@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>James Uanhoro on James Uanhoro</title>
-    <link>https://jamesuanhoro.com/</link>
+    <link>https://www.jamesuanhoro.com/</link>
     <description>Recent content in James Uanhoro on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -12,10 +12,10 @@
     
     <item>
       <title>On the interpretation of regression coefficients</title>
-      <link>https://jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
+      <link>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
       <pubDate>Fri, 11 Aug 2017 10:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
+      <guid>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
       <description>
 
 &lt;div class=&#34;alert alert-note&#34;&gt;
@@ -30,7 +30,7 @@
 
 &lt;h2 id=&#34;predicting-student-performance&#34;&gt;Predicting student performance&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;hsb &amp;lt;- read.csv(&amp;ldquo;datasets/hsb_comb_full.csv&amp;rdquo;)&lt;/p&gt;
 
@@ -101,76 +101,76 @@ Coefficients:
     
     <item>
       <title>Data visualization with ggplot2</title>
-      <link>https://jamesuanhoro.com/talk/ggplot2-festival/</link>
+      <link>https://www.jamesuanhoro.com/talk/ggplot2-festival/</link>
       <pubDate>Fri, 21 Jul 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/talk/ggplot2-festival/</guid>
+      <guid>https://www.jamesuanhoro.com/talk/ggplot2-festival/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Effect size application demo</title>
-      <link>https://jamesuanhoro.com/talk/es-demo-festival/</link>
+      <link>https://www.jamesuanhoro.com/talk/es-demo-festival/</link>
       <pubDate>Wed, 19 Jul 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/talk/es-demo-festival/</guid>
+      <guid>https://www.jamesuanhoro.com/talk/es-demo-festival/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Intro to R</title>
-      <link>https://jamesuanhoro.com/talk/intro-to-r-pub-pol/</link>
+      <link>https://www.jamesuanhoro.com/talk/intro-to-r-pub-pol/</link>
       <pubDate>Tue, 16 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/talk/intro-to-r-pub-pol/</guid>
+      <guid>https://www.jamesuanhoro.com/talk/intro-to-r-pub-pol/</guid>
       <description>&lt;p&gt;Material prepared for a full-day Intro to R workshop&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>Intro to SPSS</title>
-      <link>https://jamesuanhoro.com/talk/intro-to-spss-rmc-0/</link>
+      <link>https://www.jamesuanhoro.com/talk/intro-to-spss-rmc-0/</link>
       <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/talk/intro-to-spss-rmc-0/</guid>
+      <guid>https://www.jamesuanhoro.com/talk/intro-to-spss-rmc-0/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Example Talk</title>
-      <link>https://jamesuanhoro.com/workshop/example-talk/</link>
+      <link>https://www.jamesuanhoro.com/workshop/example-talk/</link>
       <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/workshop/example-talk/</guid>
+      <guid>https://www.jamesuanhoro.com/workshop/example-talk/</guid>
       <description>&lt;p&gt;Embed your slides or video here using &lt;a href=&#34;https://gcushen.github.io/hugo-academic-demo/post/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;. Further details can easily be added using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>2010 Nigeria Poverty Profile</title>
-      <link>https://jamesuanhoro.com/project/nigeria-poverty-profile/</link>
+      <link>https://www.jamesuanhoro.com/project/nigeria-poverty-profile/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/project/nigeria-poverty-profile/</guid>
+      <guid>https://www.jamesuanhoro.com/project/nigeria-poverty-profile/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Canvas LMS Class Visualizations</title>
-      <link>https://jamesuanhoro.com/project/canvas-lms-visualization/</link>
+      <link>https://www.jamesuanhoro.com/project/canvas-lms-visualization/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/project/canvas-lms-visualization/</guid>
+      <guid>https://www.jamesuanhoro.com/project/canvas-lms-visualization/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Effect size web application</title>
-      <link>https://jamesuanhoro.com/project/effect-size-application/</link>
+      <link>https://www.jamesuanhoro.com/project/effect-size-application/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/project/effect-size-application/</guid>
-      <description>&lt;p&gt;This is a calculator I originally built as a &lt;a href=&#34;https://jamesuanhoro.com/misc/cohens_d_calculator.xls&#34;&gt;spreadsheet&lt;/a&gt; for the Introduction to Educational Statistics class I served as lab instructor/teaching assistant for. I initially intended that it focus only on the Cohen&amp;rsquo;s &lt;em&gt;d&lt;/em&gt; family of effect sizes.&lt;/p&gt;
+      <guid>https://www.jamesuanhoro.com/project/effect-size-application/</guid>
+      <description>&lt;p&gt;This is a calculator I originally built as a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/cohens_d_calculator.xls&#34;&gt;spreadsheet&lt;/a&gt; for the Introduction to Educational Statistics class I served as lab instructor/teaching assistant for. I initially intended that it focus only on the Cohen&amp;rsquo;s &lt;em&gt;d&lt;/em&gt; family of effect sizes.&lt;/p&gt;
 
 &lt;p&gt;You can find the calculator here: &lt;a href=&#34;https://effect-size-calculator.herokuapp.com/&#34; target=&#34;_blank&#34;&gt;https://effect-size-calculator.herokuapp.com/&lt;/a&gt;.&lt;/p&gt;
 
@@ -196,28 +196,28 @@ Coefficients:
     
     <item>
       <title>Mplus LCA helper</title>
-      <link>https://jamesuanhoro.com/project/mplus-file-scraper/</link>
+      <link>https://www.jamesuanhoro.com/project/mplus-file-scraper/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/project/mplus-file-scraper/</guid>
+      <guid>https://www.jamesuanhoro.com/project/mplus-file-scraper/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Nigerian budget proposal 2016</title>
-      <link>https://jamesuanhoro.com/project/visualize-nigeria-budget/</link>
+      <link>https://www.jamesuanhoro.com/project/visualize-nigeria-budget/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/project/visualize-nigeria-budget/</guid>
+      <guid>https://www.jamesuanhoro.com/project/visualize-nigeria-budget/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Default content, retained as a guide: Writing content with Markdown, LaTeX, and Shortcodes</title>
-      <link>https://jamesuanhoro.com/post/writing-markdown-latex/</link>
+      <link>https://www.jamesuanhoro.com/post/writing-markdown-latex/</link>
       <pubDate>Wed, 20 Apr 2016 10:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/post/writing-markdown-latex/</guid>
+      <guid>https://www.jamesuanhoro.com/post/writing-markdown-latex/</guid>
       <description>&lt;p&gt;Content can be written using &lt;a href=&#34;https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet&#34; target=&#34;_blank&#34;&gt;Markdown&lt;/a&gt;, &lt;a href=&#34;https://en.wikibooks.org/wiki/LaTeX/Mathematics&#34; target=&#34;_blank&#34;&gt;LaTeX math&lt;/a&gt;, and &lt;a href=&#34;http://gohugo.io/extras/shortcodes/&#34; target=&#34;_blank&#34;&gt;Hugo Shortcodes&lt;/a&gt;. Additionally, HTML may be used for advanced formatting. This article gives an overview of the most common formatting options.&lt;/p&gt;
 
 &lt;h2 id=&#34;sub-headings&#34;&gt;Sub-headings&lt;/h2&gt;

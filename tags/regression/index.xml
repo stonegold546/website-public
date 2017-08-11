@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Regression on James Uanhoro</title>
-    <link>https://jamesuanhoro.com/tags/regression/</link>
+    <link>https://www.jamesuanhoro.com/tags/regression/</link>
     <description>Recent content in Regression on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -12,10 +12,10 @@
     
     <item>
       <title>On the interpretation of regression coefficients</title>
-      <link>https://jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
+      <link>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
       <pubDate>Fri, 11 Aug 2017 10:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
+      <guid>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
       <description>
 
 &lt;div class=&#34;alert alert-note&#34;&gt;
@@ -30,7 +30,7 @@
 
 &lt;h2 id=&#34;predicting-student-performance&#34;&gt;Predicting student performance&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;hsb &amp;lt;- read.csv(&amp;ldquo;datasets/hsb_comb_full.csv&amp;rdquo;)&lt;/p&gt;
 

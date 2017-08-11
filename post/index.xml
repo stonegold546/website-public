@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on James Uanhoro</title>
-    <link>https://jamesuanhoro.com/post/</link>
+    <link>https://www.jamesuanhoro.com/post/</link>
     <description>Recent content in Posts on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -12,10 +12,10 @@
     
     <item>
       <title>On the interpretation of regression coefficients</title>
-      <link>https://jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
+      <link>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
       <pubDate>Fri, 11 Aug 2017 10:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
+      <guid>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
       <description>
 
 &lt;div class=&#34;alert alert-note&#34;&gt;
@@ -30,7 +30,7 @@
 
 &lt;h2 id=&#34;predicting-student-performance&#34;&gt;Predicting student performance&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;hsb &amp;lt;- read.csv(&amp;ldquo;datasets/hsb_comb_full.csv&amp;rdquo;)&lt;/p&gt;
 
@@ -101,10 +101,10 @@ Coefficients:
     
     <item>
       <title>Default content, retained as a guide: Writing content with Markdown, LaTeX, and Shortcodes</title>
-      <link>https://jamesuanhoro.com/post/writing-markdown-latex/</link>
+      <link>https://www.jamesuanhoro.com/post/writing-markdown-latex/</link>
       <pubDate>Wed, 20 Apr 2016 10:00:00 +0000</pubDate>
       
-      <guid>https://jamesuanhoro.com/post/writing-markdown-latex/</guid>
+      <guid>https://www.jamesuanhoro.com/post/writing-markdown-latex/</guid>
       <description>&lt;p&gt;Content can be written using &lt;a href=&#34;https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet&#34; target=&#34;_blank&#34;&gt;Markdown&lt;/a&gt;, &lt;a href=&#34;https://en.wikibooks.org/wiki/LaTeX/Mathematics&#34; target=&#34;_blank&#34;&gt;LaTeX math&lt;/a&gt;, and &lt;a href=&#34;http://gohugo.io/extras/shortcodes/&#34; target=&#34;_blank&#34;&gt;Hugo Shortcodes&lt;/a&gt;. Additionally, HTML may be used for advanced formatting. This article gives an overview of the most common formatting options.&lt;/p&gt;
 
 &lt;h2 id=&#34;sub-headings&#34;&gt;Sub-headings&lt;/h2&gt;
