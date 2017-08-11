@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on James Uanhoro</title>
+    <link>https://jamesuanhoro.com/tags/</link>
+    <description>Recent content in Tags on James Uanhoro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 James Uanhoro</copyright>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Content tagged as &#39;Academic&#39;</title>
+      <link>https://jamesuanhoro.com/tags/academic/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/tags/academic/</guid>
+      <description>&lt;p&gt;Here is a list of all the content that has been tagged as &lt;em&gt;academic&lt;/em&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Causality</title>
+      <link>https://jamesuanhoro.com/tags/causality/</link>
+      <pubDate>Fri, 11 Aug 2017 10:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/tags/causality/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data Viz</title>
+      <link>https://jamesuanhoro.com/tags/data-viz/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/tags/data-viz/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Regression</title>
+      <link>https://jamesuanhoro.com/tags/regression/</link>
+      <pubDate>Fri, 11 Aug 2017 10:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/tags/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Software</title>
+      <link>https://jamesuanhoro.com/tags/software/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/tags/software/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>User Guide</title>
+      <link>https://jamesuanhoro.com/tags/user-guide/</link>
+      <pubDate>Wed, 20 Apr 2016 10:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/tags/user-guide/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

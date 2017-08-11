@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data Viz on James Uanhoro</title>
+    <link>https://jamesuanhoro.com/tags/data-viz/</link>
+    <description>Recent content in Data Viz on James Uanhoro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 James Uanhoro</copyright>
+    <lastBuildDate>Wed, 27 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/data-viz/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>2010 Nigeria Poverty Profile</title>
+      <link>https://jamesuanhoro.com/project/nigeria-poverty-profile/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/project/nigeria-poverty-profile/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Canvas LMS Class Visualizations</title>
+      <link>https://jamesuanhoro.com/project/canvas-lms-visualization/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/project/canvas-lms-visualization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Nigerian budget proposal 2016</title>
+      <link>https://jamesuanhoro.com/project/visualize-nigeria-budget/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/project/visualize-nigeria-budget/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

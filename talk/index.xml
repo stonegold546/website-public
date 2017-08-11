@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Workshops on James Uanhoro</title>
+    <link>https://jamesuanhoro.com/talk/</link>
+    <description>Recent content in Workshops on James Uanhoro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 James Uanhoro</copyright>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/talk/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Data visualization with ggplot2</title>
+      <link>https://jamesuanhoro.com/talk/ggplot2-festival/</link>
+      <pubDate>Fri, 21 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/talk/ggplot2-festival/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Effect size application demo</title>
+      <link>https://jamesuanhoro.com/talk/es-demo-festival/</link>
+      <pubDate>Wed, 19 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/talk/es-demo-festival/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Intro to R</title>
+      <link>https://jamesuanhoro.com/talk/intro-to-r-pub-pol/</link>
+      <pubDate>Tue, 16 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/talk/intro-to-r-pub-pol/</guid>
+      <description>&lt;p&gt;Material prepared for a full-day Intro to R workshop&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Intro to SPSS</title>
+      <link>https://jamesuanhoro.com/talk/intro-to-spss-rmc-0/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://jamesuanhoro.com/talk/intro-to-spss-rmc-0/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
