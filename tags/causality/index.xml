@@ -32,9 +32,8 @@
 
 &lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;hsb &amp;lt;- read.csv(&amp;ldquo;datasets/hsb_comb_full.csv&amp;rdquo;)&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;head(hsb)
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hsb &amp;lt;- read.csv(&amp;quot;datasets/hsb_comb_full.csv&amp;quot;)
+names(hsb)
 [1] &amp;quot;schoolid&amp;quot; &amp;quot;minority&amp;quot; &amp;quot;female&amp;quot;   &amp;quot;ses&amp;quot;      &amp;quot;mathach&amp;quot;  &amp;quot;size&amp;quot;     &amp;quot;sector&amp;quot;   
 [8] &amp;quot;pracad&amp;quot;   &amp;quot;disclim&amp;quot;  &amp;quot;himinty&amp;quot;  &amp;quot;MEANSES&amp;quot;  &amp;quot;N_BREAK&amp;quot;  &amp;quot;sesdev&amp;quot;   &amp;quot;myschool&amp;quot;
 
@@ -81,13 +80,13 @@ Coefficients:
 
 &lt;p&gt;We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.&lt;/p&gt;
 
-&lt;p&gt;Gelman and Hill advice this phrasing:&lt;/p&gt;
+&lt;p&gt;Gelman and Hill advice phrasing like this:&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;This is what they call a &lt;em&gt;predictive interpretation&lt;/em&gt; of regression coefficients. It is devoid of causality, and communicates that we are describing the difference between or making predictions for different individuals.&lt;/p&gt;
+&lt;p&gt;This is what they call a &lt;em&gt;predictive interpretation&lt;/em&gt; of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.&lt;/p&gt;
 
 &lt;hr /&gt;
 

@@ -248,9 +248,8 @@
 
 <p>I&rsquo;ll use a <a href="/misc/hsb_comb_full.csv">subset of the High School &amp; Beyond dataset</a>.</p>
 
-<p>hsb &lt;- read.csv(&ldquo;datasets/hsb_comb_full.csv&rdquo;)</p>
-
-<pre><code class="language-r">head(hsb)
+<pre><code class="language-r">hsb &lt;- read.csv(&quot;datasets/hsb_comb_full.csv&quot;)
+names(hsb)
 [1] &quot;schoolid&quot; &quot;minority&quot; &quot;female&quot;   &quot;ses&quot;      &quot;mathach&quot;  &quot;size&quot;     &quot;sector&quot;   
 [8] &quot;pracad&quot;   &quot;disclim&quot;  &quot;himinty&quot;  &quot;MEANSES&quot;  &quot;N_BREAK&quot;  &quot;sesdev&quot;   &quot;myschool&quot;
 
@@ -297,13 +296,13 @@ Coefficients:
 
 <p>We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.</p>
 
-<p>Gelman and Hill advice this phrasing:</p>
+<p>Gelman and Hill advice phrasing like this:</p>
 
 <blockquote>
 <p>For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.</p>
 </blockquote>
 
-<p>This is what they call a <em>predictive interpretation</em> of regression coefficients. It is devoid of causality, and communicates that we are describing the difference between or making predictions for different individuals.</p>
+<p>This is what they call a <em>predictive interpretation</em> of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.</p>
 
 <hr />
 
