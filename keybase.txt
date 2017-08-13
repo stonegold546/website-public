@@ -1,0 +1,55 @@
+==================================================================
+https://keybase.io/jamesuanhoro
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://www.jamesuanhoro.com
+  * I am jamesuanhoro (https://keybase.io/jamesuanhoro) on keybase.
+  * I have a public key ASBrDLWyMcmu0ABKBl5-aGwcBVlA1zbzR11pqeTAd6F2Zwo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120d0c0fc0f6abdf09f9de802054093aa0697a559b12ed796e726f0013f464831df0a",
+      "host": "keybase.io",
+      "kid": "01206b0cb5b231c9aed0004a065e7e686c1c055940d736f3475d69a9e4c077a176670a",
+      "uid": "b272ca1542d19265c65ce072b6bb6319",
+      "username": "jamesuanhoro"
+    },
+    "merkle_root": {
+      "ctime": 1502597232,
+      "hash": "a013486313aa6db61e5182dd05876c0bd1f9b470f5a03539ec1e77084cc9ee764d580c91174c78aae8e6cb6eadd9a17e558a4ecff7f65d091a56af0026ab4e9e",
+      "hash_meta": "584e2087c960c61631f8b88a89298e292eed7a4f3fe0116327838d6d37367654",
+      "seqno": 1322693
+    },
+    "service": {
+      "hostname": "www.jamesuanhoro.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "1.0.27"
+  },
+  "ctime": 1502597297,
+  "expire_in": 504576000,
+  "prev": "21281a8a64aa380383526b6e4da66234e0fe4ee644ddb06061696ae44229b7ae",
+  "seqno": 31,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgawy1sjHJrtAASgZefmhsHAVZQNc280ddaankwHehdmcKp3BheWxvYWTFA1F7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwZDBjMGZjMGY2YWJkZjA5ZjlkZTgwMjA1NDA5M2FhMDY5N2E1NTliMTJlZDc5NmU3MjZmMDAxM2Y0NjQ4MzFkZjBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwNmIwY2I1YjIzMWM5YWVkMDAwNGEwNjVlN2U2ODZjMWMwNTU5NDBkNzM2ZjM0NzVkNjlhOWU0YzA3N2ExNzY2NzBhIiwidWlkIjoiYjI3MmNhMTU0MmQxOTI2NWM2NWNlMDcyYjZiYjYzMTkiLCJ1c2VybmFtZSI6ImphbWVzdWFuaG9ybyJ9LCJtZXJrbGVfcm9vdCI6eyJjdGltZSI6MTUwMjU5NzIzMiwiaGFzaCI6ImEwMTM0ODYzMTNhYTZkYjYxZTUxODJkZDA1ODc2YzBiZDFmOWI0NzBmNWEwMzUzOWVjMWU3NzA4NGNjOWVlNzY0ZDU4MGM5MTE3NGM3OGFhZThlNmNiNmVhZGQ5YTE3ZTU1OGE0ZWNmZjdmNjVkMDkxYTU2YWYwMDI2YWI0ZTllIiwiaGFzaF9tZXRhIjoiNTg0ZTIwODdjOTYwYzYxNjMxZjhiODhhODkyOThlMjkyZWVkN2E0ZjNmZTAxMTYzMjc4MzhkNmQzNzM2NzY1NCIsInNlcW5vIjoxMzIyNjkzfSwic2VydmljZSI6eyJob3N0bmFtZSI6Ind3dy5qYW1lc3Vhbmhvcm8uY29tIiwicHJvdG9jb2wiOiJodHRwczoifSwidHlwZSI6IndlYl9zZXJ2aWNlX2JpbmRpbmciLCJ2ZXJzaW9uIjoxfSwiY2xpZW50Ijp7Im5hbWUiOiJrZXliYXNlLmlvIGdvIGNsaWVudCIsInZlcnNpb24iOiIxLjAuMjcifSwiY3RpbWUiOjE1MDI1OTcyOTcsImV4cGlyZV9pbiI6NTA0NTc2MDAwLCJwcmV2IjoiMjEyODFhOGE2NGFhMzgwMzgzNTI2YjZlNGRhNjYyMzRlMGZlNGVlNjQ0ZGRiMDYwNjE2OTZhZTQ0MjI5YjdhZSIsInNlcW5vIjozMSwidGFnIjoic2lnbmF0dXJlIn2jc2lnxEAbjZAWfXPk0S2IP9GxrnTVHWX7WqZkjk8TbmKmGJqk9YzGVAR5e/rA21PF8/Q/4OJFXhrk/va+r2vH3iPyakUAqHNpZ190eXBlIKRoYXNogqR0eXBlCKV2YWx1ZcQg5AXfsyGu++xEiMYJVlXMLjlF34pm6pZt1+nJf5cl1YSjdGFnzQICp3ZlcnNpb24B
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/jamesuanhoro
+
+==================================================================
