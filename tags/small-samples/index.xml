@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Regression on James Uanhoro</title>
-    <link>https://www.jamesuanhoro.com/tags/regression/</link>
-    <description>Recent content in Regression on James Uanhoro</description>
+    <title>Small Samples on James Uanhoro</title>
+    <link>https://www.jamesuanhoro.com/tags/small-samples/</link>
+    <description>Recent content in Small Samples on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 James Uanhoro</copyright>
     <lastBuildDate>Tue, 19 Sep 2017 10:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/regression/" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/small-samples/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Linear regression with violation of heteroskedasticity with small samples</title>
@@ -69,95 +69,6 @@ $ci_upper_simple
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:3&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;li id=&#34;fn:4&#34;&gt;Hausman, J., &amp;amp; Palmer, C. (2012). Heteroskedasticity-robust inference in finite samples. &lt;em&gt;Economics Letters, 116&lt;/em&gt;(2), 232–235. &lt;a href=&#34;https://doi.org/10.1016/j.econlet.2012.02.007&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1016/j.econlet.2012.02.007&lt;/a&gt;
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:4&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>On the interpretation of regression coefficients</title>
-      <link>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</link>
-      <pubDate>Fri, 11 Aug 2017 10:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</guid>
-      <description>
-
-&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;p&gt;We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.&lt;/p&gt;
-
-&lt;/div&gt;
-
-
-&lt;p&gt;I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&amp;rsquo;s &lt;em&gt;Data analysis using regression and multilevel/hierarchical models&lt;/em&gt;.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; So I started reading it and it&amp;rsquo;s a good book.&lt;/p&gt;
-
-&lt;p&gt;A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p. 34). To see what they mean, let us consider an example.&lt;/p&gt;
-
-&lt;h2 id=&#34;predicting-student-performance&#34;&gt;Predicting student performance&lt;/h2&gt;
-
-&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hsb &amp;lt;- read.csv(&amp;quot;datasets/hsb_comb_full.csv&amp;quot;)
-names(hsb)
-[1] &amp;quot;schoolid&amp;quot; &amp;quot;minority&amp;quot; &amp;quot;female&amp;quot;   &amp;quot;ses&amp;quot;      &amp;quot;mathach&amp;quot;  &amp;quot;size&amp;quot;     &amp;quot;sector&amp;quot;   
-[8] &amp;quot;pracad&amp;quot;   &amp;quot;disclim&amp;quot;  &amp;quot;himinty&amp;quot;  &amp;quot;MEANSES&amp;quot;  &amp;quot;N_BREAK&amp;quot;  &amp;quot;sesdev&amp;quot;   &amp;quot;myschool&amp;quot;
-
-# Let&#39;s go with the first school, and the first 5 student-level variables
-hsb &amp;lt;- hsb[hsb$schoolid == hsb$schoolid[1], 1:5]
-summary(hsb)
-schoolid       minority           female            ses             mathach      
-Min.   :1224   Min.   :0.00000   Min.   :0.0000   Min.   :-1.6580   Min.   :-2.832  
-1st Qu.:1224   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:-0.8830   1st Qu.: 3.450  
-Median :1224   Median :0.00000   Median :1.0000   Median :-0.4680   Median : 8.296  
-Mean   :1224   Mean   :0.08511   Mean   :0.5957   Mean   :-0.4344   Mean   : 9.715  
-3rd Qu.:1224   3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:-0.0330   3rd Qu.:16.370  
-Max.   :1224   Max.   :1.00000   Max.   :1.0000   Max.   : 0.9720   Max.   :23.584  
-
-# Mathach, ses and female seem to have some variability
-# Let&#39;s predict math achievement using female (dummy), ses (continuous)
-lm(mathach ~ female + ses, hsb)
-
-Call:
-lm(formula = mathach ~ female + ses, data = hsb)
-
-Coefficients:
-(Intercept)       female          ses  
-     12.092       -2.062        2.643  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now the typical approach to interpreting the coefficient for &lt;code&gt;female&lt;/code&gt; is:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Holding SES constant, there is on average, a 2.06-point difference in math achievement between males and females, with males performing better.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;There is nothing wrong with this approach, however to clarify the language, we could say:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;For students with the same SES, we expect a 2.06-point difference in math achievement between males and females, with males performing better.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;The problem arises with the interpretation of &lt;code&gt;ses&lt;/code&gt;, it typically goes:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Holding gender constant, a point improvement in SES relates with a 2.64 increase in math achievement.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.&lt;/p&gt;
-
-&lt;p&gt;Gelman and Hill advice phrasing its interpretation like this:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;This is what they call a &lt;em&gt;predictive interpretation&lt;/em&gt; of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.&lt;/p&gt;
-&lt;div class=&#34;footnotes&#34;&gt;
-
-&lt;hr /&gt;
-
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34;&gt;Gelman, A., &amp;amp; Hill, J. (2007). &lt;em&gt;Data analysis using regression and multilevel/hierarchical models&lt;/em&gt;. Cambridge University Press.
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
 </description>

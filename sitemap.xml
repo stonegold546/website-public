@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/</loc>
+      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</loc>
       <lastmod>2017-08-11T10:00:00+00:00</lastmod>
     </url>
@@ -178,6 +187,16 @@
     
     <url>
     
+      <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
+      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://www.jamesuanhoro.com/</loc>
       <lastmod>2016-04-20T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -208,7 +227,17 @@
     <url>
     
       <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-      <lastmod>2017-08-11T10:00:00+00:00</lastmod>
+      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://www.jamesuanhoro.com/tags/small-samples/</loc>
+      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

@@ -39,11 +39,11 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
 
-  <link rel="canonical" href="https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/">
+  <link rel="canonical" href="https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/">
 
   
 
-  <title>On the interpretation of regression coefficients | James Uanhoro</title>
+  <title>Linear regression with violation of heteroskedasticity with small samples | James Uanhoro</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -156,14 +156,14 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">On the interpretation of regression coefficients</h1>
+    <h1 itemprop="name">Linear regression with violation of heteroskedasticity with small samples</h1>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2017-08-11 10:00:00 &#43;0000 UTC" itemprop="datePublished">
-      Fri, Aug 11, 2017
+    <time datetime="2017-09-19 10:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Tue, Sep 19, 2017
     </time>
   </span>
 
@@ -178,7 +178,10 @@
     <a href="/tags/regression">regression</a
     >, 
     
-    <a href="/tags/causality">causality</a
+    <a href="/tags/heteroskedasticity">heteroskedasticity</a
+    >, 
+    
+    <a href="/tags/small-samples">small samples</a
     >
     
   </span>
@@ -191,35 +194,35 @@
   <ul class="share">
     <li>
       <a class="facebook"
-         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fregression-heteroskedasticity-small-samples%2f"
          target="_blank">
         <i class="fa fa-facebook"></i>
       </a>
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=On%20the%20interpretation%20of%20regression%20coefficients&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f"
+         href="https://twitter.com/intent/tweet?text=Linear%20regression%20with%20violation%20of%20heteroskedasticity%20with%20small%20samples&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fregression-heteroskedasticity-small-samples%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f&amp;title=On%20the%20interpretation%20of%20regression%20coefficients"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fregression-heteroskedasticity-small-samples%2f&amp;title=Linear%20regression%20with%20violation%20of%20heteroskedasticity%20with%20small%20samples"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f&amp;title=On%20the%20interpretation%20of%20regression%20coefficients"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fregression-heteroskedasticity-small-samples%2f&amp;title=Linear%20regression%20with%20violation%20of%20heteroskedasticity%20with%20small%20samples"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=On%20the%20interpretation%20of%20regression%20coefficients&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f">
+         href="mailto:?subject=Linear%20regression%20with%20violation%20of%20heteroskedasticity%20with%20small%20samples&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fregression-heteroskedasticity-small-samples%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -232,84 +235,59 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      
-
-<div class="alert alert-note">
-  <p>We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.</p>
+      <div class="alert alert-note">
+  <p>In small samples, the <code>wild bootstrap</code> implemented in the R <code>hcci</code> package is a good bet when heteroskedasticity is a concern.</p>
 
 </div>
 
 
-<p>I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&rsquo;s <em>Data analysis using regression and multilevel/hierarchical models</em>.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> So I started reading it and it&rsquo;s a good book.</p>
+<p>Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t,SE,pvalue)$ may be problematic. Supplemental R material I created included how to use the <code>sandwich</code> package to obtain heteroskedasticity-consistent standard errors (HCSEs). And after applying HC3 (or any of the HCs from 1 to 5), a regression coefficient was no longer statistically significant at $\alpha=.05$.</p>
 
-<p>A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p. 34). To see what they mean, let us consider an example.</p>
+<p>I mentioned to the class that some folks would recommend applying HCSEs by default. After class, I tried to learn about the difference between the different HCs. The following papers were helpful: Zeileis (2004),<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> Long &amp; Ervin (2000),<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> Cribari-Neto, Souza &amp; Vasconcellos (2007),<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> and Hausman &amp; Palmer (2012)<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup>. The <a href="https://cran.r-project.org/web/packages/sandwich/sandwich.pdf" target="_blank">documentation for the sandwich package</a> was a big help. The Hausman &amp; Palmer (H&amp;P) paper is probably best if you&rsquo;re only going to read one of the papers, and it can also serve as a short handy reference for dealing with heteroskedasticity at small sample sizes.</p>
 
-<h2 id="predicting-student-performance">Predicting student performance</h2>
+<p>I learned that <strong>HCSEs can be problematic (H&amp;P Table 1)</strong>. Additionally, the <strong>Wild Bootstrap does a good job of maintaining the nominal error rate in small samples (<em>n=40</em>) under homoskedasticity, moderate heteroskedasticity and severe heteroskedasticity (H&amp;P Table 1). It is also statistically powerful (H&amp;P Fig. 1 &amp; 2)</strong>. The good thing is the <a href="https://cran.r-project.org/web/packages/hcci/index.html" target="_blank">hcci package</a> contains a function called <code>Pboot</code> which performs the wild bootstrap to correct for heteroskedasticity.</p>
 
-<p>I&rsquo;ll use a <a href="/misc/hsb_comb_full.csv">subset of the High School &amp; Beyond dataset</a>.</p>
+<p>As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument from lm. Here&rsquo;s an example with <a href="/misc/atlschools.csv">this dataset</a>:</p>
 
-<pre><code class="language-r">hsb &lt;- read.csv(&quot;datasets/hsb_comb_full.csv&quot;)
-names(hsb)
-[1] &quot;schoolid&quot; &quot;minority&quot; &quot;female&quot;   &quot;ses&quot;      &quot;mathach&quot;  &quot;size&quot;     &quot;sector&quot;   
-[8] &quot;pracad&quot;   &quot;disclim&quot;  &quot;himinty&quot;  &quot;MEANSES&quot;  &quot;N_BREAK&quot;  &quot;sesdev&quot;   &quot;myschool&quot;
+<pre><code class="language-r">library(hcci)
+atlschools &lt;- read.csv(&quot;./atlschools.csv&quot;)
+# You can not pass the dataframe to the Pboot function so the next few lines are required prior to calling lm()
+ppc &lt;- atlschools$PPC # per-pupil costs
+ptr_c &lt;- scale(atlschools$PTR, scale = FALSE) # pupil/teacher ratio
+mts_c_10 &lt;- scale(atlschools$MTS, scale = FALSE) / 10 # monthly teacher salary
 
-# Let's go with the first school, and the first 5 student-level variables
-hsb &lt;- hsb[hsb$schoolid == hsb$schoolid[1], 1:5]
-summary(hsb)
-schoolid       minority           female            ses             mathach      
-Min.   :1224   Min.   :0.00000   Min.   :0.0000   Min.   :-1.6580   Min.   :-2.832  
-1st Qu.:1224   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:-0.8830   1st Qu.: 3.450  
-Median :1224   Median :0.00000   Median :1.0000   Median :-0.4680   Median : 8.296  
-Mean   :1224   Mean   :0.08511   Mean   :0.5957   Mean   :-0.4344   Mean   : 9.715  
-3rd Qu.:1224   3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:-0.0330   3rd Qu.:16.370  
-Max.   :1224   Max.   :1.00000   Max.   :1.0000   Max.   : 0.9720   Max.   :23.584  
+coef(summary(fit.0 &lt;- lm(ppc ~ ptr_c + mts_c_10)))
+             Estimate Std. Error   t value     Pr(&gt;|t|)
+(Intercept) 67.884318  1.1526357 58.894861 3.017231e-41
+ptr_c       -2.798285  0.3685282 -7.593138 2.427617e-09
+mts_c_10     2.477010  0.8167532  3.032752 4.190607e-03
 
-# Mathach, ses and female seem to have some variability
-# Let's predict math achievement using female (dummy), ses (continuous)
-lm(mathach ~ female + ses, hsb)
+Pboot(model = fit.0, J = 1000, K = 100)
 
-Call:
-lm(formula = mathach ~ female + ses, data = hsb)
+$beta
+[1] 67.884318 -2.798285  2.477010
 
-Coefficients:
-(Intercept)       female          ses  
-     12.092       -2.062        2.643  
+$ci_lower_simple
+[1] 65.5454924 -3.7301276 -0.0653991
+
+$ci_upper_simple
+[1] 70.221038 -1.904783  4.969260
 </code></pre>
 
-<p>Now the typical approach to interpreting the coefficient for <code>female</code> is:</p>
-
-<blockquote>
-<p>Holding SES constant, there is on average, a 2.06-point difference in math achievement between males and females, with males performing better.</p>
-</blockquote>
-
-<p>There is nothing wrong with this approach, however to clarify the language, we could say:</p>
-
-<blockquote>
-<p>For students with the same SES, we expect a 2.06-point difference in math achievement between males and females, with males performing better.</p>
-</blockquote>
-
-<p>The problem arises with the interpretation of <code>ses</code>, it typically goes:</p>
-
-<blockquote>
-<p>Holding gender constant, a point improvement in SES relates with a 2.64 increase in math achievement.</p>
-</blockquote>
-
-<p>We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.</p>
-
-<p>Gelman and Hill advice phrasing its interpretation like this:</p>
-
-<blockquote>
-<p>For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.</p>
-</blockquote>
-
-<p>This is what they call a <em>predictive interpretation</em> of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.</p>
+<p>The CI of monthly teacher salary includes 0, evidence to suggest we cannot distinguish its slope from 0. The inference at $\alpha=.05$ is different from OLS.</p>
 <div class="footnotes">
 
 <hr />
 
 <ol>
-<li id="fn:1">Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press.
+<li id="fn:1">Zeileis, A. (2004). Econometric Computing with HC and HAC Covariance Matrix Estimators. <em>Journal of Statistical Software, 11</em>(10). <a href="https://doi.org/10.18637/jss.v011.i10" target="_blank">https://doi.org/10.18637/jss.v011.i10</a>
  <a class="footnote-return" href="#fnref:1"><sup>^</sup></a></li>
+<li id="fn:2">Long, J. S., &amp; Ervin, L. H. (2000). Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model. <em>The American Statistician, 54</em>(3), 217–224. <a href="https://doi.org/10.1080/00031305.2000.10474549" target="_blank">https://doi.org/10.1080/00031305.2000.10474549</a>
+ <a class="footnote-return" href="#fnref:2"><sup>^</sup></a></li>
+<li id="fn:3">Cribari-Neto, F., Souza, T. C., &amp; Vasconcellos, K. L. P. (2007). Inference Under Heteroskedasticity and Leveraged Data. <em>Communications in Statistics - Theory and Methods, 36</em>(10), 1877–1888. <a href="https://doi.org/10.1080/03610920601126589" target="_blank">https://doi.org/10.1080/03610920601126589</a>
+ <a class="footnote-return" href="#fnref:3"><sup>^</sup></a></li>
+<li id="fn:4">Hausman, J., &amp; Palmer, C. (2012). Heteroskedasticity-robust inference in finite samples. <em>Economics Letters, 116</em>(2), 232–235. <a href="https://doi.org/10.1016/j.econlet.2012.02.007" target="_blank">https://doi.org/10.1016/j.econlet.2012.02.007</a>
+ <a class="footnote-return" href="#fnref:4"><sup>^</sup></a></li>
 </ol>
 </div>
 
@@ -322,13 +300,10 @@ Coefficients:
   <nav>
   <ul class="pager">
     
-    <li class="previous"><a href="https://www.jamesuanhoro.com/post/writing-markdown-latex/"><span
-      aria-hidden="true">&larr;</span> Default content, retained as a guide: Writing content with Markdown, LaTeX, and Shortcodes</a></li>
+    <li class="previous"><a href="https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/"><span
+      aria-hidden="true">&larr;</span> On the interpretation of regression coefficients</a></li>
     
 
-    
-    <li class="next"><a href="https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/">Linear regression with violation of heteroskedasticity with small samples <span
-      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>
