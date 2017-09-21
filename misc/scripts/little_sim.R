@@ -63,6 +63,7 @@ ggplot(little.mcar.p, aes(x = n, y = p)) + geom_boxplot() +
   scale_y_continuous(breaks = seq(0, 1, .05), limits = c(0, 1)) +
   labs(x = "Sample size", y = "p-value",
        title = "Little's MCAR test for data that are MCAR",
+       subtitle = "2000 replications",
        caption = paste(paste("For the narrow boxes, going from top to bottom, lines",
                              "represent 7.5th, 5th and 2.5th percentiles of p-values."),
                        "Test maintains nominal error rate across wide range of sample sizes.",
@@ -77,6 +78,7 @@ ggplot(little.mcar.p, aes(x = n, y = p)) + # geom_boxplot() +
   scale_y_continuous(breaks = seq(0, 1, .01), limits = c(0, .1)) +
   labs(x = "Sample size", y = "p-value",
        title = "Little's MCAR test for data that are MCAR",
+       subtitle = "2000 replications",
        caption = paste(paste("Going from top to bottom, lines for each sample size represent",
                              "7.5th, 5th and 2.5th percentiles of p-values."),
                        "Test maintains nominal error rate across wide range of sample sizes.",
@@ -120,6 +122,7 @@ ggplot(little.mcar.p.mar, aes(x = n, y = p)) + geom_boxplot() +
   scale_y_continuous(breaks = seq(0, 1, .05), limits = c(0, 1)) +
   labs(x = "Sample size", y = "p-value",
        title = "Little's MCAR test for data that are MAR",
+       subtitle = "2000 replications",
        caption = paste(paste("For the dashed boxes, going from top to bottom, lines",
                              "represent 97.5th, 95th and 92.5th percentiles of p-values."),
                        "Test only maintains nominal error rate around sample size of 120.",
@@ -134,6 +137,7 @@ ggplot(little.mcar.p.mar, aes(x = n, y = p)) + # geom_boxplot() +
   scale_y_continuous(breaks = seq(0, 1, .05), limits = c(0, .8)) +
   labs(x = "Sample size", y = "p-value",
        title = "Little's MCAR test for data that are MAR",
+       subtitle = "2000 replications",
        caption = paste(paste("Going from top to bottom, lines for each sample size",
                              "represent 97.5th, 95th and 92.5th percentiles of p-values."),
                        "Test only maintains nominal error rate around sample size of 120.",
