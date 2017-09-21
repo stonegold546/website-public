@@ -27,7 +27,7 @@
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/little_mcar/zoom_in.png&#34; alt=&#34;Data are MCAR&#34; /&gt;
 &lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/little_mcar/zoom_in_mar.png&#34; alt=&#34;Data are MAR&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;And this is the &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/little_sim.R&#34;&gt;script I used&lt;/a&gt;. You will find that the underlying regression is near perfect (no multicollinearity).&lt;/p&gt;
+&lt;p&gt;And this is the &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/little_sim.R&#34;&gt;script I used&lt;/a&gt;, the underlying regression is near perfect (no multicollinearity).&lt;/p&gt;
 &lt;div class=&#34;footnotes&#34;&gt;
 
 &lt;hr /&gt;
