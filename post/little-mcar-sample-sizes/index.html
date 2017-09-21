@@ -39,11 +39,11 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
 
-  <link rel="canonical" href="https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/">
+  <link rel="canonical" href="https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/">
 
   
 
-  <title>On the interpretation of regression coefficients | James Uanhoro</title>
+  <title>Little&#39;s MCAR test at different sample sizes | James Uanhoro</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -156,14 +156,14 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">On the interpretation of regression coefficients</h1>
+    <h1 itemprop="name">Little&#39;s MCAR test at different sample sizes</h1>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2017-08-11 10:00:00 &#43;0000 UTC" itemprop="datePublished">
-      Fri, Aug 11, 2017
+    <time datetime="2017-09-21 10:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Thu, Sep 21, 2017
     </time>
   </span>
 
@@ -175,10 +175,13 @@
   <span class="article-tags">
     <i class="fa fa-tags"></i>
     
-    <a href="/tags/regression">regression</a
+    <a href="/tags/missing-data">missing-data</a
     >, 
     
-    <a href="/tags/causality">causality</a
+    <a href="/tags/littles-mcar-test">little&#39;s mcar test</a
+    >, 
+    
+    <a href="/tags/small-samples">small-samples</a
     >
     
   </span>
@@ -191,35 +194,35 @@
   <ul class="share">
     <li>
       <a class="facebook"
-         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f"
          target="_blank">
         <i class="fa fa-facebook"></i>
       </a>
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=On%20the%20interpretation%20of%20regression%20coefficients&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f"
+         href="https://twitter.com/intent/tweet?text=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f&amp;title=On%20the%20interpretation%20of%20regression%20coefficients"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f&amp;title=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f&amp;title=On%20the%20interpretation%20of%20regression%20coefficients"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f&amp;title=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=On%20the%20interpretation%20of%20regression%20coefficients&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2finterpretation-regression-coefficients%2f">
+         href="mailto:?subject=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -232,83 +235,24 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      
-
-<div class="alert alert-note">
-  <p>We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.</p>
+      <div class="alert alert-note">
+  <p>Little&rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.</p>
 
 </div>
 
 
-<p>I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&rsquo;s <em>Data analysis using regression and multilevel/hierarchical models</em>.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> So I started reading it and it&rsquo;s a good book.</p>
+<p>I just found out about the R <a href="https://cran.r-project.org/web/packages/simglm/simglm.pdf" target="_blank">simglm package</a> and decided to do a small simulation to test Little&rsquo;s MCAR test<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future. I was able to find some examples of researchers using Little&rsquo;s MCAR test at small sample sizes, so I ran a toy simulation.</p>
 
-<p>A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p. 34). To see what they mean, let us consider an example.</p>
+<p><img src="/img/posts/little_mcar/zoom_in.png" alt="Data are MCAR" />
+<img src="/img/posts/little_mcar/zoom_in_mar.png" alt="Data are MAR" /></p>
 
-<h2 id="predicting-student-performance">Predicting student performance</h2>
-
-<p>I&rsquo;ll use a <a href="/misc/datasets/hsb_comb_full.csv">subset of the High School &amp; Beyond dataset</a>.</p>
-
-<pre><code class="language-r">hsb &lt;- read.csv(&quot;datasets/hsb_comb_full.csv&quot;)
-names(hsb)
-[1] &quot;schoolid&quot; &quot;minority&quot; &quot;female&quot;   &quot;ses&quot;      &quot;mathach&quot;  &quot;size&quot;     &quot;sector&quot;   
-[8] &quot;pracad&quot;   &quot;disclim&quot;  &quot;himinty&quot;  &quot;MEANSES&quot;  &quot;N_BREAK&quot;  &quot;sesdev&quot;   &quot;myschool&quot;
-
-# Let's go with the first school, and the first 5 student-level variables
-hsb &lt;- hsb[hsb$schoolid == hsb$schoolid[1], 1:5]
-summary(hsb)
-schoolid       minority           female            ses             mathach      
-Min.   :1224   Min.   :0.00000   Min.   :0.0000   Min.   :-1.6580   Min.   :-2.832  
-1st Qu.:1224   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:-0.8830   1st Qu.: 3.450  
-Median :1224   Median :0.00000   Median :1.0000   Median :-0.4680   Median : 8.296  
-Mean   :1224   Mean   :0.08511   Mean   :0.5957   Mean   :-0.4344   Mean   : 9.715  
-3rd Qu.:1224   3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:-0.0330   3rd Qu.:16.370  
-Max.   :1224   Max.   :1.00000   Max.   :1.0000   Max.   : 0.9720   Max.   :23.584  
-
-# Mathach, ses and female seem to have some variability
-# Let's predict math achievement using female (dummy), ses (continuous)
-lm(mathach ~ female + ses, hsb)
-
-Call:
-lm(formula = mathach ~ female + ses, data = hsb)
-
-Coefficients:
-(Intercept)       female          ses  
-     12.092       -2.062        2.643  
-</code></pre>
-
-<p>Now the typical approach to interpreting the coefficient for <code>female</code> is:</p>
-
-<blockquote>
-<p>Holding SES constant, there is on average, a 2.06-point difference in math achievement between males and females, with males performing better.</p>
-</blockquote>
-
-<p>There is nothing wrong with this approach, however to clarify the language, we could say:</p>
-
-<blockquote>
-<p>For students with the same SES, we expect a 2.06-point difference in math achievement between males and females, with males performing better.</p>
-</blockquote>
-
-<p>The problem arises with the interpretation of <code>ses</code>, it typically goes:</p>
-
-<blockquote>
-<p>Holding gender constant, a point improvement in SES relates with a 2.64 increase in math achievement.</p>
-</blockquote>
-
-<p>We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.</p>
-
-<p>Gelman and Hill advice phrasing its interpretation like this:</p>
-
-<blockquote>
-<p>For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.</p>
-</blockquote>
-
-<p>This is what they call a <em>predictive interpretation</em> of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.</p>
+<p>And this is the <a href="/misc/scripts/little_sim.R">script I used</a>. You will find that the underlying regression is near perfect (no multicollinearity).</p>
 <div class="footnotes">
 
 <hr />
 
 <ol>
-<li id="fn:1">Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press.
+<li id="fn:1">Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. <em>Journal of the American Statistical Association, 83</em>(404), 1198. <a href="https://doi.org/10.2307/2290157" target="_blank">https://doi.org/10.2307/2290157</a>
  <a class="footnote-return" href="#fnref:1"><sup>^</sup></a></li>
 </ol>
 </div>
@@ -322,13 +266,10 @@ Coefficients:
   <nav>
   <ul class="pager">
     
-    <li class="previous"><a href="https://www.jamesuanhoro.com/post/writing-markdown-latex/"><span
-      aria-hidden="true">&larr;</span> Default content, retained as a guide: Writing content with Markdown, LaTeX, and Shortcodes</a></li>
+    <li class="previous"><a href="https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/"><span
+      aria-hidden="true">&larr;</span> Linear regression with violation of heteroskedasticity with small samples</a></li>
     
 
-    
-    <li class="next"><a href="https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/">Linear regression with violation of heteroskedasticity with small samples <span
-      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>

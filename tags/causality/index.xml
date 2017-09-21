@@ -30,7 +30,7 @@
 
 &lt;h2 id=&#34;predicting-student-performance&#34;&gt;Predicting student performance&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/datasets/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hsb &amp;lt;- read.csv(&amp;quot;datasets/hsb_comb_full.csv&amp;quot;)
 names(hsb)

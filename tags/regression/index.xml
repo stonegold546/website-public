@@ -28,7 +28,7 @@
 
 &lt;p&gt;I learned that &lt;strong&gt;HCSEs can be problematic (H&amp;amp;P Table 1)&lt;/strong&gt;. Additionally, the &lt;strong&gt;Wild Bootstrap does a good job of maintaining the nominal error rate in small samples (&lt;em&gt;n=40&lt;/em&gt;) under homoskedasticity, moderate heteroskedasticity and severe heteroskedasticity (H&amp;amp;P Table 1). It is also statistically powerful (H&amp;amp;P Fig. 1 &amp;amp; 2)&lt;/strong&gt;. The good thing is the &lt;a href=&#34;https://cran.r-project.org/web/packages/hcci/index.html&#34; target=&#34;_blank&#34;&gt;hcci package&lt;/a&gt; contains a function called &lt;code&gt;Pboot()&lt;/code&gt; which performs the wild bootstrap to correct for heteroskedasticity.&lt;/p&gt;
 
-&lt;p&gt;As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument in &lt;code&gt;lm()&lt;/code&gt;. Here&amp;rsquo;s an example with &lt;a href=&#34;https://www.jamesuanhoro.com/misc/atlschools.csv&#34;&gt;this dataset&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument in &lt;code&gt;lm()&lt;/code&gt;. Here&amp;rsquo;s an example with &lt;a href=&#34;https://www.jamesuanhoro.com/misc/datasets/atlschools.csv&#34;&gt;this dataset&lt;/a&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(hcci)
 atlschools &amp;lt;- read.csv(&amp;quot;./atlschools.csv&amp;quot;)
@@ -94,7 +94,7 @@ $ci_upper_simple
 
 &lt;h2 id=&#34;predicting-student-performance&#34;&gt;Predicting student performance&lt;/h2&gt;
 
-&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ll use a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/datasets/hsb_comb_full.csv&#34;&gt;subset of the High School &amp;amp; Beyond dataset&lt;/a&gt;.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hsb &amp;lt;- read.csv(&amp;quot;datasets/hsb_comb_full.csv&amp;quot;)
 names(hsb)

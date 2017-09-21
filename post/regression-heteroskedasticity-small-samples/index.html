@@ -247,7 +247,7 @@
 
 <p>I learned that <strong>HCSEs can be problematic (H&amp;P Table 1)</strong>. Additionally, the <strong>Wild Bootstrap does a good job of maintaining the nominal error rate in small samples (<em>n=40</em>) under homoskedasticity, moderate heteroskedasticity and severe heteroskedasticity (H&amp;P Table 1). It is also statistically powerful (H&amp;P Fig. 1 &amp; 2)</strong>. The good thing is the <a href="https://cran.r-project.org/web/packages/hcci/index.html" target="_blank">hcci package</a> contains a function called <code>Pboot()</code> which performs the wild bootstrap to correct for heteroskedasticity.</p>
 
-<p>As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument in <code>lm()</code>. Here&rsquo;s an example with <a href="/misc/atlschools.csv">this dataset</a>:</p>
+<p>As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument in <code>lm()</code>. Here&rsquo;s an example with <a href="/misc/datasets/atlschools.csv">this dataset</a>:</p>
 
 <pre><code class="language-r">library(hcci)
 atlschools &lt;- read.csv(&quot;./atlschools.csv&quot;)
@@ -304,6 +304,9 @@ $ci_upper_simple
       aria-hidden="true">&larr;</span> On the interpretation of regression coefficients</a></li>
     
 
+    
+    <li class="next"><a href="https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/">Little&#39;s MCAR test at different sample sizes <span
+      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>
