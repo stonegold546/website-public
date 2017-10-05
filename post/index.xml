@@ -40,7 +40,7 @@
 
 &lt;p&gt;Re my comment at the top regarding Theil-Sen for simple linear regression when there are concerns about outliers and heteroscedasticity, see Dietz&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt; and Wilcox&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:5&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:5&#34;&gt;5&lt;/a&gt;&lt;/sup&gt; below.&lt;/p&gt;
 
-&lt;p&gt;I also conducted a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/ts_sim.R&#34;&gt;toy simulation&lt;/a&gt; to show how the Theil-Sen slope competes with OLS under heteroscedasticity. OLS point estimates are unbiased by heteroscedasticity (in the long-run).&lt;/p&gt;
+&lt;p&gt;I conducted a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/ts_sim.R&#34;&gt;toy simulation&lt;/a&gt; to see how Theil-Sen competes with OLS under heteroscedasticity.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/ts_hetero/0_slopes_hetero.png&#34; alt=&#34;Simulation results&#34; /&gt;
 &lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/ts_hetero/0_heteroscedastic_samples.png&#34; alt=&#34;25 random samples from simulation&#34; /&gt;&lt;/p&gt;
