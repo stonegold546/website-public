@@ -39,11 +39,11 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
 
-  <link rel="canonical" href="https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/">
+  <link rel="canonical" href="https://www.jamesuanhoro.com/post/theil-sen-regression/">
 
   
 
-  <title>Little&#39;s MCAR test at different sample sizes | James Uanhoro</title>
+  <title>Theil-Sen regression in R | James Uanhoro</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -156,13 +156,13 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">Little&#39;s MCAR test at different sample sizes</h1>
+    <h1 itemprop="name">Theil-Sen regression in R</h1>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2017-09-21 10:00:00 &#43;0000 UTC" itemprop="datePublished">
+    <time datetime="2017-09-21 13:00:00 &#43;0000 UTC" itemprop="datePublished">
       Thu, Sep 21, 2017
     </time>
   </span>
@@ -175,13 +175,13 @@
   <span class="article-tags">
     <i class="fa fa-tags"></i>
     
-    <a href="/tags/missing-data">missing-data</a
+    <a href="/tags/regression">regression</a
     >, 
     
-    <a href="/tags/littles-mcar-test">little&#39;s mcar test</a
+    <a href="/tags/robust">robust</a
     >, 
     
-    <a href="/tags/small-samples">small-samples</a
+    <a href="/tags/theil-sen">Theil-Sen</a
     >
     
   </span>
@@ -194,35 +194,35 @@
   <ul class="share">
     <li>
       <a class="facebook"
-         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftheil-sen-regression%2f"
          target="_blank">
         <i class="fa fa-facebook"></i>
       </a>
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f"
+         href="https://twitter.com/intent/tweet?text=Theil-Sen%20regression%20in%20R&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftheil-sen-regression%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f&amp;title=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftheil-sen-regression%2f&amp;title=Theil-Sen%20regression%20in%20R"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f&amp;title=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftheil-sen-regression%2f&amp;title=Theil-Sen%20regression%20in%20R"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=Little%27s%20MCAR%20test%20at%20different%20sample%20sizes&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2flittle-mcar-sample-sizes%2f">
+         href="mailto:?subject=Theil-Sen%20regression%20in%20R&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftheil-sen-regression%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -236,24 +236,48 @@
 
     <div class="article-style" itemprop="articleBody">
       <div class="alert alert-note">
-  <p>Little&rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.</p>
+  <p>When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the <code>Theil-Sen estimator</code>.</p>
 
 </div>
 
 
-<p>I just found out about the R <a href="https://cran.r-project.org/web/packages/simglm/index.html" target="_blank">simglm package</a> and decided to do a small simulation to test Little&rsquo;s MCAR test<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future. I was able to find some examples of researchers using Little&rsquo;s MCAR test at small sample sizes, so I ran a toy simulation.</p>
+<p>A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:</p>
 
-<p><img src="/img/posts/little_mcar/zoom_in.png" alt="Data are MCAR" />
-<img src="/img/posts/little_mcar/zoom_in_mar.png" alt="Data are MAR" /></p>
+<ul>
+<li>Plot a line between all the points in your data</li>
+<li>Calculate the slope for each line</li>
+<li>The median slope is your regression slope</li>
+</ul>
 
-<p>And this is the <a href="/misc/scripts/little_sim.R">script I used</a>, the underlying regression is near perfect (no multicollinearity).</p>
+<p>Calculating the slope this way happens to be quite robust. And when the errors are normally distributed and you have no outliers, the slope is very similar to OLS.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup></p>
+
+<p>There are several methods to obtain the intercept. It is reasonable to know what your software is doing if you care for the intercept in your regression. Theil-Sen regression is available in two R packages I know of: <code>WRS</code><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> and <a href="https://cran.r-project.org/web/packages/mblm/index.html" target="_blank">mblm</a>.</p>
+
+<p><code>mblm</code> includes a modification to Theil&rsquo;s original method that has a higher breakdown point (more robust).<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> This modification is the default method.</p>
+
+<p><code>WRS</code> contains two functions for Theil-Sen regression: Theil&rsquo;s original method in the <code>tsreg</code> function, and a modification for small samples when there are tied values in the outcome in the <code>tshdreg</code> function.</p>
+
+<p>Re my comment at the top regarding Theil-Sen for simple linear regression when there are concerns about outliers and heteroscedasticity, see Dietz<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup> and Wilcox<sup class="footnote-ref" id="fnref:5"><a rel="footnote" href="#fn:5">5</a></sup> below.</p>
+
+<p>I also conducted a <a href="/misc/scripts/ts_sim.R">toy simulation</a> to show how the Theil-Sen slope competes with OLS under heteroscedasticity. OLS point estimates are unbiased by heteroscedasticity (in the long-run).</p>
+
+<p><img src="/img/posts/ts_hetero/0_slopes_hetero.png" alt="Simulation results" />
+<img src="/img/posts/ts_hetero/0_heteroscedastic_samples.png" alt="25 random samples from simulation" /></p>
 <div class="footnotes">
 
 <hr />
 
 <ol>
-<li id="fn:1">Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. <em>Journal of the American Statistical Association, 83</em>(404), 1198. <a href="https://doi.org/10.2307/2290157" target="_blank">https://doi.org/10.2307/2290157</a>
+<li id="fn:1">Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. <em>Biometrical Journal, 40</em>(3), 261–268. <a href="https://doi.org/10.1002/(SICI)1521-4036(199807)40:3&lt;261::AID-BIMJ261&gt;3.0.CO;2-V" target="_blank">doi: 10.1002/(SICI)1521-4036(199807)40:3&lt;261::AID-BIMJ261&gt;3.0.CO;2-V</a>
  <a class="footnote-return" href="#fnref:1"><sup>^</sup></a></li>
+<li id="fn:2"><strong>W</strong>ilcox <strong>R</strong>obust <strong>S</strong>tatistics - Rand Wilcox&rsquo;s collection of robust methods. It is not available on CRAN, as CRAN requires proper documentation for all functions. This is a good set of installation instructions - <a href="https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/" target="_blank">https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/</a>.
+ <a class="footnote-return" href="#fnref:2"><sup>^</sup></a></li>
+<li id="fn:3">Siegel, A. F. (1982). Robust regression using repeated medians. <em>Biometrika, 69</em>(1), 242–244. <a href="https://doi.org/10.1093/biomet/69.1.242" target="_blank">https://doi.org/10.1093/biomet/69.1.242</a>
+ <a class="footnote-return" href="#fnref:3"><sup>^</sup></a></li>
+<li id="fn:4">Dietz, E. J. (1987). A comparison of robust estimators in simple linear regression. Communications in Statistics - Simulation and Computation, 16(4), 1209–1227. <a href="https://doi.org/10.1080/03610918708812645" target="_blank">https://doi.org/10.1080/03610918708812645</a>
+ <a class="footnote-return" href="#fnref:4"><sup>^</sup></a></li>
+<li id="fn:5">Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. Biometrical Journal, 40(3), 261–268.
+ <a class="footnote-return" href="#fnref:5"><sup>^</sup></a></li>
 </ol>
 </div>
 
@@ -266,13 +290,10 @@
   <nav>
   <ul class="pager">
     
-    <li class="previous"><a href="https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/"><span
-      aria-hidden="true">&larr;</span> Linear regression with violation of heteroskedasticity with small samples</a></li>
+    <li class="previous"><a href="https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/"><span
+      aria-hidden="true">&larr;</span> Little&#39;s MCAR test at different sample sizes</a></li>
     
 
-    
-    <li class="next"><a href="https://www.jamesuanhoro.com/post/theil-sen-regression/">Theil-Sen regression in R <span
-      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Robust on James Uanhoro</title>
+    <link>https://www.jamesuanhoro.com/tags/robust/</link>
+    <description>Recent content in Robust on James Uanhoro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 James Uanhoro</copyright>
+    <lastBuildDate>Thu, 21 Sep 2017 13:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/robust/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Theil-Sen regression in R</title>
+      <link>https://www.jamesuanhoro.com/post/theil-sen-regression/</link>
+      <pubDate>Thu, 21 Sep 2017 13:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/theil-sen-regression/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;p&gt;When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the &lt;code&gt;Theil-Sen estimator&lt;/code&gt;.&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+&lt;p&gt;A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Plot a line between all the points in your data&lt;/li&gt;
+&lt;li&gt;Calculate the slope for each line&lt;/li&gt;
+&lt;li&gt;The median slope is your regression slope&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Calculating the slope this way happens to be quite robust. And when the errors are normally distributed and you have no outliers, the slope is very similar to OLS.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;There are several methods to obtain the intercept. It is reasonable to know what your software is doing if you care for the intercept in your regression. Theil-Sen regression is available in two R packages I know of: &lt;code&gt;WRS&lt;/code&gt;&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:2&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:2&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; and &lt;a href=&#34;https://cran.r-project.org/web/packages/mblm/index.html&#34; target=&#34;_blank&#34;&gt;mblm&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;mblm&lt;/code&gt; includes a modification to Theil&amp;rsquo;s original method that has a higher breakdown point (more robust).&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:3&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:3&#34;&gt;3&lt;/a&gt;&lt;/sup&gt; This modification is the default method.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;WRS&lt;/code&gt; contains two functions for Theil-Sen regression: Theil&amp;rsquo;s original method in the &lt;code&gt;tsreg&lt;/code&gt; function, and a modification for small samples when there are tied values in the outcome in the &lt;code&gt;tshdreg&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;Re my comment at the top regarding Theil-Sen for simple linear regression when there are concerns about outliers and heteroscedasticity, see Dietz&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt; and Wilcox&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:5&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:5&#34;&gt;5&lt;/a&gt;&lt;/sup&gt; below.&lt;/p&gt;
+
+&lt;p&gt;I also conducted a &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/ts_sim.R&#34;&gt;toy simulation&lt;/a&gt; to show how the Theil-Sen slope competes with OLS under heteroscedasticity. OLS point estimates are unbiased by heteroscedasticity (in the long-run).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/ts_hetero/0_slopes_hetero.png&#34; alt=&#34;Simulation results&#34; /&gt;
+&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/ts_hetero/0_heteroscedastic_samples.png&#34; alt=&#34;25 random samples from simulation&#34; /&gt;&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. &lt;em&gt;Biometrical Journal, 40&lt;/em&gt;(3), 261–268. &lt;a href=&#34;https://doi.org/10.1002/(SICI)1521-4036(199807)40:3&amp;lt;261::AID-BIMJ261&amp;gt;3.0.CO;2-V&#34; target=&#34;_blank&#34;&gt;doi: 10.1002/(SICI)1521-4036(199807)40:3&amp;lt;261::AID-BIMJ261&amp;gt;3.0.CO;2-V&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;&lt;strong&gt;W&lt;/strong&gt;ilcox &lt;strong&gt;R&lt;/strong&gt;obust &lt;strong&gt;S&lt;/strong&gt;tatistics - Rand Wilcox&amp;rsquo;s collection of robust methods. It is not available on CRAN, as CRAN requires proper documentation for all functions. This is a good set of installation instructions - &lt;a href=&#34;https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/&#34; target=&#34;_blank&#34;&gt;https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/&lt;/a&gt;.
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:2&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34;&gt;Siegel, A. F. (1982). Robust regression using repeated medians. &lt;em&gt;Biometrika, 69&lt;/em&gt;(1), 242–244. &lt;a href=&#34;https://doi.org/10.1093/biomet/69.1.242&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1093/biomet/69.1.242&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:3&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:4&#34;&gt;Dietz, E. J. (1987). A comparison of robust estimators in simple linear regression. Communications in Statistics - Simulation and Computation, 16(4), 1209–1227. &lt;a href=&#34;https://doi.org/10.1080/03610918708812645&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1080/03610918708812645&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:4&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:5&#34;&gt;Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. Biometrical Journal, 40(3), 261–268.
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:5&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

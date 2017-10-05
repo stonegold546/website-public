@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>https://www.jamesuanhoro.com/post/theil-sen-regression/</loc>
+      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/</loc>
       <lastmod>2017-09-21T10:00:00+00:00</lastmod>
     </url>
@@ -256,7 +265,17 @@
     <url>
     
       <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
+      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://www.jamesuanhoro.com/tags/robust/</loc>
+      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -287,6 +306,16 @@
     
       <loc>https://www.jamesuanhoro.com/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://www.jamesuanhoro.com/tags/theil-sen/</loc>
+      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
