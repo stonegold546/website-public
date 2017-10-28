@@ -222,7 +222,7 @@ lhs op rhs        mi    epc sepc.all delta     ncp power decision
 # conclude there is no misspecification.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Note that you make only one change to the model at a time. The EPC and MI, are calculated assuming other parameters are approximately correct, hence the way to run the steps above is to make one change, then re-request the MIs, EPC, from &lt;code&gt;lavaan&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Note that you make only one change to the model at a time. The EPC and MI, are calculated assuming other parameters are approximately correct, hence the way to run the steps above is to make one change, then re-request the MIs, EPC, and power from &lt;code&gt;lavaan&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;I believe this is the approach recommended by SSV, and following this approach would cause one to think about the model when using MIs, while taking statistical power to detect misspecification into account. It is possible to resolve all the non-inconclusive relationships (using theory, modifications, &amp;hellip;) and be left with a model where you do not have the power to detect the remaining misspecifications (a bunch of inconclusives). This would be another reason to reduce our confidence in our final modeling results.&lt;/p&gt;
 
