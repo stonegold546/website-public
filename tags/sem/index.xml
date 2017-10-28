@@ -76,6 +76,8 @@
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(lavaan)
+# For this, I&#39;ll assume HolzingerSwineford1939 data are 9 questions, and the
+# respondents answered them x1 to x9 sequentially
 data(&amp;quot;HolzingerSwineford1939&amp;quot;)
 # model syntax for HolzingerSwineford1939 dataset
 (syntax &amp;lt;- paste(
