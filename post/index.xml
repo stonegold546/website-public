@@ -149,9 +149,9 @@ Variances:
 # Request modification indices. Sort them from highest to lowest
 # Do not print any MI below 3 for convenience of presentation
 # Apply SSV method by requesting power = TRUE, and setting delta.
-# delta for those who skipped is unacceptable level of misfit, so a delta &amp;gt; .4
+# delta for those who skipped is unacceptable level of misfit, so a delta = .4
 # standard for factor loadings means I care about the factor loading if it is
-# missing from my model and but if its factor loading is greater than .4
+# missing from my model and its factor loading is greater than .4
 # By default, delta = .1 in lavaan. Based on SSV&#39;s recommendations, this is
 # adequate for correlated errors. So I select only correlated errors for output
 # using op = &amp;quot;~~&amp;quot;
