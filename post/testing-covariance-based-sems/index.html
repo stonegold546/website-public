@@ -289,7 +289,13 @@
 
 <p><img src="/img/posts/gfis/dec_rules.png" alt="Decision rules" /></p>
 
-<p>The nice thing is this is all implemented in <code>lavaan</code> in R.</p>
+<p>The nice thing is this is all implemented in <code>lavaan</code> in R. Misspecification codes:</p>
+
+<ul>
+<li>Model misspecification: <code>(m)</code>, <code>(EPC:m)</code></li>
+<li>No model misspecification: <code>(nm)</code>, <code>(EPC:nm)</code></li>
+<li>Inconclusive on model misspecification or not: <code>(i)</code></li>
+</ul>
 
 <pre><code class="language-r">library(lavaan)
 data(&quot;HolzingerSwineford1939&quot;)

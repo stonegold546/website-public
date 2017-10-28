@@ -77,7 +77,13 @@
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/gfis/dec_rules.png&#34; alt=&#34;Decision rules&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The nice thing is this is all implemented in &lt;code&gt;lavaan&lt;/code&gt; in R.&lt;/p&gt;
+&lt;p&gt;The nice thing is this is all implemented in &lt;code&gt;lavaan&lt;/code&gt; in R. Misspecification codes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Model misspecification: &lt;code&gt;(m)&lt;/code&gt;, &lt;code&gt;(EPC:m)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;No model misspecification: &lt;code&gt;(nm)&lt;/code&gt;, &lt;code&gt;(EPC:nm)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Inconclusive on model misspecification or not: &lt;code&gt;(i)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(lavaan)
 data(&amp;quot;HolzingerSwineford1939&amp;quot;)
