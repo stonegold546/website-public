@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.25.1" />
+  <meta name="author" content="James Uanhoro">
+  <meta name="description" content="Doctoral student">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://www.jamesuanhoro.com/index.xml" type="application/rss+xml" title="James Uanhoro">
+  <link rel="feed" href="https://www.jamesuanhoro.com/index.xml" type="application/rss+xml" title="James Uanhoro">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://www.jamesuanhoro.com/post/testing-covariance-based-sems/">
+
+  
+
+  <title>Misspecification and fit indices in covariance-based SEM | James Uanhoro</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">James Uanhoro</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#workshops">
+            
+            <span>Workshops</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#teaching">
+            
+            <span>Teaching</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Misspecification and fit indices in covariance-based SEM</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2017-10-28 10:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Sat, Oct 28, 2017
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/sem">sem</a
+    >, 
+    
+    <a href="/tags/cfa">cfa</a
+    >, 
+    
+    <a href="/tags/misspecification">misspecification</a
+    >, 
+    
+    <a href="/tags/fit-indices">fit indices</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftesting-covariance-based-sems%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Misspecification%20and%20fit%20indices%20in%20covariance-based%20SEM&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftesting-covariance-based-sems%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftesting-covariance-based-sems%2f&amp;title=Misspecification%20and%20fit%20indices%20in%20covariance-based%20SEM"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftesting-covariance-based-sems%2f&amp;title=Misspecification%20and%20fit%20indices%20in%20covariance-based%20SEM"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Misspecification%20and%20fit%20indices%20in%20covariance-based%20SEM&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2ftesting-covariance-based-sems%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<div class="alert alert-note">
+  <p>If you have good measurement quality, conventional benchmarks for fit indices may lead to bad decisions. Additionally, global fit indices are not informative for investigating misspecification.</p>
+
+</div>
+
+
+<p>I am working with one of my professors, <a href="http://statsineducation.tumblr.com/" target="_blank">Dr. Jessica Logan</a>, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project. So I ran some CFA models, and was discussing model fit with Dr. Logan. I commented that factor loadings were generally high (&gt; .8), but initial model fit was inadequate to play the model fit game, for example, RMSEA &gt; .06, &hellip; She commented that she was not so worried by this combination: high loadings together with failure to meet conventional model fit guidelines. And pointed me towards a recent paper by Dan McNeish, Ji An and Gregory Hancock,<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> hereafter <em>MAH</em>, - the paper is available on <a href="https://www.researchgate.net/publication/311536084_The_Thorny_Relation_between_Measurement_Quality_and_Fit_Index_Cut-Offs_in_Latent_Variable_Models" target="_blank">ResearchGate</a>.</p>
+
+<p>MAH&rsquo;s argument hinges on an important point: all models are usually misspecified in practice. Counterintuitively, holding misspecification constant, models with lower factor loadings (or poorer measurement quality) have better fit indices than models with higher factor loadings. For example, if two models have the same level of misspecification, and one with factor loadings of .9 could have RMSEA higher than .2, and a model with factor loadings of .4 could have RMSEA less than .05. The paper contains some charts that communicate these results very clearly.</p>
+
+<p>And this is why in their conclusion, MAH write:</p>
+
+<blockquote>
+<p>By comparison, if one is researching a construct for which very high measurement quality can be obtained, one need not subscribe to such stringent AFI criteria to be confident that the model features any nontrivial misspecifications. Conversely, if one is researching a construct that cannot be measured very reliably, the currently employed cutoffs are not suitable and would be very likely to overlook potentially meaningful misspecifications in the model.</p>
+</blockquote>
+
+<p><code>AFIs</code> are approximate goodness of fit indices, these include absolute fit indices like the RMSEA and SRMR, and relative fit indices like CFI.</p>
+
+<h3 id="an-alternative-to-working-with-global-fit-indices">An alternative to working with global fit indices</h3>
+
+<p>The fit indices MAH write about are global fit indices (hereafter GFIs) and they detect all types of model misspecifications. However, as MAH point out, not all model misspecifications are problematic. Consider order effects, two items may have correlated errors independent of their shared factor simply because one follows the other (serial correlation). The absence of this correlated error in a CFA (the default) would negatively impact any global fit index. Moreover, global fit indices do not tell you what your model misspecifications are.</p>
+
+<p><em>The sections that follow may include details that not everyone would like to read about, you can skip to the <a href="#lavaan">bottom of the page for annotated lavaan code</a> for what to do instead of using global fit indices.</em></p>
+
+<p>MAH reference a 2009 paper by Satis, Satorra and van der Veld,<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> hereafter <em>SSV</em>, that addresses this issue. SSV laid out a method for investigating model misspecifications that involves the use of modification indices (MI), expected parameter change (EPC), theory and power analysis. The EPC is the value by which a constrained relationship would change from zero if it was freed to be estimated by the model. I believe researchers are familiar with MIs and often use them to fix model misspecifications with the aim of obtaining GFIs that their reviewers will accept. The relationship between MI and EPC is:</p>
+
+<p>$MI = (EPC/\sigma)^2$</p>
+
+<p>where $\sigma$ is the standard error of the EPC.</p>
+
+<p>SSV suggest the following framework:</p>
+
+<ul>
+<li>specify an unacceptable level of model misspecification $(\delta)$ for any constrained relationship in your model. They recommend thinking about your context, or:
+
+<ul>
+<li>for factor loadings, absolute value &gt; .4</li>
+<li>for correlated errors, absolute value &gt; .1</li>
+</ul></li>
+<li>calculate a noncentrality parameter, $ncp=(\delta/\sigma)^2$</li>
+<li>this $ncp$ follows a noncental-$\chi^2$ distribution which you can use to calculate the statistical power to detect $\delta$, the unnaceptable degree of model misspecification, for each constrained relationship.</li>
+</ul>
+
+<p><div id="lavaan"></p>
+
+<p>Next, the following decision rules:</p>
+
+<p><img src="/img/posts/gfis/dec_rules.png" alt="Decision rules" /></p>
+
+<p>The nice thing is this is all implemented in <code>lavaan</code> in R.</p>
+
+<pre><code class="language-r">library(lavaan)
+data(&quot;HolzingerSwineford1939&quot;)
+# model syntax for HolzingerSwineford1939 dataset
+(syntax &lt;- paste(
+  paste(&quot;f1 =~&quot;, paste0(&quot;x&quot;, 1:3, collapse = &quot; + &quot;)),
+  paste(&quot;f2 =~&quot;, paste0(&quot;x&quot;, 4:6, collapse = &quot; + &quot;)),
+  paste(&quot;f3 =~&quot;, paste0(&quot;x&quot;, 7:9, collapse = &quot; + &quot;)),
+  sep = &quot;\n&quot;))
+
+[1] &quot;f1 =~ x1 + x2 + x3\nf2 =~ x4 + x5 + x6\nf3 =~ x7 + x8 + x9&quot;
+
+# Run model, standardize latent variables, &amp; report standardized results
+summary(hs.fit &lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE),
+        standardize = TRUE)
+
+lavaan (0.5-23.1097) converged normally after  22 iterations
+
+  Number of observations                           301
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               85.306
+  Degrees of freedom                                24
+  P-value (Chi-square)                           0.000
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  f1 =~                                                                 
+    x1                0.900    0.081   11.127    0.000    0.900    0.772
+    x2                0.498    0.077    6.429    0.000    0.498    0.424
+    x3                0.656    0.074    8.817    0.000    0.656    0.581
+  f2 =~                                                                 
+    x4                0.990    0.057   17.474    0.000    0.990    0.852
+    x5                1.102    0.063   17.576    0.000    1.102    0.855
+    x6                0.917    0.054   17.082    0.000    0.917    0.838
+  f3 =~                                                                 
+    x7                0.619    0.070    8.903    0.000    0.619    0.570
+    x8                0.731    0.066   11.090    0.000    0.731    0.723
+    x9                0.670    0.065   10.305    0.000    0.670    0.665
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  f1 ~~                                                                 
+    f2                0.459    0.064    7.189    0.000    0.459    0.459
+    f3                0.471    0.073    6.461    0.000    0.471    0.471
+  f2 ~~                                                                 
+    f3                0.283    0.069    4.117    0.000    0.283    0.283
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .x1                0.549    0.114    4.833    0.000    0.549    0.404
+   .x2                1.134    0.102   11.146    0.000    1.134    0.821
+   .x3                0.844    0.091    9.317    0.000    0.844    0.662
+   .x4                0.371    0.048    7.778    0.000    0.371    0.275
+   .x5                0.446    0.058    7.642    0.000    0.446    0.269
+   .x6                0.356    0.043    8.277    0.000    0.356    0.298
+   .x7                0.799    0.081    9.823    0.000    0.799    0.676
+   .x8                0.488    0.074    6.573    0.000    0.488    0.477
+   .x9                0.566    0.071    8.003    0.000    0.566    0.558
+    f1                1.000                               1.000    1.000
+    f2                1.000                               1.000    1.000
+    f3                1.000                               1.000    1.000
+
+# Chi-square is statistically significant, there is at least some misfit
+
+# Request modification indices. Sort them from highest to lowest
+# Do not print any MI below 3 for convenience of presentation
+# Apply SSV method by requesting power = TRUE, and setting delta
+# By default, delta = .1 in lavaan. Based on SSV's recommendations, this is
+# adequate for correlated errors. So right now, I will ignore the decisions
+# for the factors like the first one suggesting I load x9 on factor 1.
+modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE)
+
+
+lhs op rhs        mi    epc sepc.all delta   ncp power decision
+30  f1 =~  x9 36.411  0.519    0.515   0.1 1.351 0.213  **(m)**
+76  x7 ~~  x8 34.145  0.536    0.488   0.1 1.187 0.193  **(m)**
+28  f1 =~  x7 18.631 -0.380   -0.349   0.1 1.294 0.206  **(m)**
+78  x8 ~~  x9 14.946 -0.423   -0.415   0.1 0.835 0.150  **(m)**
+33  f2 =~  x3  9.151 -0.269   -0.238   0.1 1.266 0.203  **(m)**
+55  x2 ~~  x7  8.918 -0.183   -0.143   0.1 2.671 0.373  **(m)**
+31  f2 =~  x1  8.903  0.347    0.297   0.1 0.741 0.138  **(m)**
+51  x2 ~~  x3  8.532  0.218    0.164   0.1 1.791 0.268  **(m)**
+59  x3 ~~  x5  7.858 -0.130   -0.089   0.1 4.643 0.577  **(m)**
+26  f1 =~  x5  7.441 -0.189   -0.147   0.1 2.087 0.303  **(m)**
+50  x1 ~~  x9  7.335  0.138    0.117   0.1 3.858 0.502  **(m)**
+65  x4 ~~  x6  6.221 -0.235   -0.185   0.1 1.128 0.186  **(m)**
+66  x4 ~~  x7  5.920  0.098    0.078   0.1 6.141 0.698  **(m)**
+48  x1 ~~  x7  5.420 -0.129   -0.102   0.1 3.251 0.438  **(m)**
+77  x7 ~~  x9  5.183 -0.187   -0.170   0.1 1.487 0.230  **(m)**
+36  f2 =~  x9  4.796  0.137    0.136   0.1 2.557 0.359  **(m)**
+29  f1 =~  x8  4.295 -0.189   -0.187   0.1 1.199 0.195  **(m)**
+63  x3 ~~  x9  4.126  0.102    0.089   0.1 3.993 0.515  **(m)**
+67  x4 ~~  x8  3.805 -0.069   -0.059   0.1 7.975 0.806     (nm)
+43  x1 ~~  x2  3.606 -0.184   -0.134   0.1 1.068 0.178      (i)
+45  x1 ~~  x4  3.554  0.078    0.058   0.1 5.797 0.673      (i)
+35  f2 =~  x8  3.359 -0.120   -0.118   0.1 2.351 0.335      (i)
+
+# x7 and x8 is termed misspecification because power is low at .193, yet the MI
+# is statistically significant. However, this may simply be due to order
+# effects, and such misspecification can be acceptable. I will not add this
+# correlated error to my model. Same goes for x8 and x9 (lhs 78) and x2 and x3
+# (lhs 51). These missing serial-correlations are acceptable misspecifications.
+
+# However consider x2 and x7 (lhs 55), low power at .373 yet significant MI.
+# Is there some theory connecting these two items? Can I explain the
+# suggested correlation?
+
+# Consider x4 and x8 (lhs 67), high power at .806, yet the MI is not
+# statistically significant, hence we can conclude there is no misspecification.
+
+# Consider x1 and x4 (lhs 45), low power at .673, and the MI is not
+# statistically significant, hence this is inconclusive.
+
+# Now for the factor loadings
+modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE,
+                    delta = .4)
+
+lhs op rhs        mi    epc sepc.all delta     ncp power decision
+30  f1 =~  x9 36.411  0.519    0.515   0.4  21.620 0.996  *epc:m*
+28  f1 =~  x7 18.631 -0.380   -0.349   0.4  20.696 0.995   epc:nm
+33  f2 =~  x3  9.151 -0.269   -0.238   0.4  20.258 0.994   epc:nm
+31  f2 =~  x1  8.903  0.347    0.297   0.4  11.849 0.931   epc:nm
+26  f1 =~  x5  7.441 -0.189   -0.147   0.4  33.388 1.000   epc:nm
+36  f2 =~  x9  4.796  0.137    0.136   0.4  40.904 1.000   epc:nm
+29  f1 =~  x8  4.295 -0.189   -0.187   0.4  19.178 0.992   epc:nm
+35  f2 =~  x8  3.359 -0.120   -0.118   0.4  37.614 1.000     (nm)
+
+# I have deleted the lines for correlated errors
+
+# See the first line, suggesting I load x9 on f1. The power is high, the MI is
+# significant and the EPC is higher than .4 suggesting that this is some type
+# of misspecification that we should pay attention to.
+
+# However, the next line suggests I load x7 on f1. The power is high, the MI is
+# significant, but the EPC is .38, less than .4, suggesting that we do not
+# consider this misspecification to be high enough to warrant modifying the
+# model. Same goes for the other suggested modification bar the final one here.
+# Its power is high, but the MI is not statistically significant, so we can
+# conclude there is no misspecification.
+</code></pre>
+
+<p>Note that you make only one change to the model at a time. The EPC and MI, are calculated assuming other parameters are approximately correct, hence the way to run the steps above is to make one change, then re-request the MIs, EPC, from <code>lavaan</code>.</p>
+
+<p>I believe this is the approach recommended by SSV, and following this approach would cause one to think about the model when using MIs, while taking statistical power to detect misspecification into account. It is possible to resolve all the non-inconclusive relationships (using theory, modifications, &hellip;) and be left with a model where you do not have the power to detect the remaining misspecifications (a bunch of inconclusives). This would be another reason to reduce our confidence in our final modeling results.</p>
+
+<hr />
+
+<blockquote>
+<p>P.S.: Another approach to latent variable model is PLS path modeling. It is a method for SEMs based on OLS regression. It stems from the work of Hermann Wold. Wold was Joreskog&rsquo;s (LISREL) advisor, Joreskog was Muthen&rsquo;s (Mplus) advisor. This is why my title uses <em>covariance-based SEM</em> instead of <em>latent variable models</em>.</p>
+</blockquote>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">McNeish, D., An, J., &amp; Hancock, G. R. (2017). The Thorny Relation Between Measurement Quality and Fit Index Cutoffs in Latent Variable Models. <em>Journal of Personality Assessment</em>. <a href="https://doi.org/10.1080/00223891.2017.1281286" target="_blank">https://doi.org/10.1080/00223891.2017.1281286</a>
+ <a class="footnote-return" href="#fnref:1"><sup>^</sup></a></li>
+<li id="fn:2">Saris, W. E., Satorra, A., &amp; van der Veld, W. M. (2009). Testing Structural Equation Models or Detection of Misspecifications? <em>Structural Equation Modeling: A Multidisciplinary Journal, 16</em>(4), 561–582. <a href="https://doi.org/10.1080/10705510903203433" target="_blank">https://doi.org/10.1080/10705510903203433</a>
+ <a class="footnote-return" href="#fnref:2"><sup>^</sup></a></li>
+</ol>
+</div>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://www.jamesuanhoro.com/post/theil-sen-regression/"><span
+      aria-hidden="true">&larr;</span> Theil-Sen regression in R</a></li>
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 James Uanhoro &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/r.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
