@@ -158,9 +158,10 @@ Variances:
 # Do not print any MI below 3 for convenience of presentation
 # Apply SSV method by requesting power = TRUE, and setting delta
 # By default, delta = .1 in lavaan. Based on SSV&#39;s recommendations, this is
-# adequate for correlated errors. So right now, I will ignore the decisions
-# for the factors like the first one suggesting I load x9 on factor 1.
-modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE)
+# adequate for correlated errors. So I select only correlated errors for output
+# using op = &amp;quot;~~&amp;quot;
+modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE,
+                    op = &amp;quot;~~&amp;quot;)
 
 
 lhs op rhs        mi    epc sepc.all delta   ncp power decision
@@ -205,20 +206,28 @@ lhs op rhs        mi    epc sepc.all delta   ncp power decision
 # statistically significant, hence this is inconclusive.
 
 # Now for the factor loadings
-modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE,
-                    delta = .4)
+modificationindices(hs.fit, sort. = TRUE, power = TRUE, delta = .4, op = &amp;quot;=~&amp;quot;)
 
-lhs op rhs        mi    epc sepc.all delta     ncp power decision
-30  f1 =~  x9 36.411  0.519    0.515   0.4  21.620 0.996  *epc:m*
-28  f1 =~  x7 18.631 -0.380   -0.349   0.4  20.696 0.995   epc:nm
-33  f2 =~  x3  9.151 -0.269   -0.238   0.4  20.258 0.994   epc:nm
-31  f2 =~  x1  8.903  0.347    0.297   0.4  11.849 0.931   epc:nm
-26  f1 =~  x5  7.441 -0.189   -0.147   0.4  33.388 1.000   epc:nm
-36  f2 =~  x9  4.796  0.137    0.136   0.4  40.904 1.000   epc:nm
-29  f1 =~  x8  4.295 -0.189   -0.187   0.4  19.178 0.992   epc:nm
-35  f2 =~  x8  3.359 -0.120   -0.118   0.4  37.614 1.000     (nm)
+lhs op rhs        mi    epc sepc.all delta    ncp power decision
+30  f1 =~  x9 36.411  0.519    0.515   0.4 21.620 0.996  *epc:m*
+28  f1 =~  x7 18.631 -0.380   -0.349   0.4 20.696 0.995   epc:nm
+33  f2 =~  x3  9.151 -0.269   -0.238   0.4 20.258 0.994   epc:nm
+31  f2 =~  x1  8.903  0.347    0.297   0.4 11.849 0.931   epc:nm
+26  f1 =~  x5  7.441 -0.189   -0.147   0.4 33.388 1.000   epc:nm
+36  f2 =~  x9  4.796  0.137    0.136   0.4 40.904 1.000   epc:nm
+29  f1 =~  x8  4.295 -0.189   -0.187   0.4 19.178 0.992   epc:nm
+35  f2 =~  x8  3.359 -0.120   -0.118   0.4 37.614 1.000     (nm)
+27  f1 =~  x6  2.843  0.100    0.092   0.4 45.280 1.000     (nm)
+38  f3 =~  x2  1.580 -0.123   -0.105   0.4 16.747 0.984     (nm)
+25  f1 =~  x4  1.211  0.069    0.059   0.4 40.867 1.000     (nm)
+39  f3 =~  x3  0.716  0.084    0.075   0.4 16.148 0.980     (nm)
+42  f3 =~  x6  0.273  0.027    0.025   0.4 58.464 1.000     (nm)
+41  f3 =~  x5  0.201 -0.027   -0.021   0.4 43.345 1.000     (nm)
+34  f2 =~  x7  0.098 -0.021   -0.019   0.4 36.318 1.000     (nm)
+32  f2 =~  x2  0.017 -0.011   -0.010   0.4 21.870 0.997     (nm)
+37  f3 =~  x1  0.014  0.015    0.013   0.4  9.700 0.876     (nm)
+40  f3 =~  x4  0.003 -0.003   -0.003   0.4 52.995 1.000     (nm)
 
-# I have deleted the lines for correlated errors
 
 # See the first line, suggesting I load x9 on f1. The power is high, the MI is
 # significant and the EPC is higher than .4 suggesting that this is some type
@@ -227,12 +236,14 @@ lhs op rhs        mi    epc sepc.all delta     ncp power decision
 # However, the next line suggests I load x7 on f1. The power is high, the MI is
 # significant, but the EPC is .38, less than .4, suggesting that we do not
 # consider this misspecification to be high enough to warrant modifying the
-# model. Same goes for the other suggested modification bar the final one here.
-# Its power is high, but the MI is not statistically significant, so we can
-# conclude there is no misspecification.
+# model. Same goes for a number of suggested modifications with decision epc:nm.
+
+# Then there is a final group with high power, but the MIs are not
+# statistically significant, so we can conclude there is no misspecification.
 
 # Note that you can also tell lavaan what constitutes high power using the
-# `high.power = ` argument. 75% is what SSV use but you can be flexible.
+# `high.power = ` argument. 75% is what SSV use and lavaan&#39;s default but you
+# can be flexible.
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Note that you make only one change to the model at a time. The EPC and MI, are calculated assuming other parameters are approximately correct, hence the way to run the steps above is to make one change, then re-request the MIs, EPC, and power from &lt;code&gt;lavaan&lt;/code&gt;.&lt;/p&gt;
