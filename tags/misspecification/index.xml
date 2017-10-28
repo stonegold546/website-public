@@ -220,6 +220,9 @@ lhs op rhs        mi    epc sepc.all delta     ncp power decision
 # model. Same goes for the other suggested modification bar the final one here.
 # Its power is high, but the MI is not statistically significant, so we can
 # conclude there is no misspecification.
+
+# Note that you can also tell lavaan what constitutes high power using the
+# `high.power = ` argument. 75% is what SSV use but you can be flexible.
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Note that you make only one change to the model at a time. The EPC and MI, are calculated assuming other parameters are approximately correct, hence the way to run the steps above is to make one change, then re-request the MIs, EPC, and power from &lt;code&gt;lavaan&lt;/code&gt;.&lt;/p&gt;
