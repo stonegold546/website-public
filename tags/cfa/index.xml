@@ -248,7 +248,7 @@ lhs op rhs        mi    epc sepc.all delta    ncp power decision
 &lt;hr /&gt;
 
 &lt;blockquote&gt;
-&lt;p&gt;P.S.: Another approach to latent variable model is PLS path modeling. It is a method for SEMs based on OLS regression. It stems from the work of Hermann Wold. Wold was Joreskog&amp;rsquo;s (LISREL) advisor, Joreskog was Muthen&amp;rsquo;s (Mplus) advisor. This is why my title uses &lt;em&gt;covariance-based SEM&lt;/em&gt; instead of &lt;em&gt;latent variable models&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;P.S.: Another approach to latent variable modeling is PLS path modeling. It is a method for SEMs based on OLS regression. It stems from the work of Hermann Wold. Wold was Joreskog&amp;rsquo;s (LISREL) advisor, Joreskog was Muthen&amp;rsquo;s (Mplus) advisor. This is why my title uses &lt;em&gt;covariance-based SEM&lt;/em&gt; instead of &lt;em&gt;latent variable models&lt;/em&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;div class=&#34;footnotes&#34;&gt;
 
