@@ -7,8 +7,173 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 James Uanhoro</copyright>
-    <lastBuildDate>Sat, 28 Oct 2017 10:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 16 Nov 2017 10:00:00 +0000</lastBuildDate>
     <atom:link href="/tags/fit-indices/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>A Chi-Square test of close fit in covariance-based SEM</title>
+      <link>https://www.jamesuanhoro.com/post/chisq-test-close-fit/</link>
+      <pubDate>Thu, 16 Nov 2017 10:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/chisq-test-close-fit/</guid>
+      <description>
+
+&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;p&gt;If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+&lt;p&gt;When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size. This is because, almost always, our models are approximations of the data. If our model-implied covariance matrix actually matched the sample covariance matrix within sampling variability, the $\chi^2$ test would not be statistically significant regardless of sample size.&lt;/p&gt;
+
+&lt;p&gt;Because of the sensitivity of the $\chi^2$ test to large sample sizes, practitioners often rely on other fit indices like the &lt;code&gt;RMSEA&lt;/code&gt;, &lt;code&gt;CFI&lt;/code&gt;, and &lt;code&gt;TLI&lt;/code&gt; - all of which are based on the $\chi^2$. For the RMSEA, MacCallum, Browne and Sugawara (1996)&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; specified values of .05 and .08 as indicating close and mediocre&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:2&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:2&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; fit respectively. And in lavaan, you automatically get a test of close fit for the RMSEA with confidence intervals and a p-value. This test actually uses the $\chi^2$ distribution, and there is no reason why one cannot perform a $\chi^2$ test of close or mediocre fit depending on one&amp;rsquo;s standards.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:3&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:3&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The sections that follow may include details that not everyone would like to read about, you can skip to the &lt;a href=&#34;#lavaan&#34;&gt;bottom of the page for annotated lavaan code&lt;/a&gt; for how to compute a $\chi^2$ test of close or mediocre fit.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;So the formula for the RMSEA is:&lt;/p&gt;
+
+&lt;p&gt;$\sqrt{\frac{\chi^2-df}{df(N-1)}}$&lt;/p&gt;
+
+&lt;p&gt;where $\chi^2$ is the $\chi^2$ test statistic of your model, $df$ is your model degrees of freedom, and $N$ is sample size.&lt;/p&gt;
+
+&lt;p&gt;If your model fit the data perfectly, the numerator, $\chi^2-df$, is zero; this is the hypothesis the standard $\chi^2$-test tests. And to test this hypothesis, it uses the $\chi^2$-distribution. If we want to perform a test of close fit on the RMSEA, we do not assume a nil null distribution for the $\chi^2$. Instead, we use the non-central $\chi^2$ distribution with a non-centrality parameter that corresponds to an RMSEA of .05. The idea is we accept some level of misspecification, and we use a distribution that corresponds to this level of misspecification. Lavaan reports the result of this test as one of the fit statistics.&lt;/p&gt;
+
+&lt;p&gt;For those who are not familiar with non-central distributions, they are the general family of distributions to which the distributions we are familiar with belong. For example, the $t$-test assumes a nil (zero) null effect so we use the non-central $t$-distribution, with an expected value (non-centrality parameter) of zero. This distribution is what we call the $t$-distribution. If we want to create confidence intervals without assuming a nil effect, we can actually use a $t$-distribution while specifying its non-centrality parameter $(\lambda)$. It is the distribution when the null of zero is false. The &lt;a href=&#34;https://en.wikipedia.org/wiki/Noncentral_t-distribution&#34; target=&#34;_blank&#34;&gt;Wikipedia introduction to this topic for the $t$-distribution&lt;/a&gt; is decent.&lt;/p&gt;
+
+&lt;p&gt;So how does this help us? The non-centrality parameter $(\lambda)$ for the RMSEA test in lavaan is actually the $\chi^2-df$ value that corresponds to an RMSEA of .05. In math:&lt;/p&gt;
+
+&lt;p&gt;$RMSEA = \sqrt{\frac{\chi^2-df}{df(N-1)}}$&lt;/p&gt;
+
+&lt;p&gt;$RMSEA^2 = \frac{\chi^2-df}{df(N-1)}$&lt;/p&gt;
+
+&lt;p&gt;$RMSEA^2 \times df(N-1) = \chi^2-df$&lt;/p&gt;
+
+&lt;p&gt;Since $\chi^2-df$ is $\lambda$, then:&lt;/p&gt;
+
+&lt;p&gt;$\lambda = RMSEA^2 \times df(N-1)$&lt;/p&gt;
+
+&lt;p&gt;So for a test of close fit, $\lambda$ is:&lt;/p&gt;
+
+&lt;p&gt;$RMSEA^2 \times df(N-1) = .05^2 \times df(N-1) = .0025 \times df(N-1)$&lt;/p&gt;
+
+&lt;p&gt;And for a test of mediocre fit, $\lambda$ is:&lt;/p&gt;
+
+&lt;p&gt;$RMSEA^2 \times df(N-1) = .08^2 \times df(N-1) = .0064 \times df(N-1)$&lt;/p&gt;
+
+&lt;p&gt;Hence, given a model degrees of freedom, and sample size, we can calculate the non-centrality parameter $(\lambda)$. And given $\lambda$, a $\chi^2$ value and the degrees of freedom for the model, we can calculate the p-value for a test of close or mediocre fit.&lt;/p&gt;
+
+&lt;p&gt;The R syntax for this is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pchisq(Chi-sq-value, degrees-of-freedom, non-centrality-parameter, FALSE)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div id=&#34;lavaan&#34;&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;demonstration&#34;&gt;Demonstration&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(lavaan)
+data(&amp;quot;HolzingerSwineford1939&amp;quot;)
+# model syntax for a bifactor model with the HolzingerSwineford1939 dataset
+# eliminating visual factor resolves Heywood case
+writeLines(syntax &amp;lt;- paste(
+  paste(&amp;quot;g =~&amp;quot;, paste0(&amp;quot;x&amp;quot;, 1:9, collapse = &amp;quot; + &amp;quot;)),
+  # paste(&amp;quot;visual =~&amp;quot;, paste0(&amp;quot;x&amp;quot;, 1:3, collapse = &amp;quot; + &amp;quot;)),
+  paste(&amp;quot;textual =~&amp;quot;, paste0(&amp;quot;x&amp;quot;, 4:6, collapse = &amp;quot; + &amp;quot;)),
+  paste(&amp;quot;speed =~&amp;quot;, paste0(&amp;quot;x&amp;quot;, 7:9, collapse = &amp;quot; + &amp;quot;)),
+  sep = &amp;quot;\n&amp;quot;
+))
+
+g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+textual =~ x4 + x5 + x6
+speed =~ x7 + x8 + x9
+
+# Run model &amp;amp; report fit measures
+# Reporting only fit statistics relevant to this demonstration
+summary(hs.fit &amp;lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
+                      orthogonal = TRUE), fit.measures = TRUE)
+
+lavaan (0.5-23.1097) converged normally after  25 iterations
+
+  Number of observations                           301
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               42.291
+  Degrees of freedom                                21
+  P-value (Chi-square)                           0.004
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.058
+  90 Percent Confidence Interval          0.032  0.083
+  P-value RMSEA &amp;lt;= 0.05                          0.276
+
+# Chi-square is statistically significant, this test of perfect fit suggests
+# the misfit between our model-implied cov matrix and sample cov matrix is
+# greater than expected due to sampling variability.
+
+# The default Chi-square test:
+
+pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
+
+[1] 0.003867178
+
+# Use formula above to calculate non-centrality parameter for test of close fit
+# .0025 multiplied by model degrees of freedom by sample size - 1
+
+(ncp.close &amp;lt;- .0025 * 21 * (301 - 1))
+
+[1] 15.75
+
+# Calculate Chi-square test of close fit
+
+pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
+
+[1] 0.2740353
+
+# The p-value for a test of close fit is .27, close to the value reported by
+# lavaan. The reason they are not closer is that lavaan does not subtract 1
+# from the sample size when calculating the non-centrality parameter.
+# I found out by digging around this page and calculating in R: https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R
+# I am not sure why. In the MacCallum paper, equation 8, the formula for the
+# non-centrality parameter is (N - 1) * df * RMSEA^2.
+
+# And if we lower our standards to conduct a chi-square test of mediocre fit:
+# .0064 multiplied by model degrees of freedom by sample size - 1
+
+(ncp.med &amp;lt;- .0064 * 21 * (301 - 1))
+
+[1] 40.32
+
+pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
+
+[1] 0.9199686
+
+# If we assume mediocre misspecification in our model, the probability of
+# observing our model-implied covariance matrix is 92%. Pretty good.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In closing, SEM practitioners typically report the $\chi^2$-test, but routinely expect the test to detect model misspecification, so often ignore it in practice. I hope the steps above show how one can conduct $\chi^2$-tests that assume some degree of model misspecification as the null hypothesis. I guess I hope that by doing this, we can make our $\chi^2$-tests somewhat relevant. The nice thing about the RMSEA and CI lavaan provides is that together, they may be more informative than a p-value from a $\chi^2$ test.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;P.S.: Another approach to latent variable modeling is PLS path modeling. It is a method for SEMs based on OLS regression. It stems from the work of Hermann Wold. Wold was Joreskog&amp;rsquo;s (LISREL) advisor, Joreskog was Muthen&amp;rsquo;s (Mplus) advisor. This is why my title uses &lt;em&gt;covariance-based SEM&lt;/em&gt; instead of &lt;em&gt;latent variable models&lt;/em&gt; or just &lt;em&gt;SEMs&lt;/em&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;MacCallum, R. C., Browne, M. W., &amp;amp; Sugawara, H. M. (1996). Power analysis and determination of sample size for covariance structure modeling. &lt;em&gt;Psychological Methods, 1&lt;/em&gt;(2), 130–149. &lt;a href=&#34;https://doi.org/10.1037/1082-989X.1.2.130&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1037/1082-989X.1.2.130&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;I always thought mediocre meant a bad thing, it only means unexceptional, ordinary.
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:2&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34;&gt;I got this unoriginal idea from discussing with one of my colleagues, Menglin Xu. We were chatting around 11 pm in the office and she mentioned the non-central $\chi^2$ distribution in SEMs. Given my interest in non-central distributions in relation to &lt;a href=&#34;https://effect-size-calculator.herokuapp.com/&#34; target=&#34;_blank&#34;&gt;confidence intervals for effect sizes&lt;/a&gt;, this idea came to mind.
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:3&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Misspecification and fit indices in covariance-based SEM</title>

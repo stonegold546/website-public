@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.25.1" />
+  <meta name="author" content="James Uanhoro">
+  <meta name="description" content="Doctoral student">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://www.jamesuanhoro.com/index.xml" type="application/rss+xml" title="James Uanhoro">
+  <link rel="feed" href="https://www.jamesuanhoro.com/index.xml" type="application/rss+xml" title="James Uanhoro">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://www.jamesuanhoro.com/post/chisq-test-close-fit/">
+
+  
+
+  <title>A Chi-Square test of close fit in covariance-based SEM | James Uanhoro</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">James Uanhoro</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#workshops">
+            
+            <span>Workshops</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#teaching">
+            
+            <span>Teaching</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">A Chi-Square test of close fit in covariance-based SEM</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2017-11-16 10:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Thu, Nov 16, 2017
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/sem">sem</a
+    >, 
+    
+    <a href="/tags/cfa">cfa</a
+    >, 
+    
+    <a href="/tags/misspecification">misspecification</a
+    >, 
+    
+    <a href="/tags/fit-indices">fit indices</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fchisq-test-close-fit%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=A%20Chi-Square%20test%20of%20close%20fit%20in%20covariance-based%20SEM&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fchisq-test-close-fit%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fchisq-test-close-fit%2f&amp;title=A%20Chi-Square%20test%20of%20close%20fit%20in%20covariance-based%20SEM"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fchisq-test-close-fit%2f&amp;title=A%20Chi-Square%20test%20of%20close%20fit%20in%20covariance-based%20SEM"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=A%20Chi-Square%20test%20of%20close%20fit%20in%20covariance-based%20SEM&amp;body=https%3a%2f%2fwww.jamesuanhoro.com%2fpost%2fchisq-test-close-fit%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<div class="alert alert-note">
+  <p>If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.</p>
+
+</div>
+
+
+<p>When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size. This is because, almost always, our models are approximations of the data. If our model-implied covariance matrix actually matched the sample covariance matrix within sampling variability, the $\chi^2$ test would not be statistically significant regardless of sample size.</p>
+
+<p>Because of the sensitivity of the $\chi^2$ test to large sample sizes, practitioners often rely on other fit indices like the <code>RMSEA</code>, <code>CFI</code>, and <code>TLI</code> - all of which are based on the $\chi^2$. For the RMSEA, MacCallum, Browne and Sugawara (1996)<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> specified values of .05 and .08 as indicating close and mediocre<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> fit respectively. And in lavaan, you automatically get a test of close fit for the RMSEA with confidence intervals and a p-value. This test actually uses the $\chi^2$ distribution, and there is no reason why one cannot perform a $\chi^2$ test of close or mediocre fit depending on one&rsquo;s standards.<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup></p>
+
+<p><strong>The sections that follow may include details that not everyone would like to read about, you can skip to the <a href="#lavaan">bottom of the page for annotated lavaan code</a> for how to compute a $\chi^2$ test of close or mediocre fit.</strong></p>
+
+<p>So the formula for the RMSEA is:</p>
+
+<p>$\sqrt{\frac{\chi^2-df}{df(N-1)}}$</p>
+
+<p>where $\chi^2$ is the $\chi^2$ test statistic of your model, $df$ is your model degrees of freedom, and $N$ is sample size.</p>
+
+<p>If your model fit the data perfectly, the numerator, $\chi^2-df$, is zero; this is the hypothesis the standard $\chi^2$-test tests. And to test this hypothesis, it uses the $\chi^2$-distribution. If we want to perform a test of close fit on the RMSEA, we do not assume a nil null distribution for the $\chi^2$. Instead, we use the non-central $\chi^2$ distribution with a non-centrality parameter that corresponds to an RMSEA of .05. The idea is we accept some level of misspecification, and we use a distribution that corresponds to this level of misspecification. Lavaan reports the result of this test as one of the fit statistics.</p>
+
+<p>For those who are not familiar with non-central distributions, they are the general family of distributions to which the distributions we are familiar with belong. For example, the $t$-test assumes a nil (zero) null effect so we use the non-central $t$-distribution, with an expected value (non-centrality parameter) of zero. This distribution is what we call the $t$-distribution. If we want to create confidence intervals without assuming a nil effect, we can actually use a $t$-distribution while specifying its non-centrality parameter $(\lambda)$. It is the distribution when the null of zero is false. The <a href="https://en.wikipedia.org/wiki/Noncentral_t-distribution" target="_blank">Wikipedia introduction to this topic for the $t$-distribution</a> is decent.</p>
+
+<p>So how does this help us? The non-centrality parameter $(\lambda)$ for the RMSEA test in lavaan is actually the $\chi^2-df$ value that corresponds to an RMSEA of .05. In math:</p>
+
+<p>$RMSEA = \sqrt{\frac{\chi^2-df}{df(N-1)}}$</p>
+
+<p>$RMSEA^2 = \frac{\chi^2-df}{df(N-1)}$</p>
+
+<p>$RMSEA^2 \times df(N-1) = \chi^2-df$</p>
+
+<p>Since $\chi^2-df$ is $\lambda$, then:</p>
+
+<p>$\lambda = RMSEA^2 \times df(N-1)$</p>
+
+<p>So for a test of close fit, $\lambda$ is:</p>
+
+<p>$RMSEA^2 \times df(N-1) = .05^2 \times df(N-1) = .0025 \times df(N-1)$</p>
+
+<p>And for a test of mediocre fit, $\lambda$ is:</p>
+
+<p>$RMSEA^2 \times df(N-1) = .08^2 \times df(N-1) = .0064 \times df(N-1)$</p>
+
+<p>Hence, given a model degrees of freedom, and sample size, we can calculate the non-centrality parameter $(\lambda)$. And given $\lambda$, a $\chi^2$ value and the degrees of freedom for the model, we can calculate the p-value for a test of close or mediocre fit.</p>
+
+<p>The R syntax for this is:</p>
+
+<pre><code class="language-r">pchisq(Chi-sq-value, degrees-of-freedom, non-centrality-parameter, FALSE)
+</code></pre>
+
+<p><div id="lavaan"></p>
+
+<h2 id="demonstration">Demonstration</h2>
+
+<pre><code class="language-r">library(lavaan)
+data(&quot;HolzingerSwineford1939&quot;)
+# model syntax for a bifactor model with the HolzingerSwineford1939 dataset
+# eliminating visual factor resolves Heywood case
+writeLines(syntax &lt;- paste(
+  paste(&quot;g =~&quot;, paste0(&quot;x&quot;, 1:9, collapse = &quot; + &quot;)),
+  # paste(&quot;visual =~&quot;, paste0(&quot;x&quot;, 1:3, collapse = &quot; + &quot;)),
+  paste(&quot;textual =~&quot;, paste0(&quot;x&quot;, 4:6, collapse = &quot; + &quot;)),
+  paste(&quot;speed =~&quot;, paste0(&quot;x&quot;, 7:9, collapse = &quot; + &quot;)),
+  sep = &quot;\n&quot;
+))
+
+g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+textual =~ x4 + x5 + x6
+speed =~ x7 + x8 + x9
+
+# Run model &amp; report fit measures
+# Reporting only fit statistics relevant to this demonstration
+summary(hs.fit &lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
+                      orthogonal = TRUE), fit.measures = TRUE)
+
+lavaan (0.5-23.1097) converged normally after  25 iterations
+
+  Number of observations                           301
+
+  Estimator                                         ML
+  Minimum Function Test Statistic               42.291
+  Degrees of freedom                                21
+  P-value (Chi-square)                           0.004
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.058
+  90 Percent Confidence Interval          0.032  0.083
+  P-value RMSEA &lt;= 0.05                          0.276
+
+# Chi-square is statistically significant, this test of perfect fit suggests
+# the misfit between our model-implied cov matrix and sample cov matrix is
+# greater than expected due to sampling variability.
+
+# The default Chi-square test:
+
+pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
+
+[1] 0.003867178
+
+# Use formula above to calculate non-centrality parameter for test of close fit
+# .0025 multiplied by model degrees of freedom by sample size - 1
+
+(ncp.close &lt;- .0025 * 21 * (301 - 1))
+
+[1] 15.75
+
+# Calculate Chi-square test of close fit
+
+pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
+
+[1] 0.2740353
+
+# The p-value for a test of close fit is .27, close to the value reported by
+# lavaan. The reason they are not closer is that lavaan does not subtract 1
+# from the sample size when calculating the non-centrality parameter.
+# I found out by digging around this page and calculating in R: https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R
+# I am not sure why. In the MacCallum paper, equation 8, the formula for the
+# non-centrality parameter is (N - 1) * df * RMSEA^2.
+
+# And if we lower our standards to conduct a chi-square test of mediocre fit:
+# .0064 multiplied by model degrees of freedom by sample size - 1
+
+(ncp.med &lt;- .0064 * 21 * (301 - 1))
+
+[1] 40.32
+
+pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
+
+[1] 0.9199686
+
+# If we assume mediocre misspecification in our model, the probability of
+# observing our model-implied covariance matrix is 92%. Pretty good.
+</code></pre>
+
+<p>In closing, SEM practitioners typically report the $\chi^2$-test, but routinely expect the test to detect model misspecification, so often ignore it in practice. I hope the steps above show how one can conduct $\chi^2$-tests that assume some degree of model misspecification as the null hypothesis. I guess I hope that by doing this, we can make our $\chi^2$-tests somewhat relevant. The nice thing about the RMSEA and CI lavaan provides is that together, they may be more informative than a p-value from a $\chi^2$ test.</p>
+
+<hr />
+
+<blockquote>
+<p>P.S.: Another approach to latent variable modeling is PLS path modeling. It is a method for SEMs based on OLS regression. It stems from the work of Hermann Wold. Wold was Joreskog&rsquo;s (LISREL) advisor, Joreskog was Muthen&rsquo;s (Mplus) advisor. This is why my title uses <em>covariance-based SEM</em> instead of <em>latent variable models</em> or just <em>SEMs</em>.</p>
+</blockquote>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">MacCallum, R. C., Browne, M. W., &amp; Sugawara, H. M. (1996). Power analysis and determination of sample size for covariance structure modeling. <em>Psychological Methods, 1</em>(2), 130–149. <a href="https://doi.org/10.1037/1082-989X.1.2.130" target="_blank">https://doi.org/10.1037/1082-989X.1.2.130</a>
+ <a class="footnote-return" href="#fnref:1"><sup>^</sup></a></li>
+<li id="fn:2">I always thought mediocre meant a bad thing, it only means unexceptional, ordinary.
+ <a class="footnote-return" href="#fnref:2"><sup>^</sup></a></li>
+<li id="fn:3">I got this unoriginal idea from discussing with one of my colleagues, Menglin Xu. We were chatting around 11 pm in the office and she mentioned the non-central $\chi^2$ distribution in SEMs. Given my interest in non-central distributions in relation to <a href="https://effect-size-calculator.herokuapp.com/" target="_blank">confidence intervals for effect sizes</a>, this idea came to mind.
+ <a class="footnote-return" href="#fnref:3"><sup>^</sup></a></li>
+</ol>
+</div>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://www.jamesuanhoro.com/post/testing-covariance-based-sems/"><span
+      aria-hidden="true">&larr;</span> Misspecification and fit indices in covariance-based SEM</a></li>
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 James Uanhoro &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/r.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
