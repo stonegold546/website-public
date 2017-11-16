@@ -60,7 +60,7 @@
 
 &lt;p&gt;$RMSEA^2 \times df(N-1) = .08^2 \times df(N-1) = .0064 \times df(N-1)$&lt;/p&gt;
 
-&lt;p&gt;Note that on page 241 of Browne and Cudeck (1993)&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;, they instead use a non-centrality parameter they refer to as $\lambda^*$ that is:&lt;/p&gt;
+&lt;p&gt;Note that on page 241 of Browne and Cudeck (1993),&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt; they instead use a non-centrality parameter they refer to as $\lambda^*$ that is:&lt;/p&gt;
 
 &lt;p&gt;$RMSEA^2 \times df \times N$, i.e.&lt;/p&gt;
 
