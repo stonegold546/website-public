@@ -180,7 +180,7 @@ pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:3&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;li id=&#34;fn:4&#34;&gt;Browne, M. W., &amp;amp; Cudeck, R. (1992). Alternative Ways of Assessing Model Fit. &lt;em&gt;Sociological Methods &amp;amp; Research, 21&lt;/em&gt;(2), 230–258. &lt;a href=&#34;https://doi.org/10.1177/0049124192021002005&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1177/0049124192021002005&lt;/a&gt;
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:4&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li id=&#34;fn:5&#34;&gt;I found out by digging around &lt;a href=&#34;https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R&#34; target=&#34;_blank&#34;&gt;this page&lt;/a&gt; and calculating in R.
+&lt;li id=&#34;fn:5&#34;&gt;I found out by digging around &lt;a href=&#34;https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R&#34; target=&#34;_blank&#34;&gt;this page&lt;/a&gt; and calculating in R. I guess it is safer to go with the original Browne and Cudeck paper, or what lavaan does. But the reader can make that choice for themselves.
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:5&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
