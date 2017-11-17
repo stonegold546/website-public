@@ -60,13 +60,7 @@
 
 &lt;p&gt;$RMSEA^2 \times df(N-1) = .08^2 \times df(N-1) = .0064 \times df(N-1)$&lt;/p&gt;
 
-&lt;p&gt;Note that on page 241 of Browne and Cudeck (1993),&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt; they instead use a non-centrality parameter they refer to as $\lambda^*$ that is:&lt;/p&gt;
-
-&lt;p&gt;$RMSEA^2 \times df \times N$, i.e.&lt;/p&gt;
-
-&lt;p&gt;$.0025 \times df \times N$ for testing close fit&lt;/p&gt;
-
-&lt;p&gt;This is what lavaan does.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:5&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:5&#34;&gt;5&lt;/a&gt;&lt;/sup&gt; The MacCallum, Browne, and Sugawara paper used $\lambda$ not $\lambda^*$. I do not know why there is this difference.&lt;/p&gt;
+&lt;p&gt;Note that lavaan may do things a little differently.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 
 &lt;p&gt;Hence, given a model degrees of freedom, and sample size, we can calculate the non-centrality parameter $(\lambda)$. And given $\lambda$, a $\chi^2$ value and the degrees of freedom for the model, we can calculate the p-value for a test of close or mediocre fit.&lt;/p&gt;
 
@@ -140,10 +134,8 @@ pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
 
 # The p-value for a test of close fit is .27, close to the value reported by
 # lavaan. The reason they are not closer is that lavaan does not subtract 1
-# from the sample size when calculating the non-centrality parameter.
-# In the MacCallum paper, equation 8, the formula for the non-centrality
-# parameter is (N - 1) * df * RMSEA^2. However, in the older Browne and Cudeck
-# paper, they used N * df * RMSEA^2, what lavaan does.
+# from the sample size when calculating the non-centrality parameter under
+# its default settings for ML. See the final footnote below for details.
 
 # And if we lower our standards to conduct a chi-square test of mediocre fit:
 # .0064 multiplied by model degrees of freedom by sample size - 1
@@ -178,10 +170,8 @@ pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:2&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;li id=&#34;fn:3&#34;&gt;I got this unoriginal idea from discussing with one of my colleagues, Menglin Xu. We were chatting around 11 pm in the office and she mentioned the non-central $\chi^2$ distribution in SEMs. Given my interest in non-central distributions in relation to &lt;a href=&#34;https://effect-size-calculator.herokuapp.com/&#34; target=&#34;_blank&#34;&gt;confidence intervals for effect sizes&lt;/a&gt;, this idea came to mind.
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:3&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li id=&#34;fn:4&#34;&gt;Browne, M. W., &amp;amp; Cudeck, R. (1992). Alternative Ways of Assessing Model Fit. &lt;em&gt;Sociological Methods &amp;amp; Research, 21&lt;/em&gt;(2), 230–258. &lt;a href=&#34;https://doi.org/10.1177/0049124192021002005&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1177/0049124192021002005&lt;/a&gt;
+&lt;li id=&#34;fn:4&#34;&gt;I found out by digging around &lt;a href=&#34;https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R&#34; target=&#34;_blank&#34;&gt;this page&lt;/a&gt; and calculating in R. I continued exploring and noticed lavaan using $N$ only happens with ML estimation. If you try WLSMV estimation, lavaan uses $N-1$; and I got very confused on noticing this and emailed one of my factor analysis professors, Paul De Boeck. He replied in an email mentioning Wishart, bias correction and the lavaan manual. From the lavaan manual, lavaan&amp;rsquo;s default for ML estimation is something it refers to as the &lt;em&gt;normal likelihood approach&lt;/em&gt;. When it does this, it uses $N$. If you change it to the &lt;em&gt;wishart likelihood approach&lt;/em&gt; by specifying &lt;code&gt;likelihood = &amp;quot;wishart&amp;quot;&lt;/code&gt; within the &lt;code&gt;sem()&lt;/code&gt; or &lt;code&gt;cfa()&lt;/code&gt; or &lt;code&gt;lavaan()&lt;/code&gt; functions, it then uses $N-1$. This is only relevant for ML estimation. For other estimation methods, it&amp;rsquo;s $N-1$. I spent a few hours learning about the problem then trying to figure out what was going on, and I got an email reply within minutes of emailing my professor :).
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:4&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li id=&#34;fn:5&#34;&gt;I found out by digging around &lt;a href=&#34;https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R&#34; target=&#34;_blank&#34;&gt;this page&lt;/a&gt; and calculating in R. I guess it is safer to go with the original Browne and Cudeck paper, or what lavaan does. But the reader can make that choice for themselves. I continued exploring and this is not always the case. If you try WLSMV estimation, lavaan uses $N-1$; and I am now very confused :).
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:5&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
 </description>
