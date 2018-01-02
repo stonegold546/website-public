@@ -48,9 +48,18 @@
     </item>
     
     <item>
+      <title>Estimation</title>
+      <link>https://www.jamesuanhoro.com/tags/estimation/</link>
+      <pubDate>Tue, 02 Jan 2018 10:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/estimation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Fit Indices</title>
       <link>https://www.jamesuanhoro.com/tags/fit-indices/</link>
-      <pubDate>Thu, 16 Nov 2017 10:00:00 +0000</pubDate>
+      <pubDate>Tue, 02 Jan 2018 10:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/fit-indices/</guid>
       <description></description>
@@ -75,6 +84,15 @@
     </item>
     
     <item>
+      <title>Logistic Regression</title>
+      <link>https://www.jamesuanhoro.com/tags/logistic-regression/</link>
+      <pubDate>Tue, 02 Jan 2018 10:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/logistic-regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Missing Data</title>
       <link>https://www.jamesuanhoro.com/tags/missing-data/</link>
       <pubDate>Thu, 21 Sep 2017 10:00:00 +0000</pubDate>
@@ -89,6 +107,15 @@
       <pubDate>Thu, 16 Nov 2017 10:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/misspecification/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rasch</title>
+      <link>https://www.jamesuanhoro.com/tags/rasch/</link>
+      <pubDate>Tue, 02 Jan 2018 10:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/rasch/</guid>
       <description></description>
     </item>
     
@@ -116,33 +143,6 @@
       <pubDate>Thu, 16 Nov 2017 10:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/sem/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Small Samples</title>
-      <link>https://www.jamesuanhoro.com/tags/small-samples/</link>
-      <pubDate>Thu, 21 Sep 2017 10:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/small-samples/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Software</title>
-      <link>https://www.jamesuanhoro.com/tags/software/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/software/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Theil Sen</title>
-      <link>https://www.jamesuanhoro.com/tags/theil-sen/</link>
-      <pubDate>Thu, 21 Sep 2017 13:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/theil-sen/</guid>
       <description></description>
     </item>
     

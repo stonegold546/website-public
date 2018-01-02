@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>https://www.jamesuanhoro.com/post/rasch_binary_using_glmer/</loc>
+      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://www.jamesuanhoro.com/post/chisq-test-close-fit/</loc>
       <lastmod>2017-11-16T10:00:00+00:00</lastmod>
     </url>
@@ -242,8 +251,18 @@
     
     <url>
     
+      <loc>https://www.jamesuanhoro.com/tags/estimation/</loc>
+      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://www.jamesuanhoro.com/tags/fit-indices/</loc>
-      <lastmod>2017-11-16T10:00:00+00:00</lastmod>
+      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -274,6 +293,16 @@
     
       <loc>https://www.jamesuanhoro.com/tags/littles-mcar-test/</loc>
       <lastmod>2017-09-21T10:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
+      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -313,6 +342,16 @@
     <url>
     
       <loc>https://www.jamesuanhoro.com/publication_types/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://www.jamesuanhoro.com/tags/rasch/</loc>
+      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
