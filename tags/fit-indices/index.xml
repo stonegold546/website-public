@@ -18,12 +18,6 @@
       <guid>https://www.jamesuanhoro.com/post/rasch_binary_using_glmer/</guid>
       <description>
 
-&lt;!-- &lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;p&gt;If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.&lt;/p&gt;
-
-&lt;/div&gt;
- --&gt;
-
 &lt;p&gt;I&amp;rsquo;ve been interested in the relationship between ordinal regression and item response theory for a few months now. There are several helpful papers on the topic, here are some randomly picked ones &lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:2&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:2&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:3&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:3&#34;&gt;3&lt;/a&gt;&lt;/sup&gt; &lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt; &lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:5&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:5&#34;&gt;5&lt;/a&gt;&lt;/sup&gt;, and a book.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:6&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:6&#34;&gt;6&lt;/a&gt;&lt;/sup&gt; In this post, I focus on Rasch analysis. To do any of these analyses as a regression, your data need to be in long format - single column identifying items (regression predictor), single column with item response categories (regression outcome), and column holding the person ID. Using the right dummy coding of the variables, you can get so-called &lt;em&gt;item difficulties&lt;/em&gt; as regression coefficients for the items - more on this later.&lt;/p&gt;
 
 &lt;p&gt;Most recently, I spent some type trying to understand (in English) the different estimation methods. The clearest reading I found is the Software chapter of De Boeck &amp;amp; Wilson&amp;rsquo;s Explanatory item response models, the final chapter.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:6&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:6&#34;&gt;6&lt;/a&gt;&lt;/sup&gt; I&amp;rsquo;ve learned a few things. The three most common estimation methods are:&lt;/p&gt;

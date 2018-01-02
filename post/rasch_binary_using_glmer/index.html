@@ -240,12 +240,6 @@
     <div class="article-style" itemprop="articleBody">
       
 
-<!-- <div class="alert alert-note">
-  <p>If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.</p>
-
-</div>
- -->
-
 <p>I&rsquo;ve been interested in the relationship between ordinal regression and item response theory for a few months now. There are several helpful papers on the topic, here are some randomly picked ones <sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> <sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> <sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> <sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup> <sup class="footnote-ref" id="fnref:5"><a rel="footnote" href="#fn:5">5</a></sup>, and a book.<sup class="footnote-ref" id="fnref:6"><a rel="footnote" href="#fn:6">6</a></sup> In this post, I focus on Rasch analysis. To do any of these analyses as a regression, your data need to be in long format - single column identifying items (regression predictor), single column with item response categories (regression outcome), and column holding the person ID. Using the right dummy coding of the variables, you can get so-called <em>item difficulties</em> as regression coefficients for the items - more on this later.</p>
 
 <p>Most recently, I spent some type trying to understand (in English) the different estimation methods. The clearest reading I found is the Software chapter of De Boeck &amp; Wilson&rsquo;s Explanatory item response models, the final chapter.<sup class="footnote-ref" id="fnref:6"><a rel="footnote" href="#fn:6">6</a></sup> I&rsquo;ve learned a few things. The three most common estimation methods are:</p>
