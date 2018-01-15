@@ -34,25 +34,35 @@
 
 &lt;h2 id=&#34;demonstration&#34;&gt;Demonstration&lt;/h2&gt;
 
-&lt;p&gt;Following this demonstration probably requires good knowledge of ggplot2 and dplyr to create the plots.&lt;/p&gt;
+&lt;p&gt;&lt;sub&gt;Following this demonstration probably requires good knowledge of ggplot2 and dplyr to create the plots.&lt;/sub&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(eRm) # Standard Rasch analysis with CML estimation
-library(glmmTMB) # Better for binary logistic regression than glmer, but does not accept contrasts. If you want your regression coefficients to be item difficulties on arrival, not good
-# library(survival) # Handles conditional logistic regression, clogit(), but does not accept contrasts
+# glmmTMB for binary logistic regression than glmer, but does not accept contrasts.
+# If you want your regression coefficients to be item difficulties on arrival, not good
+# library(glmmTMB)
+# survival performs conditional logistic regression, clogit(), but does not accept contrasts
+# library(survival)
 library(Epi) # For conditional logistic regression with contrasts
 library(lme4) # For glmer
 library(ggplot2) # For plotting
 library(ggrepel) # For plot labeling
 library(dplyr) # For data manipulation
 library(scales) # For formatted percent on ggplot axes
+&lt;/code&gt;&lt;/pre&gt;
 
-# Data comes from eRm package, it is simulated, has 30 items and 100 persons, binary response format
-raschdat1 &amp;lt;- as.data.frame(raschdat1)
+&lt;p&gt;&lt;sub&gt;Data comes from eRm package, it is simulated, has 30 items and 100 persons binary response format.&lt;/sub&gt;&lt;/p&gt;
 
-# CML estimation using eRm package
-res.rasch &amp;lt;- RM(raschdat1)
-# Coefficients are item &amp;quot;easiness&amp;quot;, need to multiply by -1 to obtain difficulties
-coef(res.rasch)
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;raschdat1 &amp;lt;- as.data.frame(raschdat1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;cml-estimation-using-erm-package&#34;&gt;CML estimation using eRm package&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;res.rasch &amp;lt;- RM(raschdat1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;sub&gt;Coefficients are item &amp;ldquo;easiness&amp;rdquo;, need to multiply by -1 to obtain difficulties.&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;coef(res.rasch)
 
 beta V1      beta V2      beta V3      beta V4      beta V5
 1.565269700  0.051171719  0.782190094 -0.650231958 -1.300578876
@@ -66,9 +76,11 @@ beta V21     beta V22     beta V23     beta V24     beta V25
 0.936549373  0.989173502  0.681696830  0.002949605 -0.814227487
 beta V26     beta V27     beta V28     beta V29     beta V30
 1.207133468 -0.093927362 -0.290443234 -0.758721133  0.731734150
+&lt;/code&gt;&lt;/pre&gt;
 
-# Repeating using regression
-raschdat1.long &amp;lt;- raschdat1
+&lt;h3 id=&#34;repeated-using-regression&#34;&gt;Repeated using regression&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;raschdat1.long &amp;lt;- raschdat1
 raschdat1.long$tot &amp;lt;- rowSums(raschdat1.long) # Create total score
 c(min(raschdat1.long$tot), max(raschdat1.long$tot)) # Min and max score
 
@@ -79,9 +91,11 @@ raschdat1.long &amp;lt;- tidyr::gather(raschdat1.long, item, value, V1:V30) # Wi
 # Make item factor
 raschdat1.long$item &amp;lt;- factor(
   raschdat1.long$item, levels = paste0(&amp;quot;V&amp;quot;, 1:30), ordered = TRUE)
+&lt;/code&gt;&lt;/pre&gt;
 
-# Conditional maximum likelihood
-# Use clogistic() function in Epi package, note the contrasts
+&lt;h4 id=&#34;conditional-maximum-likelihood&#34;&gt;Conditional maximum likelihood&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Use clogistic() function in Epi package, note the contrasts
 res.clogis &amp;lt;- clogistic(
   value ~ item, strata = ID, raschdat1.long,
   contrasts = list(item = rbind(rep(-1, 29), diag(29))))
@@ -100,9 +114,11 @@ item21       item22       item23       item24       item25
 0.989181510  0.681691285  0.002973418 -0.814232531  1.207139323
 item26       item27       item28       item29        
 -0.093902568 -0.290430680 -0.758728000  0.731731557           
+&lt;/code&gt;&lt;/pre&gt;
 
-# Note that item1 is V2 not V1, and item29 is V30. The values correspond to the results from the eRm package. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1
-sum(coef(res.clogis)[1:29]) * -1
+&lt;p&gt;&lt;sub&gt;Note that item1 is V2 not V1, and item29 is V30. The values correspond to the results from the eRm package. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1.&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sum(coef(res.clogis)[1:29]) * -1
 
 [1] 1.565278
 
@@ -111,7 +127,8 @@ res.rasch$loglik # Rasch log-likelihood
 
 [1] -1434.482
 
-res.clogis$loglik # conditional logsitic log-likelihood, second value is log-likelihood of final model
+# conditional logsitic log-likelihood, second value is log-likelihood of final model
+res.clogis$loglik
 
 [1] -1630.180 -1434.482
 
@@ -121,11 +138,13 @@ res.clogis$loglik # conditional logsitic log-likelihood, second value is log-lik
 res.clogis$n
 
 [1] 3000
+&lt;/code&gt;&lt;/pre&gt;
 
-# Aparently, all of the data (30 * 100) were used in the estimation. This is because no participant scored zero on all questions, or 1 on all questions (minimum was 1 and maximum was 26 out of 30). All the data contributed to estimation, so the variance estimation in this example was efficient(?)
+&lt;p&gt;&lt;sub&gt;Aparently, all of the data (30 * 100) were used in the estimation. This is because no participant scored zero on all questions, or 1 on all questions (minimum was 1 and maximum was 26 out of 30). All the data contributed to estimation, so the variance estimation in this example was efficient(?)&lt;/sub&gt;&lt;/p&gt;
 
-# Estimation using joint maximum likelihood
-# Standard logistic regression, note the use of contrasts
+&lt;h4 id=&#34;joint-maximum-likelihood&#34;&gt;Joint maximum likelihood&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Standard logistic regression, note the use of contrasts
 res.jml &amp;lt;- glm(
   value ~ item + factor(ID), data = raschdat1.long, family = binomial,
   contrasts = list(item = rbind(rep(-1, 29), diag(29))))
@@ -144,15 +163,20 @@ coef(res.jml)[1:30]
 0.971562267  1.026247034  0.706839644  0.002613624 -0.844497142
      item25       item26       item27       item28       item29
 1.252837340 -0.097839229 -0.301589647 -0.786973625  0.758800752
+&lt;/code&gt;&lt;/pre&gt;
 
-# item29 is the same as V30. Note that they are very similar to the coefficients from the eRm package. Differences result from differences in estimation method. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1
-sum(coef(res.jml)[2:30]) * -1
+&lt;p&gt;&lt;sub&gt;item29 is the same as V30. Note that they are very similar to the coefficients from the eRm package. Differences result from differences in estimation method. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1.&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sum(coef(res.jml)[2:30]) * -1
 
 [1] 1.625572
+&lt;/code&gt;&lt;/pre&gt;
 
-# Multilevel logistic regression or MML
-# glmer does not converge with the data. glmmTMB does. But I want the regression coefficients to be item difficulties/easiness on arrival, and glmmTMB does not provide an option for contrasts. What I do is run glmer twice, with the fixed effects and random effects from the first run as starting values in the second run
-res.mlm.l &amp;lt;- glmer(
+&lt;h4 id=&#34;multilevel-logistic-regression-or-mml&#34;&gt;Multilevel logistic regression or MML&lt;/h4&gt;
+
+&lt;p&gt;&lt;sub&gt;glmer does not converge with the data. glmmTMB does. But I want the regression coefficients to be item difficulties/easiness on arrival, and glmmTMB does not provide an option for contrasts. What I do is run glmer twice, with the fixed effects and random effects from the first run as starting values in the second run.&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;res.mlm.l &amp;lt;- glmer(
   value ~ item + (1 | ID), raschdat1.long, family = binomial,
   contrasts = list(item = rbind(rep(-1, 29), diag(29))))
 # Warning message:
@@ -164,21 +188,22 @@ res.mlm.l &amp;lt;- glmer(
   value ~ item + (1 | ID), raschdat1.long, family = binomial,
   contrasts = list(item = rbind(rep(-1, 29), diag(29))),
   start = list(fixef = fixef(res.mlm.l), theta = getME(res.mlm.l, &amp;quot;theta&amp;quot;)))
-
-## NOW the estimation stuff is out of the way, to the fun stuff
-# I&#39;ll use the multilevel model to replicate the Rasch results
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Person-Item map
+&lt;h3 id=&#34;using-the-multilevel-model-to-replicate-the-rasch-results&#34;&gt;Using the multilevel model to replicate the Rasch results&lt;/h3&gt;
 
-# eRm provides a person-item map with a single line:
-plotPImap(res.rasch)
+&lt;h4 id=&#34;person-item-map&#34;&gt;Person-Item map&lt;/h4&gt;
+
+&lt;p&gt;&lt;sub&gt;eRm provides a person-item map with a single line:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plotPImap(res.rasch)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/pimap.png&#34; alt=&#34;PIMAP&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# To create this map, we need item difficulties (regression coefficients * -1) and person abilities (random intercepts)
-item.diff &amp;lt;- -1 * coef(summary(res.mlm.l))[, 1] # Regression coefficients * -1
+&lt;p&gt;&lt;sub&gt;To create this map, we need item difficulties (regression coefficients * -1) and person abilities (random intercepts).&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;item.diff &amp;lt;- -1 * coef(summary(res.mlm.l))[, 1] # Regression coefficients * -1
 item.diff[1] &amp;lt;- -1 * sum(item.diff[2:30]) # Difficulty of first item is sum of all others
 item.diff &amp;lt;- data.frame(
   item.diff = as.numeric(item.diff), item = paste0(&amp;quot;V&amp;quot;, 1:30))
@@ -214,19 +239,20 @@ ggplot(pers.ab.df, aes(x = pers.ability)) +
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/pimap_mlm.png&#34; alt=&#34;PIMAP_MLM&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# The extreme person scores are different. This is down to differences in MML and whatever method eRm uses to obtain person measures. It has to use a two-step process of sorts because CML does not provide person measures.
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;sub&gt;The extreme person scores are different. This is down to differences in MML and whatever method eRm uses to obtain person measures. It has to use a two-step process of sorts because CML does not provide person measures.&lt;/sub&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Item-Characteristic Curves
+&lt;h4 id=&#34;item-characteristic-curves&#34;&gt;Item-Characteristic Curves&lt;/h4&gt;
 
-# eRm provides a item characteristic curves with a single line:
-plotjointICC(res.rasch)
+&lt;p&gt;&lt;sub&gt;eRm provides a item characteristic curves with a single line:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plotjointICC(res.rasch)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/icc_joint.png&#34; alt=&#34;ICC&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Here, we need to be able to predict the probability that a student will get an item correct, given their latent ability. What I did was use the logistic equation to predict probabilities. The log-odds given a latent ability is the difference between a latent ability and an item difficulty. Once this log-odds is obtained, calculating the predicted probability is easy. Since I&#39;m using loops to do this, I also calculate item information, which is predicted probability multiplied by 1 - predicted probability. Here&#39;s how:
-{
+&lt;p&gt;&lt;sub&gt;Here, we need to be able to predict the probability that a student will get an item correct, given their latent ability. What I did was use the logistic equation to predict probabilities. The log-odds given a latent ability is the difference between a latent ability and an item difficulty. Once this log-odds is obtained, calculating the predicted probability is easy. Since I&amp;rsquo;m using loops to do this, I also calculate item information, which is predicted probability multiplied by 1 - predicted probability. Here&amp;rsquo;s how:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;{
   theta.s &amp;lt;- seq(-6, 6, .01) # Person abilities for prediction
   pred.prob &amp;lt;- c() # Vector to hold predicted probabilities
   test.info.df &amp;lt;- c() # Vector to hold test info
@@ -263,8 +289,9 @@ ggplot(test.info.df, aes(x = theta, y = prob, colour = reorder(item, diff, mean)
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/icc_joint_mlm.png&#34; alt=&#34;ICC_MLM&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# I find the colours ambiguous, this code would an item by item plot, not printed
-ggplot(test.info.df, aes(x = theta, y = prob)) + geom_line() +
+&lt;p&gt;&lt;sub&gt;I find the colours ambiguous, the code below would produce an item by item plot, not printed&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ggplot(test.info.df, aes(x = theta, y = prob)) + geom_line() +
   scale_x_continuous(breaks = seq(-6, 6, 2), limits = c(-4, 4)) +
   scale_y_continuous(labels = percent, breaks = seq(0, 1, .25)) +
   labs(x = &amp;quot;Person ability&amp;quot;, y = &amp;quot;Probability of correct response&amp;quot;,
@@ -274,16 +301,18 @@ ggplot(test.info.df, aes(x = theta, y = prob)) + geom_line() +
   theme_classic()
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Person parameter plot
+&lt;h4 id=&#34;person-parameter-plot&#34;&gt;Person parameter plot&lt;/h4&gt;
 
-# Again, a one-liner in eRm:
-plot(person.parameter(res.rasch))
+&lt;p&gt;&lt;sub&gt;Again, a one-liner in eRm:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(person.parameter(res.rasch))
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/pp.png&#34; alt=&#34;PERS_PAR&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Compared to others, this is fairly straightforward. We need the estimated person abilities:
-raschdat1.long$ability &amp;lt;- ranef(res.mlm.l)$ID[, 1]
+&lt;p&gt;&lt;sub&gt;Compared to others, this is fairly straightforward. We need the estimated person abilities:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;raschdat1.long$ability &amp;lt;- ranef(res.mlm.l)$ID[, 1]
 
 # And GGPLOT-ING IT:
 ggplot(raschdat1.long, aes(x = tot, y = ability)) +
@@ -298,12 +327,13 @@ ggplot(raschdat1.long, aes(x = tot, y = ability)) +
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/pp_mlm.png&#34; alt=&#34;PERS_PAR_MLM&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Both plots are not the same, though they overlap for the most part. Because estimation of person parameters is more tedious in CML, I&#39;d trust the multilevel values.
+&lt;p&gt;&lt;sub&gt;Both plots are not the same, though they overlap for the most part. Because estimation of person parameters is more tedious in CML, I&amp;rsquo;d trust the multilevel values.&lt;/sub&gt;&lt;/p&gt;
 
-# Item fit using mean square
+&lt;h4 id=&#34;item-fit-using-mean-square&#34;&gt;Item fit using mean square&lt;/h4&gt;
 
-# eRm one-liner:
-itemfit(person.parameter(res.rasch)) # Not printed
+&lt;p&gt;&lt;sub&gt;eRm one-liner:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;itemfit(person.parameter(res.rasch)) # Not printed
 
 # First, we need fitted and residual values
 raschdat1.long$fitted &amp;lt;- fitted(res.mlm.l)
@@ -346,13 +376,13 @@ ggplot(item.fit.df, aes(x = mml, y = cml)) +
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/msq_comp_item.png&#34; alt=&#34;COMP_ITEM_FIT&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Interestingly, it seems the MSQ from CML is almost always higher than that from the multilevel model (MML)
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;sub&gt;Interestingly, it seems the MSQ from CML is almost always higher than that from the multilevel model (MML).&lt;/sub&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Person fit using mean square
+&lt;h4 id=&#34;person-fit-using-mean-square&#34;&gt;Person fit using mean square&lt;/h4&gt;
 
-# eRm one-liner:
-personfit(person.parameter(res.rasch)) # Not printed
+&lt;p&gt;&lt;sub&gt;eRm one-liner:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;personfit(person.parameter(res.rasch)) # Not printed
 
 pers.ab.df$ID &amp;lt;- 1:100
 
@@ -392,23 +422,22 @@ ggplot(person.fit.df, aes(x = mml, y = cml)) +
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/msq_comp_person.png&#34; alt=&#34;COMP_PERS_FIT&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Same pattern, MSQ from CML is almost always higher than that from the multilevel model (MML)
-# I used the conventional cut-offs to identify misfitting persons
-# Person 1 with low infit and outfit MSQ got only one question correct, cannot recall what stood out about 8, 26 and 53.
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;sub&gt;Same pattern, MSQ from CML is almost always higher than that from the multilevel model (MML) I used the conventional cut-offs to identify misfitting persons. Person 1 with low infit and outfit MSQ got only one question correct, cannot recall what stood out about 8, 26 and 53.&lt;/sub&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# TEST INFORMATION
+&lt;h4 id=&#34;test-information&#34;&gt;Test information&lt;/h4&gt;
 
-# eRm one-liner:
-plotINFO(res.rasch)
+&lt;p&gt;&lt;sub&gt;eRm one-liner:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plotINFO(res.rasch)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/iic_joint.png&#34; alt=&#34;IIC&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# We&#39;ve done the work for this above when we created the ICCs, and calculated the test information. All that remains is plotting.
+&lt;p&gt;&lt;sub&gt;We&amp;rsquo;ve done the work for this above when we created the ICCs, and calculated the test information. All that remains is plotting.&lt;/sub&gt;&lt;/p&gt;
 
-# For the overall test information, we need to sum each items test information:
-ggplot(summarise(group_by(test.info.df, theta), info = sum(info)),
+&lt;p&gt;&lt;sub&gt;For the overall test information, we need to sum each items test information:&lt;/sub&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ggplot(summarise(group_by(test.info.df, theta), info = sum(info)),
        aes(x = theta, y = info)) + geom_line() +
   scale_x_continuous(breaks = -6:6) +
   scale_y_continuous(breaks = c(1:5, .10, 6.42)) +
@@ -431,8 +460,9 @@ ggplot(test.info.df, aes(x = theta, y = info)) +
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/iic_overlay_mlm.png&#34; alt=&#34;IIC_OVER&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# And finally, using the Standard Error of Measurement (SEM), I thought you could create a confidence-band like plot. The SEM is the inverse of the root of test information.
-ggplot(summarise(group_by(test.info.df, theta), info = 1 / sqrt(sum(info))),
+&lt;p&gt;&lt;sub&gt;And finally, using the Standard Error of Measurement (SEM), I thought you could create a confidence-band like plot. The SEM is the inverse of the root of test information.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ggplot(summarise(group_by(test.info.df, theta), info = 1 / sqrt(sum(info))),
        aes(x = theta)) +
   scale_x_continuous(breaks = seq(-3, 3, 1), limits = c(-3, 3)) +
   scale_y_continuous(breaks = c(seq(-3, 3, 1), -4.5, 4.5), limits = c(-4.5, 4.5)) +
@@ -445,8 +475,9 @@ ggplot(summarise(group_by(test.info.df, theta), info = 1 / sqrt(sum(info))),
 
 &lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/rasch_bin_logistic/sem.png&#34; alt=&#34;SEM&#34; /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# This is the one I like best, because I feel it is most informative. This plot shows that for a kid with an estimated ability of -3, their ability is estimated with such precision that their actual score could lie between -1.5 and -4.5. In the middle at 0, the actual score could lie between, by my guess, -.8 and .8. I am not so sure this interpretation is correct, but it is appealing :).
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;sub&gt;This is the one I like best, because I feel it is most informative. This plot shows that for a kid with an estimated ability of -3, their ability is estimated with such precision that their actual score could lie between -1.5 and -4.5. In the middle at 0, the actual score could lie between, by my guess, -.8 and .8. I am not so sure this interpretation is correct, but it is appealing :).&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;I&amp;rsquo;m not sure what I have achieved here, apart from a lot of ggplot-ing, &amp;hellip; But having worked through this, I feel I can better understand what the model is trying to claim a series of items, and what some of its diagnostics are about. I guess the next step would be to replicate this on real data I am working on. The &lt;code&gt;ordinal&lt;/code&gt; package could work for this, as it performs ordinal multilevel regression. However, it only performs cumulative link logistic regression, which Rijmen et al.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; call the &lt;em&gt;graded response model&lt;/em&gt; in IRT.&lt;/p&gt;
 

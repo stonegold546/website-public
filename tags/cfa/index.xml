@@ -88,10 +88,11 @@ writeLines(syntax &amp;lt;- paste(
 g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
 textual =~ x4 + x5 + x6
 speed =~ x7 + x8 + x9
+&lt;/code&gt;&lt;/pre&gt;
 
-# Run model &amp;amp; report fit measures
-# Reporting only fit statistics relevant to this demonstration
-summary(hs.fit &amp;lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
+&lt;p&gt;&lt;sub&gt;Run model &amp;amp; report fit measures. Reporting only fit statistics relevant to this demonstration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;summary(hs.fit &amp;lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
                       orthogonal = TRUE), fit.measures = TRUE)
 
 lavaan (0.5-23.1097) converged normally after  25 iterations
@@ -108,39 +109,38 @@ Root Mean Square Error of Approximation:
   RMSEA                                          0.058
   90 Percent Confidence Interval          0.032  0.083
   P-value RMSEA &amp;lt;= 0.05                          0.276
+&lt;/code&gt;&lt;/pre&gt;
 
-# Chi-square is statistically significant, this test of perfect fit suggests
-# the misfit between our model-implied cov matrix and sample cov matrix is
-# greater than expected due to sampling variability.
+&lt;p&gt;&lt;sub&gt;Chi-square is statistically significant, this test of perfect fit suggests
+the misfit between our model-implied cov matrix and sample cov matrix is
+greater than expected due to sampling variability.&lt;/p&gt;
 
-# The default Chi-square test:
+&lt;p&gt;&lt;sub&gt;The default Chi-square test:&lt;/p&gt;
 
-pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
 
 [1] 0.003867178
+&lt;/code&gt;&lt;/pre&gt;
 
-# Use formula above to calculate non-centrality parameter for test of close fit
-# .0025 multiplied by model degrees of freedom by sample size - 1
+&lt;p&gt;&lt;sub&gt;Use formula above to calculate non-centrality parameter for test of close fit: .0025 multiplied by model degrees of freedom by sample size - 1&lt;/p&gt;
 
-(ncp.close &amp;lt;- .0025 * 21 * (301 - 1))
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(ncp.close &amp;lt;- .0025 * 21 * (301 - 1))
 
 [1] 15.75
+&lt;/code&gt;&lt;/pre&gt;
 
-# Calculate Chi-square test of close fit
+&lt;p&gt;&lt;sub&gt;Calculate Chi-square test of close fit:&lt;/p&gt;
 
-pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
 
 [1] 0.2740353
+&lt;/code&gt;&lt;/pre&gt;
 
-# The p-value for a test of close fit is .27, close to the value reported by
-# lavaan. The reason they are not closer is that lavaan does not subtract 1
-# from the sample size when calculating the non-centrality parameter under
-# its default settings for ML. See the final footnote below for details.
+&lt;p&gt;&lt;sub&gt;The p-value for a test of close fit is .27, close to the value reported by lavaan. The reason they are not closer is that lavaan does not subtract 1 from the sample size when calculating the non-centrality parameter under its default settings for ML. See below for details.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 
-# And if we lower our standards to conduct a chi-square test of mediocre fit:
-# .0064 multiplied by model degrees of freedom by sample size - 1
+&lt;p&gt;&lt;sub&gt;And if we lower our standards to conduct a chi-square test of mediocre fit: .0064 multiplied by model degrees of freedom by sample size - 1&lt;/p&gt;
 
-(ncp.med &amp;lt;- .0064 * 21 * (301 - 1))
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(ncp.med &amp;lt;- .0064 * 21 * (301 - 1))
 
 [1] 40.32
 
@@ -148,9 +148,11 @@ pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
 
 [1] 0.9199686
 
-# If we assume mediocre misspecification in our model, the probability of
-# observing our model-implied covariance matrix is 92%. Pretty good.
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;sub&gt;If we assume mediocre misspecification in our model, the probability of observing our model-implied covariance matrix is 92%. Pretty good.&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;In closing, SEM practitioners typically report the $\chi^2$-test, but routinely expect the test to detect model misspecification, so often ignore it in practice. I hope the steps above show how one can conduct $\chi^2$-tests that assume some degree of model misspecification as the null hypothesis. I guess I hope that by doing this, we can make our $\chi^2$-tests somewhat relevant. The nice thing about the RMSEA and CI lavaan provides is that together, they may be more informative than a p-value from a $\chi^2$ test.&lt;/p&gt;
 
@@ -243,9 +245,11 @@ pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(lavaan)
-# For this, I&#39;ll assume HolzingerSwineford1939 data are 9 questions, and the
-# respondents answered them x1 to x9 sequentially
-data(&amp;quot;HolzingerSwineford1939&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;sub&gt;For this, I&amp;rsquo;ll assume HolzingerSwineford1939 data are 9 questions, and the respondents answered them x1 to x9 sequentially.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(&amp;quot;HolzingerSwineford1939&amp;quot;)
 # model syntax for HolzingerSwineford1939 dataset
 (syntax &amp;lt;- paste(
   paste(&amp;quot;f1 =~&amp;quot;, paste0(&amp;quot;x&amp;quot;, 1:3, collapse = &amp;quot; + &amp;quot;)),
@@ -254,9 +258,11 @@ data(&amp;quot;HolzingerSwineford1939&amp;quot;)
   sep = &amp;quot;\n&amp;quot;))
 
 [1] &amp;quot;f1 =~ x1 + x2 + x3\nf2 =~ x4 + x5 + x6\nf3 =~ x7 + x8 + x9&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
-# Run model, standardize latent variables, &amp;amp; report standardized results
-summary(hs.fit &amp;lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE),
+&lt;p&gt;&lt;sub&gt;Run model, standardize latent variables, &amp;amp; report standardized results:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;summary(hs.fit &amp;lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE),
         standardize = TRUE)
 
 lavaan (0.5-23.1097) converged normally after  22 iterations
@@ -310,19 +316,13 @@ Variances:
     f1                1.000                               1.000    1.000
     f2                1.000                               1.000    1.000
     f3                1.000                               1.000    1.000
+&lt;/code&gt;&lt;/pre&gt;
 
-# Chi-square is statistically significant, there is at least some misfit
+&lt;p&gt;&lt;sub&gt;Chi-square is statistically significant, there is at least some misfit&lt;/p&gt;
 
-# Request modification indices. Sort them from highest to lowest
-# Do not print any MI below 3 for convenience of presentation
-# Apply SSV method by requesting power = TRUE, and setting delta.
-# delta for those who skipped is unacceptable level of misfit, so a delta = .4
-# standard for factor loadings means I care about the factor loading if it is
-# missing from my model and its factor loading is greater than .4
-# By default, delta = .1 in lavaan. Based on SSV&#39;s recommendations, this is
-# adequate for correlated errors. So I select only correlated errors for output
-# using op = &amp;quot;~~&amp;quot;
-modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE,
+&lt;p&gt;&lt;sub&gt;Request modification indices. Sort them from highest to lowest. Do not print any MI below 3 for convenience of presentation. Apply SSV method by requesting power = TRUE, and setting delta. delta for those who skipped is unacceptable level of misfit, so a delta = .4 standard for factor loadings means I care about the factor loading if it is missing from my model and its factor loading is greater than .4. By default, delta = .1 in lavaan. Based on SSV&amp;rsquo;s recommendations, this is adequate for correlated errors. So I select only correlated errors for output using op = &amp;ldquo;~~&amp;rdquo;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;modificationindices(hs.fit, sort. = TRUE, minimum.value = 3, power = TRUE,
                     op = &amp;quot;~~&amp;quot;)
 
 
@@ -349,26 +349,19 @@ lhs op rhs        mi    epc sepc.all delta   ncp power decision
 43  x1 ~~  x2  3.606 -0.184   -0.134   0.1 1.068 0.178      (i)
 45  x1 ~~  x4  3.554  0.078    0.058   0.1 5.797 0.673      (i)
 35  f2 =~  x8  3.359 -0.120   -0.118   0.1 2.351 0.335      (i)
+&lt;/code&gt;&lt;/pre&gt;
 
-# Check the decision column
-# x7 and x8 is termed misspecification because power is low at .193, yet the MI
-# is statistically significant. However, this may simply be due to order
-# effects, and such misspecification can be acceptable. I will not add this
-# correlated error to my model. Same goes for x8 and x9 (lhs 78) and x2 and x3
-# (lhs 51). These missing serial-correlations are acceptable misspecifications.
+&lt;p&gt;&lt;sub&gt;Check the decision column. x7 and x8 is termed misspecification because power is low at .193, yet the MI is statistically significant. However, this may simply be due to order effects, and such misspecification can be acceptable. I will not add this correlated error to my model. Same goes for x8 and x9 (lhs 78) and x2 and x3 (lhs 51). These missing serial-correlations are acceptable misspecifications.&lt;/p&gt;
 
-# However consider x2 and x7 (lhs 55), low power at .373 yet significant MI.
-# Is there some theory connecting these two items? Can I explain the
-# suggested correlation?
+&lt;p&gt;&lt;sub&gt;However consider x2 and x7 (lhs 55), low power at .373 yet significant MI. Is there some theory connecting these two items? Can I explain the suggested correlation?&lt;/p&gt;
 
-# Consider x4 and x8 (lhs 67), high power at .806, yet the MI is not
-# statistically significant, hence we can conclude there is no misspecification.
+&lt;p&gt;&lt;sub&gt;Consider x4 and x8 (lhs 67), high power at .806, yet the MI is not statistically significant, hence we can conclude there is no misspecification.&lt;/p&gt;
 
-# Consider x1 and x4 (lhs 45), low power at .673, and the MI is not
-# statistically significant, hence this is inconclusive.
+&lt;p&gt;&lt;sub&gt;Consider x1 and x4 (lhs 45), low power at .673, and the MI is not statistically significant, hence this is inconclusive.&lt;/p&gt;
 
-# Now for the factor loadings
-modificationindices(hs.fit, sort. = TRUE, power = TRUE, delta = .4, op = &amp;quot;=~&amp;quot;)
+&lt;p&gt;&lt;sub&gt;Now for the factor loadings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;modificationindices(hs.fit, sort. = TRUE, power = TRUE, delta = .4, op = &amp;quot;=~&amp;quot;)
 
 lhs op rhs        mi    epc sepc.all delta    ncp power decision
 30  f1 =~  x9 36.411  0.519    0.515   0.4 21.620 0.996  *epc:m*
@@ -389,24 +382,17 @@ lhs op rhs        mi    epc sepc.all delta    ncp power decision
 32  f2 =~  x2  0.017 -0.011   -0.010   0.4 21.870 0.997     (nm)
 37  f3 =~  x1  0.014  0.015    0.013   0.4  9.700 0.876     (nm)
 40  f3 =~  x4  0.003 -0.003   -0.003   0.4 52.995 1.000     (nm)
-
-
-# See the first line, suggesting I load x9 on f1. The power is high, the MI is
-# significant and the EPC is higher than .4 suggesting that this is some type
-# of misspecification that we should pay attention to.
-
-# However, the next line suggests I load x7 on f1. The power is high, the MI is
-# significant, but the EPC is .38, less than .4, suggesting that we do not
-# consider this misspecification to be high enough to warrant modifying the
-# model. Same goes for a number of suggested modifications with decision epc:nm.
-
-# Then there is a final group with high power, but the MIs are not
-# statistically significant, so we can conclude there is no misspecification.
-
-# Note that you can also tell lavaan what constitutes high power using the
-# `high.power = ` argument. 75% is what SSV use and lavaan&#39;s default but you
-# can be flexible.
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;sub&gt;See the first line, suggesting I load x9 on f1. The power is high, the MI is significant and the EPC is higher than .4 suggesting that this is some type of misspecification that we should pay attention to.&lt;/p&gt;
+
+&lt;p&gt;&lt;sub&gt;However, the next line suggests I load x7 on f1. The power is high, the MI is significant, but the EPC is .38, less than .4, suggesting that we do not consider this misspecification to be high enough to warrant modifying the model. Same goes for a number of suggested modifications with decision epc:nm.&lt;/p&gt;
+
+&lt;p&gt;&lt;sub&gt;Then there is a final group with high power, but the MIs are not statistically significant, so we can conclude there is no misspecification.&lt;/p&gt;
+
+&lt;p&gt;&lt;sub&gt;Note that you can also tell lavaan what constitutes high power using the &lt;code&gt;high.power =&lt;/code&gt; argument. 75% is what SSV use and is lavaan&amp;rsquo;s default but you can be flexible.&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;Note that you make only one change to the model at a time. The EPC and MI, are calculated assuming other parameters are approximately correct, hence the way to run the steps above is to make one change, then re-request the MIs, EPC, and power from &lt;code&gt;lavaan&lt;/code&gt;.&lt;/p&gt;
 

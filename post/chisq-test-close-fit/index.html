@@ -310,10 +310,11 @@ writeLines(syntax &lt;- paste(
 g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
 textual =~ x4 + x5 + x6
 speed =~ x7 + x8 + x9
+</code></pre>
 
-# Run model &amp; report fit measures
-# Reporting only fit statistics relevant to this demonstration
-summary(hs.fit &lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
+<p><sub>Run model &amp; report fit measures. Reporting only fit statistics relevant to this demonstration:</p>
+
+<pre><code class="language-r">summary(hs.fit &lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
                       orthogonal = TRUE), fit.measures = TRUE)
 
 lavaan (0.5-23.1097) converged normally after  25 iterations
@@ -330,39 +331,38 @@ Root Mean Square Error of Approximation:
   RMSEA                                          0.058
   90 Percent Confidence Interval          0.032  0.083
   P-value RMSEA &lt;= 0.05                          0.276
+</code></pre>
 
-# Chi-square is statistically significant, this test of perfect fit suggests
-# the misfit between our model-implied cov matrix and sample cov matrix is
-# greater than expected due to sampling variability.
+<p><sub>Chi-square is statistically significant, this test of perfect fit suggests
+the misfit between our model-implied cov matrix and sample cov matrix is
+greater than expected due to sampling variability.</p>
 
-# The default Chi-square test:
+<p><sub>The default Chi-square test:</p>
 
-pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
+<pre><code class="language-r">pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
 
 [1] 0.003867178
+</code></pre>
 
-# Use formula above to calculate non-centrality parameter for test of close fit
-# .0025 multiplied by model degrees of freedom by sample size - 1
+<p><sub>Use formula above to calculate non-centrality parameter for test of close fit: .0025 multiplied by model degrees of freedom by sample size - 1</p>
 
-(ncp.close &lt;- .0025 * 21 * (301 - 1))
+<pre><code class="language-r">(ncp.close &lt;- .0025 * 21 * (301 - 1))
 
 [1] 15.75
+</code></pre>
 
-# Calculate Chi-square test of close fit
+<p><sub>Calculate Chi-square test of close fit:</p>
 
-pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
+<pre><code class="language-r">pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
 
 [1] 0.2740353
+</code></pre>
 
-# The p-value for a test of close fit is .27, close to the value reported by
-# lavaan. The reason they are not closer is that lavaan does not subtract 1
-# from the sample size when calculating the non-centrality parameter under
-# its default settings for ML. See the final footnote below for details.
+<p><sub>The p-value for a test of close fit is .27, close to the value reported by lavaan. The reason they are not closer is that lavaan does not subtract 1 from the sample size when calculating the non-centrality parameter under its default settings for ML. See below for details.<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup></p>
 
-# And if we lower our standards to conduct a chi-square test of mediocre fit:
-# .0064 multiplied by model degrees of freedom by sample size - 1
+<p><sub>And if we lower our standards to conduct a chi-square test of mediocre fit: .0064 multiplied by model degrees of freedom by sample size - 1</p>
 
-(ncp.med &lt;- .0064 * 21 * (301 - 1))
+<pre><code class="language-r">(ncp.med &lt;- .0064 * 21 * (301 - 1))
 
 [1] 40.32
 
@@ -370,9 +370,11 @@ pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
 
 [1] 0.9199686
 
-# If we assume mediocre misspecification in our model, the probability of
-# observing our model-implied covariance matrix is 92%. Pretty good.
 </code></pre>
+
+<p><sub>If we assume mediocre misspecification in our model, the probability of observing our model-implied covariance matrix is 92%. Pretty good.</p>
+
+<hr />
 
 <p>In closing, SEM practitioners typically report the $\chi^2$-test, but routinely expect the test to detect model misspecification, so often ignore it in practice. I hope the steps above show how one can conduct $\chi^2$-tests that assume some degree of model misspecification as the null hypothesis. I guess I hope that by doing this, we can make our $\chi^2$-tests somewhat relevant. The nice thing about the RMSEA and CI lavaan provides is that together, they may be more informative than a p-value from a $\chi^2$ test.</p>
 
