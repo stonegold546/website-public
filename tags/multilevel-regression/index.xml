@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Multilevel-regression on James Uanhoro</title>
+    <link>https://www.jamesuanhoro.com/tags/multilevel-regression/</link>
+    <description>Recent content in Multilevel-regression on James Uanhoro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.jamesuanhoro.com/tags/multilevel-regression/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Using glmer() to perform Rasch analysis</title>
+      <link>https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/</link>
+      <pubDate>Tue, 02 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/</guid>
+      <description>I&amp;rsquo;ve been interested in the relationship between ordinal regression and item response theory (IRT) for a few months now. There are several helpful papers on the topic, here are some randomly picked ones 1 2 3 4 5, and a book.6 In this post, I focus on Rasch analysis. To do any of these analyses as a regression, your data need to be in long format - single column identifying items (regression predictor), single column with item response categories (regression outcome), and column holding the person ID.</description>
+    </item>
+    
+  </channel>
+</rss>
