@@ -1,43 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Missing Data on James Uanhoro</title>
+    <title>Missing data on James Uanhoro</title>
     <link>https://www.jamesuanhoro.com/tags/missing-data/</link>
-    <description>Recent content in Missing Data on James Uanhoro</description>
+    <description>Recent content in Missing data on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2017 James Uanhoro</copyright>
-    <lastBuildDate>Thu, 21 Sep 2017 10:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/missing-data/" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 21 Sep 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.jamesuanhoro.com/tags/missing-data/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Little&#39;s MCAR test at different sample sizes</title>
-      <link>https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/</link>
-      <pubDate>Thu, 21 Sep 2017 10:00:00 +0000</pubDate>
+      <link>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</link>
+      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/</guid>
-      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;p&gt;Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.&lt;/p&gt;
-
-&lt;/div&gt;
-
-
-&lt;p&gt;I just found out about the R &lt;a href=&#34;https://cran.r-project.org/web/packages/simglm/index.html&#34; target=&#34;_blank&#34;&gt;simglm package&lt;/a&gt; and decided to do a small simulation to test Little&amp;rsquo;s MCAR test&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future. I was able to find some examples of researchers using Little&amp;rsquo;s MCAR test at small sample sizes, so I ran a toy simulation.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/little_mcar/zoom_in.png&#34; alt=&#34;Data are MCAR&#34; /&gt;
-&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/little_mcar/zoom_in_mar.png&#34; alt=&#34;Data are MAR&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;And this is the &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/little_sim.R&#34;&gt;script I used&lt;/a&gt;, the underlying regression is near perfect (no multicollinearity).&lt;/p&gt;
-&lt;div class=&#34;footnotes&#34;&gt;
-
-&lt;hr /&gt;
-
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34;&gt;Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. &lt;em&gt;Journal of the American Statistical Association, 83&lt;/em&gt;(404), 1198. &lt;a href=&#34;https://doi.org/10.2307/2290157&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.2307/2290157&lt;/a&gt;
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-</description>
+      <guid>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</guid>
+      <description>TLDR: Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.
+ I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
     </item>
     
   </channel>

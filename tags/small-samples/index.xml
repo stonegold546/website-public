@@ -1,107 +1,45 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Small Samples on James Uanhoro</title>
+    <title>Small samples on James Uanhoro</title>
     <link>https://www.jamesuanhoro.com/tags/small-samples/</link>
-    <description>Recent content in Small Samples on James Uanhoro</description>
+    <description>Recent content in Small samples on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2017 James Uanhoro</copyright>
-    <lastBuildDate>Thu, 21 Sep 2017 10:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/small-samples/" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 21 Sep 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.jamesuanhoro.com/tags/small-samples/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Little&#39;s MCAR test at different sample sizes</title>
-      <link>https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/</link>
-      <pubDate>Thu, 21 Sep 2017 10:00:00 +0000</pubDate>
+      <link>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</link>
+      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/</guid>
-      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;p&gt;Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.&lt;/p&gt;
-
-&lt;/div&gt;
-
-
-&lt;p&gt;I just found out about the R &lt;a href=&#34;https://cran.r-project.org/web/packages/simglm/index.html&#34; target=&#34;_blank&#34;&gt;simglm package&lt;/a&gt; and decided to do a small simulation to test Little&amp;rsquo;s MCAR test&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future. I was able to find some examples of researchers using Little&amp;rsquo;s MCAR test at small sample sizes, so I ran a toy simulation.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/little_mcar/zoom_in.png&#34; alt=&#34;Data are MCAR&#34; /&gt;
-&lt;img src=&#34;https://www.jamesuanhoro.com/img/posts/little_mcar/zoom_in_mar.png&#34; alt=&#34;Data are MAR&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;And this is the &lt;a href=&#34;https://www.jamesuanhoro.com/misc/scripts/little_sim.R&#34;&gt;script I used&lt;/a&gt;, the underlying regression is near perfect (no multicollinearity).&lt;/p&gt;
-&lt;div class=&#34;footnotes&#34;&gt;
-
-&lt;hr /&gt;
-
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34;&gt;Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. &lt;em&gt;Journal of the American Statistical Association, 83&lt;/em&gt;(404), 1198. &lt;a href=&#34;https://doi.org/10.2307/2290157&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.2307/2290157&lt;/a&gt;
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-</description>
+      <guid>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</guid>
+      <description>TLDR: Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.
+ I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
+    </item>
+    
+    <item>
+      <title>Theil-Sen regression in R</title>
+      <link>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</link>
+      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</guid>
+      <description>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the Theil-Sen estimator.
+ A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
+ Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope  Calculating the slope this way happens to be quite robust.</description>
     </item>
     
     <item>
       <title>Linear regression with violation of heteroskedasticity with small samples</title>
-      <link>https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/</link>
-      <pubDate>Tue, 19 Sep 2017 10:00:00 +0000</pubDate>
+      <link>https://www.jamesuanhoro.com/post/2017/09/19/linear-regression-with-violation-of-heteroskedasticity-with-small-samples/</link>
+      <pubDate>Tue, 19 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/</guid>
-      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;p&gt;In small samples, the &lt;code&gt;wild bootstrap&lt;/code&gt; implemented in the R &lt;code&gt;hcci&lt;/code&gt; package is a good bet when heteroskedasticity is a concern.&lt;/p&gt;
-
-&lt;/div&gt;
-
-
-&lt;p&gt;Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t,SE,pvalue)$ may be problematic. Supplemental R material I created included how to use the &lt;code&gt;sandwich&lt;/code&gt; package to obtain heteroskedasticity-consistent standard errors (HCSEs). And after applying HC3 (or any of the HCs from 1 to 5), a regression coefficient was no longer statistically significant at $\alpha=.05$.&lt;/p&gt;
-
-&lt;p&gt;I mentioned to the class that some folks would recommend applying HCSEs by default. After class, I tried to learn about the difference between the different HCs. The following papers were helpful: Zeileis (2004),&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; Long &amp;amp; Ervin (2000),&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:2&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:2&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; Cribari-Neto, Souza &amp;amp; Vasconcellos (2007),&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:3&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:3&#34;&gt;3&lt;/a&gt;&lt;/sup&gt; and Hausman &amp;amp; Palmer (2012)&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:4&#34;&gt;&lt;a rel=&#34;footnote&#34; href=&#34;#fn:4&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;. The &lt;a href=&#34;https://cran.r-project.org/web/packages/sandwich/index.html&#34; target=&#34;_blank&#34;&gt;documentation for the sandwich package&lt;/a&gt; was a big help. The Hausman &amp;amp; Palmer (H&amp;amp;P) paper is probably best if you&amp;rsquo;re only going to read one of the papers, and it can also serve as a short handy reference for dealing with heteroskedasticity at small sample sizes.&lt;/p&gt;
-
-&lt;p&gt;I learned that &lt;strong&gt;HCSEs can be problematic (H&amp;amp;P Table 1)&lt;/strong&gt;. Additionally, the &lt;strong&gt;Wild Bootstrap does a good job of maintaining the nominal error rate in small samples (&lt;em&gt;n=40&lt;/em&gt;) under homoskedasticity, moderate heteroskedasticity and severe heteroskedasticity (H&amp;amp;P Table 1). It is also statistically powerful (H&amp;amp;P Fig. 1 &amp;amp; 2)&lt;/strong&gt;. The good thing is the &lt;a href=&#34;https://cran.r-project.org/web/packages/hcci/index.html&#34; target=&#34;_blank&#34;&gt;hcci package&lt;/a&gt; contains a function called &lt;code&gt;Pboot()&lt;/code&gt; which performs the wild bootstrap to correct for heteroskedasticity.&lt;/p&gt;
-
-&lt;p&gt;As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument in &lt;code&gt;lm()&lt;/code&gt;. Here&amp;rsquo;s an example with &lt;a href=&#34;https://www.jamesuanhoro.com/misc/datasets/atlschools.csv&#34;&gt;this dataset&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(hcci)
-atlschools &amp;lt;- read.csv(&amp;quot;./atlschools.csv&amp;quot;)
-# You can not pass the dataframe to the Pboot function so the next few lines are required prior to calling lm()
-ppc &amp;lt;- atlschools$PPC # per-pupil costs
-ptr_c &amp;lt;- scale(atlschools$PTR, scale = FALSE) # pupil/teacher ratio
-mts_c_10 &amp;lt;- scale(atlschools$MTS, scale = FALSE) / 10 # monthly teacher salary
-
-coef(summary(fit.0 &amp;lt;- lm(ppc ~ ptr_c + mts_c_10)))
-             Estimate Std. Error   t value     Pr(&amp;gt;|t|)
-(Intercept) 67.884318  1.1526357 58.894861 3.017231e-41
-ptr_c       -2.798285  0.3685282 -7.593138 2.427617e-09
-mts_c_10     2.477010  0.8167532  3.032752 4.190607e-03
-
-Pboot(model = fit.0, J = 1000, K = 100)
-
-$beta
-[1] 67.884318 -2.798285  2.477010
-
-$ci_lower_simple
-[1] 65.5454924 -3.7301276 -0.0653991
-
-$ci_upper_simple
-[1] 70.221038 -1.904783  4.969260
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The CI of monthly teacher salary includes 0, evidence to suggest we cannot distinguish its slope from 0. The inference at $\alpha=.05$ is different from OLS.&lt;/p&gt;
-&lt;div class=&#34;footnotes&#34;&gt;
-
-&lt;hr /&gt;
-
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34;&gt;Zeileis, A. (2004). Econometric Computing with HC and HAC Covariance Matrix Estimators. &lt;em&gt;Journal of Statistical Software, 11&lt;/em&gt;(10). &lt;a href=&#34;https://doi.org/10.18637/jss.v011.i10&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.18637/jss.v011.i10&lt;/a&gt;
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li id=&#34;fn:2&#34;&gt;Long, J. S., &amp;amp; Ervin, L. H. (2000). Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model. &lt;em&gt;The American Statistician, 54&lt;/em&gt;(3), 217–224. &lt;a href=&#34;https://doi.org/10.1080/00031305.2000.10474549&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1080/00031305.2000.10474549&lt;/a&gt;
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:2&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li id=&#34;fn:3&#34;&gt;Cribari-Neto, F., Souza, T. C., &amp;amp; Vasconcellos, K. L. P. (2007). Inference Under Heteroskedasticity and Leveraged Data. &lt;em&gt;Communications in Statistics - Theory and Methods, 36&lt;/em&gt;(10), 1877–1888. &lt;a href=&#34;https://doi.org/10.1080/03610920601126589&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1080/03610920601126589&lt;/a&gt;
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:3&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li id=&#34;fn:4&#34;&gt;Hausman, J., &amp;amp; Palmer, C. (2012). Heteroskedasticity-robust inference in finite samples. &lt;em&gt;Economics Letters, 116&lt;/em&gt;(2), 232–235. &lt;a href=&#34;https://doi.org/10.1016/j.econlet.2012.02.007&#34; target=&#34;_blank&#34;&gt;https://doi.org/10.1016/j.econlet.2012.02.007&lt;/a&gt;
- &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:4&#34;&gt;&lt;sup&gt;^&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-</description>
+      <guid>https://www.jamesuanhoro.com/post/2017/09/19/linear-regression-with-violation-of-heteroskedasticity-with-small-samples/</guid>
+      <description>TLDR: In small samples, the wild bootstrap implemented in the R hcci package is a good bet when heteroskedasticity is a concern.
+ Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
     </item>
     
   </channel>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theil-Sen regression in R | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Theil-Sen regression in R</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2017/09/21</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> <a href="/categories/rstats">rstats</a> 
+  
+  
+  
+  Tags: <a href="/tags/robust-regression">robust regression</a> <a href="/tags/heteroskedasticity">heteroskedasticity</a> <a href="/tags/outliers">outliers</a> <a href="/tags/small-samples">small samples</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<blockquote>
+<p><strong>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the <code>Theil-Sen estimator</code>.</strong></p>
+</blockquote>
+
+<p>A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:</p>
+
+<ul>
+<li>Plot a line between all the points in your data</li>
+<li>Calculate the slope for each line</li>
+<li>The median slope is your regression slope</li>
+</ul>
+
+<p>Calculating the slope this way happens to be quite robust. And when the errors are normally distributed and you have no outliers, the slope is very similar to OLS.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup></p>
+
+<p>There are several methods to obtain the intercept. It is reasonable to know what your software is doing if you care for the intercept in your regression. Theil-Sen regression is available in two R packages I know of: <code>WRS</code><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> and <a href="https://cran.r-project.org/web/packages/mblm/index.html">mblm</a>.</p>
+
+<p><code>mblm</code> includes a modification to Theil&rsquo;s original method that has a higher breakdown point (more robust).<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> This modification is the default method.</p>
+
+<p><code>WRS</code> contains two functions for Theil-Sen regression: Theil&rsquo;s original method in the <code>tsreg</code> function, and a modification for small samples when there are tied values in the outcome in the <code>tshdreg</code> function.</p>
+
+<p>Re my comment at the top regarding Theil-Sen for simple linear regression when there are concerns about outliers and heteroskedasticity, see Dietz<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup> and Wilcox<sup class="footnote-ref" id="fnref:5"><a rel="footnote" href="#fn:5">5</a></sup> below.</p>
+
+<p>I conducted a <a href="/misc/scripts/ts_sim.R">toy simulation</a> to see how Theil-Sen competes with OLS under heteroskedasticity; It is the more efficient estimator.</p>
+
+<p><img src="/img/posts/ts_hetero/0_slopes_hetero.png" alt="Simulation results" />
+<img src="/img/posts/ts_hetero/0_heteroscedastic_samples.png" alt="25 random samples from simulation" /></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. <em>Biometrical Journal, 40</em>(3), 261–268. <a href="https://doi.org/10.1002/(SICI)1521-4036(199807)40:3&lt;261::AID-BIMJ261&gt;3.0.CO;2-V">doi: 10.1002/(SICI)1521-4036(199807)40:3&lt;261::AID-BIMJ261&gt;3.0.CO;2-V</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2"><strong>W</strong>ilcox <strong>R</strong>obust <strong>S</strong>tatistics - Rand Wilcox&rsquo;s collection of robust methods. It is not available on CRAN, as CRAN requires proper documentation for all functions. This is a good set of installation instructions - <a href="https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/">https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/</a>.
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
+<li id="fn:3">Siegel, A. F. (1982). Robust regression using repeated medians. <em>Biometrika, 69</em>(1), 242–244. <a href="https://doi.org/10.1093/biomet/69.1.242">https://doi.org/10.1093/biomet/69.1.242</a>
+ <a class="footnote-return" href="#fnref:3">↩</a></li>
+<li id="fn:4">Dietz, E. J. (1987). A comparison of robust estimators in simple linear regression. Communications in Statistics - Simulation and Computation, 16(4), 1209–1227. <a href="https://doi.org/10.1080/03610918708812645">https://doi.org/10.1080/03610918708812645</a>
+ <a class="footnote-return" href="#fnref:4">↩</a></li>
+<li id="fn:5">Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. Biometrical Journal, 40(3), 261–268.
+ <a class="footnote-return" href="#fnref:5">↩</a></li>
+</ol>
+</div>
+
+</main>
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://github.com/stonegold546">Github</a> | <a href="https://twitter.com/JamesUanhoro">Twitter</a>
+      
+    </footer>
+  </body>
+</html>
+

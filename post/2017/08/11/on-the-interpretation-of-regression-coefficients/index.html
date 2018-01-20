@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>On the interpretation of regression coefficients | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">On the interpretation of regression coefficients</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2017/08/11</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> 
+  
+  
+  
+  Tags: <a href="/tags/regression">regression</a> <a href="/tags/causality">causality</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+
+
+<blockquote>
+<p><strong>TLDR: We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.</strong></p>
+</blockquote>
+
+<p>I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&rsquo;s <em>Data analysis using regression and multilevel/hierarchical models</em>.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> So I started reading it and it&rsquo;s a good book.</p>
+
+<p>A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p. 34). To see what they mean, let us consider an example.</p>
+
+<h2 id="predicting-student-performance">Predicting student performance</h2>
+
+<p>I&rsquo;ll use a <a href="/misc/datasets/hsb_comb_full.csv">subset of the High School &amp; Beyond dataset</a>.</p>
+
+<pre><code class="language-ruby">hsb &lt;- read.csv(&quot;datasets/hsb_comb_full.csv&quot;)
+names(hsb)
+[1] &quot;schoolid&quot; &quot;minority&quot; &quot;female&quot;   &quot;ses&quot;      &quot;mathach&quot;  &quot;size&quot;     &quot;sector&quot;   
+[8] &quot;pracad&quot;   &quot;disclim&quot;  &quot;himinty&quot;  &quot;MEANSES&quot;  &quot;N_BREAK&quot;  &quot;sesdev&quot;   &quot;myschool&quot;
+
+# Let's go with the first school, and the first 5 student-level variables
+hsb &lt;- hsb[hsb$schoolid == hsb$schoolid[1], 1:5]
+summary(hsb)
+schoolid       minority           female            ses             mathach      
+Min.   :1224   Min.   :0.00000   Min.   :0.0000   Min.   :-1.6580   Min.   :-2.832  
+1st Qu.:1224   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:-0.8830   1st Qu.: 3.450  
+Median :1224   Median :0.00000   Median :1.0000   Median :-0.4680   Median : 8.296  
+Mean   :1224   Mean   :0.08511   Mean   :0.5957   Mean   :-0.4344   Mean   : 9.715  
+3rd Qu.:1224   3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:-0.0330   3rd Qu.:16.370  
+Max.   :1224   Max.   :1.00000   Max.   :1.0000   Max.   : 0.9720   Max.   :23.584  
+
+# Mathach, ses and female seem to have some variability
+# Let's predict math achievement using female (dummy), ses (continuous)
+lm(mathach ~ female + ses, hsb)
+
+Call:
+lm(formula = mathach ~ female + ses, data = hsb)
+
+Coefficients:
+(Intercept)       female          ses  
+     12.092       -2.062        2.643  
+</code></pre>
+
+<p>Now the typical approach to interpreting the coefficient for <code>female</code> is:</p>
+
+<blockquote>
+<p>Holding SES constant, there is on average, a 2.06-point difference in math achievement between males and females, with males performing better.</p>
+</blockquote>
+
+<p>There is nothing wrong with this approach, however to clarify the language, we could say:</p>
+
+<blockquote>
+<p>For students with the same SES, we expect a 2.06-point difference in math achievement between males and females, with males performing better.</p>
+</blockquote>
+
+<p>The problem arises with the interpretation of <code>ses</code>, it typically goes:</p>
+
+<blockquote>
+<p>Holding gender constant, a point improvement in SES relates with a 2.64 increase in math achievement.</p>
+</blockquote>
+
+<p>We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.</p>
+
+<p>Gelman and Hill advice phrasing its interpretation like this:</p>
+
+<blockquote>
+<p>For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.</p>
+</blockquote>
+
+<p>This is what they call a <em>predictive interpretation</em> of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press.
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+</ol>
+</div>
+
+</main>
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://github.com/stonegold546">Github</a> | <a href="https://twitter.com/JamesUanhoro">Twitter</a>
+      
+    </footer>
+  </body>
+</html>
+

@@ -1,449 +1,172 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/rasch_binary_using_glmer/</loc>
-      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/chisq-test-close-fit/</loc>
-      <lastmod>2017-11-16T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/11/16/a-chi-square-test-of-close-fit-in-covariance-based-sem/</loc>
+    <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/talk/intro-to-r-rmc/</loc>
-      <lastmod>2017-11-02T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/10/28/misspecification-and-fit-indices-in-covariance-based-sem/</loc>
+    <lastmod>2017-10-28T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/testing-covariance-based-sems/</loc>
-      <lastmod>2017-10-28T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/theil-sen-regression/</loc>
-      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/little-mcar-sample-sizes/</loc>
-      <lastmod>2017-09-21T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/09/19/linear-regression-with-violation-of-heteroskedasticity-with-small-samples/</loc>
+    <lastmod>2017-09-19T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/regression-heteroskedasticity-small-samples/</loc>
-      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/08/11/on-the-interpretation-of-regression-coefficients/</loc>
+    <lastmod>2017-08-11T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/interpretation-regression-coefficients/</loc>
-      <lastmod>2017-08-11T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/</loc>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/talk/ggplot2-festival/</loc>
-      <lastmod>2017-07-21T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/causality/</loc>
+    <lastmod>2017-08-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/talk/es-demo-festival/</loc>
-      <lastmod>2017-07-19T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</loc>
+    <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/talk/intro-to-r-pub-pol/</loc>
-      <lastmod>2017-05-16T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/fit-indices/</loc>
+    <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/talk/intro-to-spss-rmc-0/</loc>
-      <lastmod>2017-03-20T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/academic/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/workshop/example-talk/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/item-response-theory/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/littles-mcar-test/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/publication/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/talk/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/missing-data/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/project/nigeria-poverty-profile/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/misspecification/</loc>
+    <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/project/canvas-lms-visualization/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/outliers/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/project/effect-size-application/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/project/mplus-file-scraper/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/projects/</loc>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/project/visualize-nigeria-budget/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/rasch/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/post/writing-markdown-latex/</loc>
-      <lastmod>2016-04-20T10:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
+    <lastmod>2017-08-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/robust-regression/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/causality/</loc>
-      <lastmod>2017-08-11T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/rstats/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/cfa/</loc>
-      <lastmod>2017-11-16T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/small-samples/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/data-viz/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/estimation/</loc>
-      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</loc>
+    <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/fit-indices/</loc>
-      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/</loc>
+    <lastmod>2017-08-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
-      <lastmod>2017-09-19T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/</loc>
-      <lastmod>2016-04-20T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/littles-mcar-test/</loc>
-      <lastmod>2017-09-21T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
-      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/missing-data/</loc>
-      <lastmod>2017-09-21T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/misspecification/</loc>
-      <lastmod>2017-11-16T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/project/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/publication_types/</loc>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/rasch/</loc>
-      <lastmod>2018-01-02T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/robust/</loc>
-      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/sem/</loc>
-      <lastmod>2017-11-16T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/small-samples/</loc>
-      <lastmod>2017-09-21T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/software/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/theil-sen/</loc>
-      <lastmod>2017-09-21T13:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/tags/user-guide/</loc>
-      <lastmod>2016-04-20T10:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://www.jamesuanhoro.com/workshop/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://www.jamesuanhoro.com/workshops/</loc>
+  </url>
   
 </urlset>

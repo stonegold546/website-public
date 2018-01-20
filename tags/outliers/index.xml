@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Outliers on James Uanhoro</title>
+    <link>https://www.jamesuanhoro.com/tags/outliers/</link>
+    <description>Recent content in Outliers on James Uanhoro</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 21 Sep 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.jamesuanhoro.com/tags/outliers/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Theil-Sen regression in R</title>
+      <link>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</link>
+      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</guid>
+      <description>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the Theil-Sen estimator.
+ A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
+ Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope  Calculating the slope this way happens to be quite robust.</description>
+    </item>
+    
+  </channel>
+</rss>

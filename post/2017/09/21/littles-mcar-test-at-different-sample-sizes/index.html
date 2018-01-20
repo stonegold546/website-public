@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Little&#39;s MCAR test at different sample sizes | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Little&#39;s MCAR test at different sample sizes</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2017/09/21</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> <a href="/categories/rstats">rstats</a> 
+  
+  
+  
+  Tags: <a href="/tags/missing-data">missing data</a> <a href="/tags/littles-mcar-test">little&#39;s mcar test</a> <a href="/tags/small-samples">small samples</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<blockquote>
+<p><strong>TLDR: Little&rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.</strong></p>
+</blockquote>
+
+<p>I just found out about the R <a href="https://cran.r-project.org/web/packages/simglm/index.html">simglm package</a> and decided to do a small simulation to test Little&rsquo;s MCAR test<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future. I was able to find some examples of researchers using Little&rsquo;s MCAR test at small sample sizes, so I ran a toy simulation.</p>
+
+<p><img src="/img/posts/little_mcar/zoom_in.png" alt="Data are MCAR" />
+<img src="/img/posts/little_mcar/zoom_in_mar.png" alt="Data are MAR" /></p>
+
+<p>And this is the <a href="/misc/scripts/little_sim.R">script I used</a>, the underlying regression is near perfect (no multicollinearity).</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. <em>Journal of the American Statistical Association, 83</em>(404), 1198. <a href="https://doi.org/10.2307/2290157">https://doi.org/10.2307/2290157</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+</ol>
+</div>
+
+</main>
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://github.com/stonegold546">Github</a> | <a href="https://twitter.com/JamesUanhoro">Twitter</a>
+      
+    </footer>
+  </body>
+</html>
+
