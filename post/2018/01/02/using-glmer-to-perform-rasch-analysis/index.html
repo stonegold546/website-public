@@ -72,7 +72,7 @@
   
   
   
-  Tags: <a href="/tags/rasch">Rasch</a> <a href="/tags/multilevel-regression">multilevel-regression</a> <a href="/tags/item-response-theory">item-response-theory</a> <a href="/tags/logistic-regression">logistic-regression</a> 
+  Tags: <a href="/tags/rasch-model">Rasch-model</a> <a href="/tags/multilevel-regression">multilevel-regression</a> <a href="/tags/item-response-theory">item-response-theory</a> <a href="/tags/logistic-regression">logistic-regression</a> 
   
   
 </p>
@@ -396,6 +396,10 @@ ggplot(raschdat1.long, aes(x = tot, y = ability)) +
 
 <h4 id="item-fit-using-mean-square">Item fit using mean square</h4>
 
+<p>For the outfit MSQ, you square the residual (on the response scale, or actual score - predicted probability), and divide it by the predicted probability $\times$ (1 - predicted probability). The average of this value for each item is its outfit mean square. The average of this value for each person is their outfit mean square.</p>
+
+<p>For the infit MSQ, you perform the same computations. However, you perform these computations within the items for item infit, and within the persons for person infit. This is a vague; for some reason, I had issues typing out the formula in MathJax. See slides 14 and 15 <a href="http://statmath.wu-wien.ac.at/people/hatz/psychometrics/10w/RM_handouts_5.pdf">here</a> for formulae.</p>
+
 <p>eRm one-liner:</p>
 
 <pre><code class="language-ruby">itemfit(person.parameter(res.rasch)) # Not printed
@@ -498,7 +502,7 @@ ggplot(person.fit.df, aes(x = mml, y = cml)) +
 
 <p><img src="/img/posts/rasch_bin_logistic/iic_joint.png" alt="IIC" /></p>
 
-<p>We&rsquo;ve done the work for this above when we created the ICCs, and calculated the test information. All that remains is plotting. For the overall test information, we need to sum each items test information:</p>
+<p>We&rsquo;ve already done the work for this above when we created the ICCs, and calculated the test information. All that remains is plotting. For the overall test information, we need to sum each item&rsquo;s test information:</p>
 
 <pre><code class="language-ruby">ggplot(summarise(group_by(test.info.df, theta), info = sum(info)),
        aes(x = theta, y = info)) + geom_line() +
