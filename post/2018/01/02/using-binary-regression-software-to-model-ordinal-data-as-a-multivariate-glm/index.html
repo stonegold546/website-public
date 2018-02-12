@@ -97,7 +97,7 @@
 
 <p>How does one model this using univariate GLM software? The UCLA idre page has this article on <a href="https://stats.idre.ucla.edu/r/faq/multivariate-random-coefficient-model/">multivariate random coefficient models</a>. It&rsquo;s relevant here because they use <code>nlme</code> (a univariate linear mixed models software) to model a multivariate outcome. The essential idea is in stacking the data, making it a kind of repeated measures, but finding a way to signal to the software that the outcomes are different, requiring different intercepts and slopes for the predictors.</p>
 
-<p>So what we do is we transform the data from wide to long, model it as a regular binomial, but we need to tell the model to estimate a different intercept for each level. If we want proportional odds, then we can estimate a single coefficient for each predictor. If not, we can do otherwise using interaction terms as we will see. The unique challenge is the outcomes are correlated, so we need a model that can model this correlation.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> For this, I use general estimating equations (GEE) with an <code>unstructured</code> working correlation structure.</p>
+<p>So what we do is we transform the data from wide to long, model it as a regular binomial, but we need to tell the model to estimate a different intercept for each level. If we want proportional odds, then we can estimate a single coefficient for each predictor. If not, we can do otherwise using interaction terms as we will see. The unique challenge is the outcomes are correlated, so we need a model that can model this correlation.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> For this, I use general estimating equations (GEE) with an <code>unstructured</code> working correlation structure.<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup></p>
 
 <h2 id="demonstration">Demonstration</h2>
 
@@ -337,6 +337,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
  <a class="footnote-return" href="#fnref:1">↩</a></li>
 <li id="fn:2">Under normal circumstances, we would also need to inform the software that the variances are different for each outcome. However this is the binomial regression, and the variance of the latent variable is fixed at $\frac{pi^2}{3}$. If this were an attempt at multivariate OLS regression, one would have to model the dispersion separately for each variable. I believe the <code>sformula =</code> argument in the <code>geese()</code> function in <code>geepack</code> should make this possible.
  <a class="footnote-return" href="#fnref:2">↩</a></li>
+<li id="fn:3">I use an <code>unstructured</code> working correlation structure because it allows the estimation of the correlation between each pair of outcomes. Other alternatives do not permit this: <code>independence</code> places 1 on diagonal, and 0 off diagonal; <code>exchangeable</code> forces all off diagonal elements to be the same (<em>compound symmetry</em> in ANOVA terminology); <code>ar1</code> uses a specification that is more adequate for time ordered data. Assuming independence would not be defensible here, and exchangeable may be overly constraining for our purposes.
+ <a class="footnote-return" href="#fnref:3">↩</a></li>
 </ol>
 </div>
 
