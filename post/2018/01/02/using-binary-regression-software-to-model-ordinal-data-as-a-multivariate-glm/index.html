@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Using binary regression software to model ordinal data as a multivariate GLM | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Using binary regression software to model ordinal data as a multivariate GLM</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2018/01/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> <a href="/categories/rstats">rstats</a> 
+  
+  
+  
+  Tags: <a href="/tags/logistic-regression">logistic-regression</a> <a href="/tags/ordinal-regression">ordinal-regression</a> <a href="/tags/multivariate-glm">multivariate-GLM</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+
+
+<p>I have read that the most common model for analyzing ordinal data is the cumulative link logistic model, coupled with the proportional odds assumption. Essentially, you treat the outcome as if it were the categorical manifestation of a continuous latent variable. The predictor variables of this outcome influence it in one way only, so you get a single regression coefficient for each predictor. But the model has several intercepts representing the points at which the variable was cut to create the observed categorical manifestation.</p>
+
+<p>That each predictor variable influences the outcome in one way - as you have in commonplace regression models - is the proportional odds assumption or constraint. Alternatively, one can have each predictor variable influence the outcome differently at each cut-point. This would be relaxing the proportional odds constraint.</p>
+
+<p>In Agresti&rsquo;s Categorical Data Analysis,<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> he writes, &ldquo;McCullagh (1980) and Thompson and Baker (1981) treated cumulative link models as multivariate GLMs&rdquo; when discussing estimation for cumulative link models. To unpack this claim, I did some extra reading and it&rsquo;s relative easy to see how. Consider an ordinal variable that has 4 levels: 1, 2, 3, 4. This ordinal variable can be expressed as three binary variables. And there are a variety of ways to do this, I will use the cumulative link parameterization as an example.</p>
+
+<p>Since there are 4 levels, there are three transitions (aka thresholds, cut-points): from 1 to 2, 2 to 3 and 3 to 4. Using the cumulative link parameterization, we generate a new variable per transition point as shown in the table below.</p>
+
+<p>$\begin{array}{c|ccc} &amp; 1 - 2 &amp; 2 - 3 &amp; 3 - 4\\ \hline 1 &amp; 0 &amp; 0 &amp; 0 \\ 2 &amp; 1 &amp; 0 &amp; 0 \\ 3 &amp; 1 &amp; 1 &amp; 0 \\ 4 &amp; 1 &amp; 1 &amp; 1\end{array}$</p>
+
+<p>A 1 is less than all the cut-points, so becomes three zeros; a 4 exceeds all the cut-points and becomes three ones. Given 4 levels, each respondent now has three responses, one per cut-point, hence the description of this ordinal model as a multivariate GLM. See the <a href="#acat">bottom of this page</a> for the adjacent categories parameterization.</p>
+
+<p>How does one model this using univariate GLM software? The UCLA idre page has this article on <a href="https://stats.idre.ucla.edu/r/faq/multivariate-random-coefficient-model/">multivariate random coefficient models</a>. It&rsquo;s relevant here because they use <code>nlme</code> (a univariate linear mixed models software) to model a multivariate outcome. The essential idea is in stacking the data, making it a kind of repeated measures, but finding a way to signal to the software that the outcomes are different, requiring different intercepts and slopes for the predictors.</p>
+
+<p>So what we do is we transform the data from wide to long, model it as a regular binomial, but we need to tell the model to estimate a different intercept for each level. If we want proportional odds, then we can estimate a single coefficient for each predictor. If not, we can do otherwise using interaction terms as we will see. The unique challenge is the outcomes are correlated, so we need a model that can model this correlation.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> For this, I use general estimating equations (GEE) with an <code>unstructured</code> working correlation structure.</p>
+
+<h2 id="demonstration">Demonstration</h2>
+
+<pre><code class="language-ruby">library(ordinal) # For ordinal regression to check our results
+library(geepack) # For GEE with binary data
+</code></pre>
+
+<p>I&rsquo;ll use the <code>soup</code> dataset from the ordinal package.</p>
+
+<pre><code class="language-ruby">soup &lt;- ordinal::soup
+soup$ID &lt;- 1:nrow(soup) # Create a person ID variable
+str(soup)
+
+'data.frame':	1847 obs. of  13 variables:
+ $ RESP    : Factor w/ 185 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ PROD    : Factor w/ 2 levels &quot;Ref&quot;,&quot;Test&quot;: 1 2 1 2 1 2 2 2 2 1 ...
+ $ PRODID  : Factor w/ 6 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 1 2 1 3 1 6 2 4 5 1 ...
+ $ SURENESS: Ord.factor w/ 6 levels &quot;1&quot;&lt;&quot;2&quot;&lt;&quot;3&quot;&lt;&quot;4&quot;&lt;..: 6 5 5 6 5 5 2 5 5 2 ...
+ $ DAY     : Factor w/ 2 levels &quot;1&quot;,&quot;2&quot;: 1 1 1 1 2 2 2 2 2 2 ...
+ $ SOUPTYPE: Factor w/ 3 levels &quot;Self-made&quot;,&quot;Canned&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+ $ SOUPFREQ: Factor w/ 3 levels &quot;&gt;1/week&quot;,&quot;1-4/month&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ COLD    : Factor w/ 2 levels &quot;No&quot;,&quot;Yes&quot;: 2 2 2 2 2 2 2 2 2 2 ...
+ $ EASY    : Factor w/ 10 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 7 7 7 7 7 7 7 7 7 7 ...
+ $ GENDER  : Factor w/ 2 levels &quot;Male&quot;,&quot;Female&quot;: 2 2 2 2 2 2 2 2 2 2 ...
+ $ AGEGROUP: Factor w/ 4 levels &quot;18-30&quot;,&quot;31-40&quot;,..: 4 4 4 4 4 4 4 4 4 4 ...
+ $ LOCATION: Factor w/ 3 levels &quot;Region 1&quot;,&quot;Region 2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ ID      : int  1 2 3 4 5 6 7 8 9 10 ...
+</code></pre>
+
+<p>I&rsquo;ll use the <code>SURENESS</code> variable. It has 6 levels. I&rsquo;ll model it with the <code>DAY</code> and <code>GENDER</code> variables.</p>
+
+<pre><code class="language-ruby"># Select variables to work with
+soup &lt;- dplyr::select(soup, ID, SURENESS, DAY, GENDER)
+# I like dummy variables with recognizable names
+soup$girl &lt;- ifelse(soup$GENDER == &quot;Female&quot;, 1, 0) # Make male reference group
+soup$day2 &lt;- ifelse(soup$DAY == &quot;2&quot;, 1, 0) # Make day 1 reference group
+</code></pre>
+
+<p>The next step is to transform the ordinal outcome into 5 outcomes representing each of the thresholds:</p>
+
+<pre><code class="language-ruby">soup$SURE2 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 2, 1, 0)
+soup$SURE3 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 3, 1, 0)
+soup$SURE4 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 4, 1, 0)
+soup$SURE5 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 5, 1, 0)
+soup$SURE6 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 6, 1, 0)
+</code></pre>
+
+<p>With that done, we&rsquo;re ready for the wide to long transformation of these 5 new outcome variables.</p>
+
+<pre><code class="language-ruby">soup.long &lt;- tidyr::gather(soup, SURE, VAL, SURE2:SURE6) # New long data frame
+soup.long &lt;- soup.long[order(soup.long$ID), ] # Order the data by person
+head(soup.long$SURE) # Currently looks like:
+
+[1] &quot;SURE2&quot; &quot;SURE3&quot; &quot;SURE4&quot; &quot;SURE5&quot; &quot;SURE6&quot; &quot;SURE2&quot;
+
+# I only want 2, 3, 4, ... the final number
+soup.long$SURE &lt;- as.numeric(substr(soup.long$SURE, 5, 5))
+soup.long$SURE.f &lt;- factor(soup.long$SURE) # Create a factor variable
+head(soup.long) # Let's look at the data
+
+     ID SURENESS DAY GENDER girl day2 SURE VAL SURE.f
+1     1        6   1 Female    1    0    2   1      2
+1848  1        6   1 Female    1    0    3   1      3
+3695  1        6   1 Female    1    0    4   1      4
+5542  1        6   1 Female    1    0    5   1      5
+7389  1        6   1 Female    1    0    6   1      6
+2     2        5   1 Female    1    0    2   1      2
+</code></pre>
+
+<p>Person 1 is a girl with day 1. Her response was a 6, hence, all her <code>VAL</code> scores are 1. She is like 4 was in the transformation table above. Let&rsquo;s look at someone who did not select the highest response category:</p>
+
+<pre><code class="language-ruby"># First 5 rows in data with a four, since data ordered by person, returns an individual's record
+soup.long[soup.long$SURENESS == 4, ][1:5, ]
+
+     ID SURENESS DAY GENDER girl day2 SURE VAL SURE.f
+22   22        4   1 Female    1    0    2   1      2
+1869 22        4   1 Female    1    0    3   1      3
+3716 22        4   1 Female    1    0    4   1      4
+5563 22        4   1 Female    1    0    5   0      5
+7410 22        4   1 Female    1    0    6   0      6
+</code></pre>
+
+<p>This individual selected a <code>SURENESS</code> of 4. Her first three <code>VAL</code> scores are 1 because she cleared the first three thresholds. Her final two scores are 0 because 4 is less than the 4 - 5 threshold and 5 - 6 threshold.</p>
+
+<p>The next step is to create dummy variables for the thresholds. These variables will be used to represent the intercept in our models.</p>
+
+<pre><code class="language-ruby"># Taking a short cut to create dummy variables.
+soup.long &lt;- cbind(soup.long, model.matrix(
+  ~ 0 + SURE.f, data = soup.long,
+  contrasts.arg = list(SURE.f = &quot;contr.treatment&quot;)) * -1)
+</code></pre>
+
+<p>Note that I multiplied the dummy variables by -1. In ordinal regression, doing this makes interpretation easier and is the default option in the <code>ordinal</code> package. In summary, it ensures that positive coefficients increase the odds of moving from a lower category, say 3, to a higher category, 4, or responding to a higher response category.</p>
+
+<p>And now, we are ready to run the models. We use GEE, remove the intercept and place a dummy variable for each threshold, and the two coefficients for <code>day2</code> and <code>girl</code>. The correlation structure is <code>unstructured</code>.</p>
+
+<pre><code class="language-ruby">pom.bin &lt;- geeglm( # Prop odds model
+  VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + day2,
+  id = ID, data = soup.long, family = binomial, corstr = &quot;unstructured&quot;
+)
+</code></pre>
+
+<p>Next, I estimate the model using standard ordinal regression software:</p>
+
+<pre><code class="language-ruby">pom.ord &lt;- clm(SURENESS ~ girl + day2, data = soup)
+</code></pre>
+
+<p>Let&rsquo;s compare coefficients and standard errors:</p>
+
+<pre><code class="language-ruby">round(cbind(coef(summary(pom.bin)), coef(summary(pom.ord)))[, c(1, 5, 2, 6, 3, 7, 4, 8)], 5)
+
+        Estimate Estimate.1 Std.err Std. Error     Wald  z value Pr(&gt;|W|) Pr(&gt;|z|)
+SURE.f2 -2.13244   -2.13155 0.10454    0.10450 416.0946 -20.3971   0.0000   0.0000
+SURE.f3 -1.19345   -1.19259 0.09142    0.09232 170.4284 -12.9179   0.0000   0.0000
+SURE.f4 -0.89164   -0.89079 0.08979    0.09011  98.5995  -9.8857   0.0000   0.0000
+SURE.f5 -0.65782   -0.65697 0.08945    0.08898  54.0791  -7.3833   0.0000   0.0000
+SURE.f6 -0.04558   -0.04477 0.08801    0.08789   0.2682  -0.5093   0.6046   0.6105
+girl    -0.04932   -0.04917 0.09036    0.09074   0.2980  -0.5419   0.5851   0.5879
+day2    -0.26172   -0.26037 0.08584    0.08579   9.2954  -3.0351   0.0023   0.0024
+</code></pre>
+
+<p>Placing the results side by side, one can see that they are very close.</p>
+
+<p>However, estimation using <code>glm()</code> which cannot model dependencies between the outcomes of a person yields different results. For demonstration:</p>
+
+<pre><code class="language-ruby">round(coef(summary(glm(
+  VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + day2,
+  data = soup.long, family = binomial
+))), 5)
+
+        Estimate Std. Error z value Pr(&gt;|z|)
+SURE.f2 -2.15144    0.08255 -26.062   0.0000
+SURE.f3 -1.21271    0.06736 -18.004   0.0000
+SURE.f4 -0.91149    0.06472 -14.084   0.0000
+SURE.f5 -0.67782    0.06327 -10.713   0.0000
+SURE.f6 -0.06523    0.06178  -1.056   0.2911
+girl    -0.07326    0.04961  -1.477   0.1398
+day2    -0.26898    0.04653  -5.780   0.0000
+</code></pre>
+
+<p>Both the estimates and standard errors are inadequate.</p>
+
+<p>We can easily relax the proportional odds constraint in the <code>pom.bin</code> model. Let&rsquo;s run what some call a <em>partial proportional odds model</em> by relaxing this constraint for the <code>day2</code> predictor. We do this by estimating an interaction between the threshold dummies and the <code>day2</code> predictor. Note that there is no effect for the <code>day2</code> variable itself, it only appears in the interaction terms with the various intercepts.</p>
+
+<pre><code class="language-ruby">npom.bin &lt;- geeglm( # Partial prop odds, prop odds for girl only
+  VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl +
+    # SURE.f2:girl + SURE.f3:girl + SURE.f4:girl + SURE.f5:girl + SURE.f6:girl +
+    SURE.f2:day2 + SURE.f3:day2 + SURE.f4:day2 + SURE.f5:day2 + SURE.f6:day2,
+  id = ID, data = soup.long, family = binomial, corstr = &quot;unstructured&quot;
+)
+</code></pre>
+
+<p>I also run the same model in <code>ordinal</code> for comparison, using the nominal argument for <code>day2</code>.</p>
+
+<pre><code class="language-ruby">npom.ord &lt;- clm( # Using ordinal package for comparison
+  SURENESS ~ girl, data = soup, nominal = ~ day2)
+# Compare results
+round(cbind(coef(summary(npom.bin))[c(1:5, 7:11, 6), ],
+            coef(summary(npom.ord)))[, c(1, 5, 2, 6, 3, 7, 4, 8)], 5)
+
+             Estimate Estimate.1 Std.err Std. Error     Wald  z value Pr(&gt;|W|) Pr(&gt;|z|)
+SURE.f2      -2.02982   -2.03106 0.11800    0.11834 295.8986 -17.1630  0.00000  0.00000
+SURE.f3      -1.22087   -1.22213 0.09829    0.09857 154.2801 -12.3980  0.00000  0.00000
+SURE.f4      -0.92773   -0.92899 0.09458    0.09443  96.2112  -9.8375  0.00000  0.00000
+SURE.f5      -0.65744   -0.65870 0.09246    0.09188  50.5554  -7.1693  0.00000  0.00000
+SURE.f6      -0.04733   -0.04859 0.08955    0.08965   0.2793  -0.5420  0.59714  0.58784
+SURE.f2:day2  0.07359    0.07360 0.14148    0.14155   0.2705   0.5199  0.60298  0.60312
+SURE.f3:day2  0.31691    0.31697 0.10607    0.10613   8.9270   2.9867  0.00281  0.00282
+SURE.f4:day2  0.33301    0.33308 0.09970    0.09973  11.1551   3.3398  0.00084  0.00084
+SURE.f5:day2  0.26330    0.26339 0.09618    0.09616   7.4938   2.7391  0.00619  0.00616
+SURE.f6:day2  0.26741    0.26748 0.09347    0.09345   8.1842   2.8622  0.00423  0.00421
+girl         -0.04809   -0.04994 0.09048    0.09077   0.2825  -0.5502  0.59507  0.58221
+</code></pre>
+
+<p>The results are again comparable.</p>
+
+<p>We can now compare the partial proportional odds binary model to the proportional odds binary model to test the constraint for the <code>day2</code> variable. Luckily, <code>geepack</code> permits <code>anova()</code> which conducts a Wald test comparing both models:</p>
+
+<pre><code class="language-ruby">anova(pom.bin, npom.bin) # Testing partial proportional odds assumption.
+
+Analysis of 'Wald statistic' Table
+
+Model 1 VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + SURE.f2:day2 + SURE.f3:day2 + SURE.f4:day2 + SURE.f5:day2 + SURE.f6:day2
+Model 2 VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + day2
+  Df   X2 P(&gt;|Chi|)
+1  4 6.94      0.14
+</code></pre>
+
+<p>The difference between both models was not statistically significant, suggesting the proportionality constraint for the <code>day2</code> variable suffices.</p>
+
+<p>We can conduct the same test in <code>ordinal</code> either by comparing <code>pom.ord</code> and <code>npom.ord</code> models using <code>anova()</code>, or using the <code>nomimal_test()</code> function. Both are likelihood ratio tests, which are more adequate than the Wald test for the GEEs above.</p>
+
+<pre><code class="language-ruby">anova(pom.ord, npom.ord)
+
+Likelihood ratio tests of cumulative link models:
+
+         formula:               nominal: link: threshold:
+pom.ord  SURENESS ~ girl + day2 ~1       logit flexible  
+npom.ord SURENESS ~ girl        ~day2    logit flexible  
+
+         no.par  AIC logLik LR.stat df Pr(&gt;Chisq)
+pom.ord       7 5554  -2770                      
+npom.ord     11 5555  -2766    6.91  4       0.14
+
+nominal_test(pom.ord)
+
+Tests of nominal effects
+
+formula: SURENESS ~ girl + day2
+       Df logLik  AIC  LRT Pr(&gt;Chi)  
+&lt;none&gt;     -2770 5554                
+girl    4  -2766 5554 8.02    0.091 .
+day2    4  -2766 5555 6.91    0.141  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</code></pre>
+
+<p>Both tests converge to the same result, and also give the same p-values for the Wald test comparing the GEE models. However, the Wald-$\chi^2$ test statistic was slightly higher.</p>
+
+<hr />
+
+<p>Having done this, of course using a package for ordinal data is much easier. However, there may be some advantage to treating the model as binary. For some reason I am yet to figure out, <code>ordinal</code> returns only one set of fitted probabilities when one attempts to obtain predicted probabilities from the model using the <code>fitted()</code> function. Ideally, it should return a fitted probability for each threshold. With <code>geepack</code>, obtaining the predicted probabilities at each level is straightforward using the <code>fitted()</code> function. However, this advantage is trivial. For one, <code>VGAM</code>&rsquo;s <code>vglm()</code> does not suffer the same problem, and calculating predicted probabilities is a relatively simple task.</p>
+
+<hr />
+
+<p><div id="acat"></p>
+
+<p>Adjacent categories parameterization:</p>
+
+<p>$\begin{array}{c|ccc} &amp; 1 - 2 &amp; 2 - 3 &amp; 3 - 4\\ \hline 1 &amp; 0 &amp;  &amp;  \\ 2 &amp; 1 &amp; 0 &amp;  \\ 3 &amp;  &amp; 1 &amp; 0 \\ 4 &amp;  &amp;  &amp; 1\end{array}$</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Agresti, A. (2013). Categorical data analysis. Wiley-Interscience.
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2">Under normal circumstances, we would also need to inform the software that the variances are different for each outcome. However this is the binomial regression, and the variance of the latent variable is fixed at $\frac{pi^2}{3}$. If this were an attempt at multivariate OLS regression, one would have to model the dispersion separately for each variable. I believe the <code>sformula =</code> argument in the <code>geese()</code> function in <code>geepack</code> should make this possible.
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
+</ol>
+</div>
+
+</main>
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+

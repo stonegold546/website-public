@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2018/01/02/using-binary-regression-software-to-model-ordinal-data-as-a-multivariate-glm/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/</loc>
     <lastmod>2018-01-02T00:00:00+00:00</lastmod>
   </url>
@@ -97,6 +102,18 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/multilevel-regression/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/multivariate-glm/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/ordinal-regression/</loc>
     <lastmod>2018-01-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

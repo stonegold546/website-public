@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Using binary regression software to model ordinal data as a multivariate GLM</title>
+      <link>https://www.jamesuanhoro.com/post/2018/01/02/using-binary-regression-software-to-model-ordinal-data-as-a-multivariate-glm/</link>
+      <pubDate>Tue, 02 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/01/02/using-binary-regression-software-to-model-ordinal-data-as-a-multivariate-glm/</guid>
+      <description>I have read that the most common model for analyzing ordinal data is the cumulative link logistic model, coupled with the proportional odds assumption. Essentially, you treat the outcome as if it were the categorical manifestation of a continuous latent variable. The predictor variables of this outcome influence it in one way only, so you get a single regression coefficient for each predictor. But the model has several intercepts representing the points at which the variable was cut to create the observed categorical manifestation.</description>
+    </item>
+    
+    <item>
       <title>Using glmer() to perform Rasch analysis</title>
       <link>https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/</link>
       <pubDate>Tue, 02 Jan 2018 00:00:00 +0000</pubDate>
