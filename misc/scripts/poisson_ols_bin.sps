@@ -1,0 +1,41 @@
+﻿* Encoding: UTF-8.
+
+* Logistic model.
+LOGISTIC REGRESSION VARIABLES Remedial
+  /METHOD=ENTER Boy Reading 
+  /SAVE=PRED
+  /CRITERIA=PIN(.05) POUT(.10) ITERATE(20) CUT(.5).
+
+* Plot predicted probabilities - Logistic.
+GRAPH
+  /SCATTERPLOT(BIVAR)=Reading WITH PRE_1 BY Boy
+  /MISSING=LISTWISE.
+
+* Poisson model with robust errors.
+GENLIN Remedial BY Boy (ORDER=DESCENDING) WITH Reading
+  /MODEL Boy Reading INTERCEPT=YES
+ DISTRIBUTION=POISSON LINK=LOG
+  /CRITERIA COVB=ROBUST
+  /PRINT CPS DESCRIPTIVES MODELINFO FIT SUMMARY SOLUTION
+  /SAVE MEANPRED.
+
+* Plot predicted probabilities - Poisson.
+GRAPH
+  /SCATTERPLOT(BIVAR)=Reading WITH MeanPredicted BY Boy
+  /MISSING=LISTWISE.
+
+COMPUTE Reading_c = Reading - 65.
+EXECUTE.
+
+* OLS model with robust errors.
+GENLIN Remedial BY Boy (ORDER=DESCENDING) WITH Reading_c
+  /MODEL Boy Reading_c INTERCEPT=YES
+ DISTRIBUTION=NORMAL LINK=IDENTITY
+  /CRITERIA COVB=ROBUST
+  /PRINT CPS DESCRIPTIVES MODELINFO FIT SUMMARY SOLUTION
+  /SAVE MEANPRED LEVERAGE.
+
+* Plot predicted probabilities - Normal.
+GRAPH
+  /SCATTERPLOT(BIVAR)=Reading WITH MeanPredicted_1 BY Boy
+  /MISSING=LISTWISE.
