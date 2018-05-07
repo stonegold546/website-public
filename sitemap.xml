@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</loc>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2018/02/12/using-binary-regression-software-to-model-ordinal-data-as-a-multivariate-glm/</loc>
     <lastmod>2018-02-12T00:00:00+00:00</lastmod>
   </url>
@@ -66,6 +71,12 @@
   </url>
   
   <url>
+    <loc>https://www.jamesuanhoro.com/tags/glm/</loc>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
     <lastmod>2017-09-21T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -73,7 +84,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -97,6 +108,12 @@
   <url>
     <loc>https://www.jamesuanhoro.com/tags/misspecification/</loc>
     <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/model-validation/</loc>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -126,7 +143,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -142,7 +159,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -154,7 +171,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/rstats/</loc>
-    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -172,7 +189,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

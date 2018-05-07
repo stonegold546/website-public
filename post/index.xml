@@ -6,10 +6,19 @@
     <description>Recent content in Posts on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Feb 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 07 May 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Simulating data from regression models</title>
+      <link>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</link>
+      <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</guid>
+      <description>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it extendable to the family of generalized linear models (logistic, Poisson, gamma, &amp;hellip;). It&amp;rsquo;s something Gelman and Hill cover in their regression text.1 Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</description>
+    </item>
     
     <item>
       <title>Using binary regression software to model ordinal data as a multivariate GLM</title>
