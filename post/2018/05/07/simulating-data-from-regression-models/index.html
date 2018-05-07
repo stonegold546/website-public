@@ -85,7 +85,7 @@
 
 <p>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it  extendable to the family of generalized linear models (logistic, Poisson, gamma, &hellip;). It&rsquo;s something Gelman and Hill cover in their regression text.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</p>
 
-<p>Your standard regression model assumes there are true/fixed parameters relating the predictors to the outcome. However, when we perform regression, we only estimate these parameters. Hence, regression software returns standard errors which represent coefficient uncertainty. All other things being equal, smaller sample sizes lead us to larger standard errors, or coefficient uncertainty. The default method for simulating data from a model ignores this uncertainty. Is this a big problem? Maybe not. But it would be nice if this source of model uncertainty was not ignored.</p>
+<p>Your standard regression model assumes there are true/fixed parameters relating the predictors to the outcome. However, when we perform regression, we only estimate these parameters. Hence, regression software returns standard errors which represent coefficient uncertainty. All other things being equal, smaller sample sizes lead us to larger standard errors, or coefficient uncertainty. The default method for simulating data from a model ignores this uncertainty. Is this a big problem? Maybe not so much. But it would be nice if this source of model uncertainty was not ignored.</p>
 
 <p>I&rsquo;ll demonstrate what I mean using an example.</p>
 
@@ -244,7 +244,7 @@ par(mfrow = c(1, 1))
 [1] 2.020036 3.931580 3.810612
 </code></pre>
 
-<p>The mean and variance are closer to the mean and variance of the original outcome than when one ignores coefficient uncertainty. This approach will always result in a lower variance than when one considers the uncertainty in regression coefficients. It is much faster and requires zero programming to implement, but I am not comfortable ignoring uncertainty in regression coefficients. I think there is an argument to make that it makes the model seem more adequate than it is.</p>
+<p>The mean and variance are closer to the mean and variance of the original outcome than when one ignores coefficient uncertainty. This approach will always result in a lower variance than when one considers the uncertainty in regression coefficients. It is much faster and requires zero programming to implement, but I am not comfortable ignoring uncertainty in regression coefficients, making the model seem more adequate than it is.</p>
 
 <p>Another problem is most packages that utilize <code>lm()</code> and <code>glm()</code> and simulate data from the model would probably not implement their own <code>simulate()</code> function. For example, <code>DHARMa</code>, a great package for simulation-based residual diagnostics, also relies on the <code>simulate()</code> function when evaluating GLMs.</p>
 <div class="footnotes">
