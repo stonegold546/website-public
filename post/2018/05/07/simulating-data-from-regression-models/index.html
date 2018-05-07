@@ -83,9 +83,9 @@
 <main>
 
 
-<p>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it  extendable to the family of generalized linear models (logistic, Poisson, gamma, &hellip;). It&rsquo;s something Gelman and Hill cover in their regression text.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</p>
+<p>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it is extendable to the family of generalized linear models (logistic, Poisson, gamma, &hellip;). It&rsquo;s something Gelman and Hill cover in their regression text.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</p>
 
-<p>Your standard regression model assumes there are true/fixed parameters relating the predictors to the outcome. However, when we perform regression, we only estimate these parameters. Hence, regression software returns standard errors which represent coefficient uncertainty. All other things being equal, smaller sample sizes lead us to larger standard errors, or coefficient uncertainty. The default method for simulating data from a model ignores this uncertainty. Is this a big problem? Maybe not so much. But it would be nice if this source of model uncertainty was not ignored.</p>
+<p>Your standard regression model assumes there are true/fixed parameters relating the predictors to the outcome. However, when we perform regression, we only estimate these parameters. Hence, regression software returns standard errors which represent coefficient uncertainty. All other things being equal, smaller sample sizes lead us to greater coefficient uncertainty meaning larger standard errors. The default method for simulating data from a model ignores this uncertainty. Is this a big problem? Maybe not so much. But it would be nice if this source of model uncertainty was not ignored.</p>
 
 <p>I&rsquo;ll demonstrate what I mean using an example.</p>
 
@@ -201,7 +201,7 @@ c(mean(colMeans(sim.dat)), mean(apply(sim.dat, 2, var))) # average of mean and v
 [1] 2.050724 4.167751
 </code></pre>
 
-<p>The average mean of the simulated outcomes was a little higher than that of the original data, the average variance was much higher. On average, one can expect the variance to be more off target than the mean. The variance will also be positively skewed with some extremely values, at the same time, it is bounded at zero, so the median might be a better reflection of the center of the data:</p>
+<p>The average mean of the simulated outcomes was a little higher than that of the original data, the average variance was much higher. On average, one can expect the variance to be more off target than the mean. The variance will also be positively skewed with some extremely high values, at the same time, it is bounded at zero, so the median might be a better reflection of the center of the data:</p>
 
 <pre><code class="language-ruby">median(apply(sim.dat, 2, var))
 
@@ -254,7 +254,7 @@ par(mfrow = c(1, 1))
 <ol>
 <li id="fn:1">Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press.
  <a class="footnote-return" href="#fnref:1">↩</a></li>
-<li id="fn:2">Gelman and Hill perform a procedure that is a little more complicated and has its basis in Bayesian inference.
+<li id="fn:2">Gelman and Hill perform a procedure that is a little more complicated and has its basis in Bayesian inference. It is implemented in the <code>sim()</code> function in the <code>arm</code> package.
  <a class="footnote-return" href="#fnref:2">↩</a></li>
 </ol>
 </div>
