@@ -323,6 +323,66 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 <hr />
 
+<p>Also, if one is familiar with maximum likelihood estimation, one could simply program the likelihood function. It is the product of the probability of responding to each category within each person, followed by the product of these values across persons. If we take the log likelihood instead, we arrive at sums across persons, and within persons.</p>
+
+<p>Syntax for the example above in the proportional odds case would be:</p>
+
+<pre><code class="language-ruby">library(stats4) # For maximum likelihood estimation
+
+# The coefficients from glm are useful starting values
+# Using them can remove the need for programming monotonicity of thresholds
+start.coefs &lt;- -coef(glm( # Reverse code the thresholds
+  VAL ~ 0 + SURE.f + girl + day2, binomial, soup.long))
+X &lt;- cbind(soup$girl, soup$day2) # matrix of predictors
+y &lt;- (soup$SURENESS) # response variable
+inv.logit &lt;- function(x) 1 / (1 + exp(-x)) # useful within likelihood function
+negll &lt;- function(a1, a2, a3, a4, a5, bg, bd) {
+  betas &lt;- -c(bg, bd) # Reverse coefs
+  # sums of probabilities, probability of 6 + prob of 5 + ...
+  ll &lt;- sum(log(1 - inv.logit(a5 + X %*% betas))[y == 6]) +
+    sum(log(inv.logit(a5 + X %*% betas) - inv.logit(a4 + X %*% betas))[y == 5]) +
+    sum(log(inv.logit(a4 + X %*% betas) - inv.logit(a3 + X %*% betas))[y == 4]) +
+    sum(log(inv.logit(a3 + X %*% betas) - inv.logit(a2 + X %*% betas))[y == 3]) +
+    sum(log(inv.logit(a2 + X %*% betas) - inv.logit(a1 + X %*% betas))[y == 2]) +
+    sum(log(inv.logit(a1 + X %*% betas))[y == 1])
+  -ll # return negative log likelihood
+}
+# Starting values need named list
+start.coefs &lt;- sapply(start.coefs, list)
+names(start.coefs) &lt;- c(paste0(&quot;a&quot;, 1:5), paste0(&quot;b&quot;, c(&quot;g&quot;, &quot;d&quot;)))
+res &lt;- mle(negll, start.coefs) # Obtain ML solution
+coef(summary(res))
+      Estimate Std. Error
+a1 -2.13155603 0.10450286
+a2 -1.19259266 0.09232077
+a3 -0.89079068 0.09010891
+a4 -0.65697671 0.08898063
+a5 -0.04477565 0.08788869
+bg -0.04917604 0.09073602
+bd -0.26037369 0.08578617
+
+coef(summary(pom.ord))
+        Estimate Std. Error     z value     Pr(&gt;|z|)
+1|2  -2.13155281 0.10450291 -20.3970663 1.775532e-92
+2|3  -1.19259171 0.09232091 -12.9178937 3.567748e-38
+3|4  -0.89078590 0.09010896  -9.8856524 4.804418e-23
+4|5  -0.65697465 0.08898068  -7.3833401 1.543671e-13
+5|6  -0.04476553 0.08788871  -0.5093434 6.105115e-01
+girl -0.04917245 0.09073601  -0.5419287 5.878676e-01
+day2 -0.26037360 0.08578617  -3.0351465 2.404188e-03
+</code></pre>
+
+<p>The results are pretty similar, and for a more certain way of comparing models, we can always compare log-likelihoods:</p>
+
+<pre><code class="language-ruby">logLik(res)
+'log Lik.' -2769.784 (df=7)
+
+logLik(pom.ord)
+'log Lik.' -2769.784 (df=7)
+</code></pre>
+
+<hr />
+
 <p><div id="acat"></p>
 
 <p>Adjacent categories parameterization:</p>
