@@ -6,10 +6,19 @@
     <description>Recent content in Rstats on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 May 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 06 Oct 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/categories/rstats/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Two group mean and variance comparisons</title>
+      <link>https://www.jamesuanhoro.com/post/2018/10/06/two-group-mean-and-variance-comparisons/</link>
+      <pubDate>Sat, 06 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/10/06/two-group-mean-and-variance-comparisons/</guid>
+      <description>Someone asked an interesting question on Cross Validated recently about comparing the means and variances of two groups. They had a substantive interest in exploring variance and mean differences between two groups. They were thinking about Shapiro-Wilk test to test the data for normality, Levene&amp;rsquo;s test or F-test for variance comparisons depending on the results of Shapiro-Wilk, and Mann-Whitney or Welch&amp;rsquo;s test for means comparisons depending on the Shapiro-Wilk.</description>
+    </item>
     
     <item>
       <title>Modeling the error variance to account for heteroskedasticity</title>

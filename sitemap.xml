@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2018/10/06/two-group-mean-and-variance-comparisons/</loc>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2018/05/07/modeling-the-error-variance-to-account-for-heteroskedasticity/</loc>
     <lastmod>2018-05-07T00:00:00+00:00</lastmod>
   </url>
@@ -83,13 +88,13 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
-    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -160,7 +165,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -176,25 +181,25 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/robust-regression/</loc>
-    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/rstats/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/simulation/</loc>
-    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -206,7 +211,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
