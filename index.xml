@@ -6,10 +6,19 @@
     <description>Recent content in Home on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 06 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Oct 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Should you perform logistic regression on a dichotomized continuous variable when you have access to the continuous variable? I&#39;m not sure.</title>
+      <link>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</link>
+      <pubDate>Sun, 07 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</guid>
+      <description>A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest. The substantive question often falls under the lines of modeling the probability of someone exceeding/falling short of this clinically significant threshold.</description>
+    </item>
     
     <item>
       <title>Two group mean and variance comparisons</title>
