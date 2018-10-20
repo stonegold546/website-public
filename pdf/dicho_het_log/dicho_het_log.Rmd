@@ -53,7 +53,7 @@ It is a relatively common practice for education researchers to dichotomize cont
 
 In this paper, I argue that there are reasons to distrust the findings from such a procedure. In the next section, I review two formulations for the logistic regression model. By doing this, it becomes evident why this procedure can be problematic. The source of this problem is heteroskedasticity in the linear regression model for the original continuous variable. I conclude with a simple demonstraton using simulated data.
 
-# Derivation of the logistic regression model
+# Formulation of the logistic regression model
 
 The standard logistic regression model is a generalized linear model [@fox2015applied; @mccullagh1989nelder] for the probabilities responsible for an observed Bernoulli response variable:
 
