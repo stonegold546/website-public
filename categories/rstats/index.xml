@@ -17,7 +17,8 @@
       <pubDate>Sun, 07 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</guid>
-      <description>A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest. The substantive question often falls under the lines of modeling the probability of someone exceeding/falling short of this clinically significant threshold.</description>
+      <description>See here for an update, I recommend not dichotomizing, but it pays to read this first.
+A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest.</description>
     </item>
     
     <item>

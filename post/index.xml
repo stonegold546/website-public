@@ -6,10 +6,20 @@
     <description>Recent content in Posts on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 20 Oct 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Possibility of heteroskedasticity is a good reason not to dichotomize a continuous variable prior to logistic regression.</title>
+      <link>https://www.jamesuanhoro.com/post/2018/10/20/possibility-of-heteroskedasticity-is-a-good-reason-not-to-dichotomize-a-continuous-variable-prior-to-logistic-regression./</link>
+      <pubDate>Sat, 20 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/10/20/possibility-of-heteroskedasticity-is-a-good-reason-not-to-dichotomize-a-continuous-variable-prior-to-logistic-regression./</guid>
+      <description>Continuing on whether it&amp;rsquo;s a good idea to dichotomize continuous variables prior to analysis for substantive reasons, I think I settle on the side of bad idea. The major reason is potential heteroskedasticity of the error term in the linear regression model for the original continuous variable.
+This is an interesting issue, but one that I do not want to devote time to write about. So I decided to write a brief methods note.</description>
+    </item>
     
     <item>
       <title>Should you perform logistic regression on a dichotomized continuous variable when you have access to the continuous variable? I&#39;m not sure.</title>
@@ -17,7 +27,8 @@
       <pubDate>Sun, 07 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</guid>
-      <description>A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest. The substantive question often falls under the lines of modeling the probability of someone exceeding/falling short of this clinically significant threshold.</description>
+      <description>See here for an update, I recommend not dichotomizing, but it pays to read this first.
+A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest.</description>
     </item>
     
     <item>

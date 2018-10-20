@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2018/10/20/possibility-of-heteroskedasticity-is-a-good-reason-not-to-dichotomize-a-continuous-variable-prior-to-logistic-regression./</loc>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</loc>
     <lastmod>2018-10-07T00:00:00+00:00</lastmod>
   </url>
@@ -93,13 +98,13 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
-    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -110,7 +115,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
-    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -170,7 +175,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -186,7 +191,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -216,7 +221,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

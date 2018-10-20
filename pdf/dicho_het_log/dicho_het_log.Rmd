@@ -1,0 +1,158 @@
+---
+title             : "Brief methods note: Investigators must exercise caution prior to dichotomizing continuous variables for use as binary outcomes in logistic regression"
+shorttitle        : "Dichotomizing continuous outcome variables"
+
+author: 
+  - name          : "James Uanhoro"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "210 Ramseyer Hall, 29 W Woodruff Ave, Columbus, OH 43210"
+    email         : "uanhoro.1@osu.edu"
+  # - name          : "Ernst-August Doelle"
+  #   affiliation   : "1,2"
+
+affiliation:
+  - id            : "1"
+    institution   : "The Ohio State University"
+  # - id            : "2"
+  #   institution   : "Konstanz Business School"
+
+authornote: |
+  James Uanhoro is a PhD student in the Quantitative Research, Evaluation and Measurement program within the Department of Educational Studies
+
+abstract: |
+  A common practice in empirical data analysis is to dichotomize continuous outcomes for substantive or interpretational purposes. A particular cut-point on the outcome variable may be practically relevant, such that researchers dichotomize the continuous outcome at the cut-point to create a binary outcome, then proceed to model this binary outcome using logistic regression. However, homoskedasticity of the error term in the linear regression model for the continuous outcome is an often overlooked assumption for this application of logistic regression to be valid. If this condition is not met, the logistic regression model for the binary outcome will be misspecified, and the coefficients and predicted probabilities will be incorrect. Correctly estimating the relationship can be difficult computationally. Hence, I recommend that researchers directly model the continuous outcome even when there are substantive justifications for modeling the dichotomized outcome.
+
+keywords          : "logistic regression, dichotomization, heteroskedasticity"
+# wordcount         : "X"
+
+bibliography      : ["r-references.bib"]
+
+floatsintext      : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "doc"
+output            : papaja::apa6_pdf
+---
+
+```{r setup, include = FALSE}
+library("papaja")
+library(ggplot2)
+library(stargazer)
+```
+
+# Introduction
+
+It is a relatively common practice for education researchers to dichotomize continuous variables into binary variables, then analyze the binary variables using logistic regression. The most common reason for doing this is substantive. For example, the original response variable may be student scores on a test with range of 0 to 100. On this test, students with scores equal to or above 70 pass, while others fail. In such situations, researchers interested in understanding the dynamics of student success on the test may dichotomize the original test scores into 1 (pass) or 0 (fail) and model the probability that a student passed (or failed) using logistic regression.
+
+In this paper, I argue that there are reasons to distrust the findings from such a procedure. In the next section, I review two formulations for the logistic regression model. By doing this, it becomes evident why this procedure can be problematic. The source of this problem is heteroskedasticity in the linear regression model for the original continuous variable. I conclude with a simple demonstraton using simulated data.
+
+# Derivation of the logistic regression model
+
+The standard logistic regression model is a generalized linear model [@fox2015applied; @mccullagh1989nelder] for the probabilities responsible for an observed Bernoulli response variable:
+
+\begin{equation} \label{eq:1}
+\ln\Bigg[\frac{p}{1-p}\Bigg]=\alpha + X\beta
+\end{equation}
+
+where $p$ are the probabilities of success underlying the observed Bernoulli variable for each case, $\alpha$ is the intercept, $X$ is an $n$ by $k$ matrix for $n$ cases and $k$ predictors (excluding the intercept), and $\beta$ are $k$ regression weights for each predictor. The logit transformation applied to the probabilities (left hand side of equation \@ref(eq:1)) equates the probabilities to the predictors, $X$, multiplied by their weights, $\beta$, plus the intercept, $\alpha$.
+
+We can rewrite equation \@ref(eq:1) by solving for $p$:
+
+\begin{equation} \label{eq:2}
+p=\frac{e^{(\alpha+X\beta)}}{1+e^{(\alpha+X\beta)}}
+\end{equation}
+
+Equation \@ref(eq:2) is also known as the inverse logit transformation applied to $\alpha+X\beta$, transforming it from a value that has a possible range of $-\infty$ to $\infty$ to a probability guaranteed to lie between 0 and 1. At this point, I motivate the logistic regression model using a latent variable formulation [@Amemiya1981]:
+
+\begin{equation} \label{eq:3}
+p=P(\alpha+X\beta+\epsilon>t)
+\end{equation}
+
+This formulation of the model is the one we rely on when we dichotomize a continuous variable for use as the outcome in a logistic regression model. The probabilities underlying the new binary outcome are the probabilities that a continuous variable with a systematic componenent, $\alpha + X\beta$, and random error, $\epsilon$, exceeds a threshold, $t$. For logistic regression, we make the additional assumption that $\epsilon$ is a standard logistic variable $(\epsilon\sim\mathcal{L}(0, 1))$; this means that $\epsilon$ has mean 0 and variance of $\pi^2/3$.
+
+As one will observe from equation \@ref(eq:3), changing the value of $t$ simply changes the value of $\alpha$. If the threshold increases by 3, then the intercept increases by 3. So for the model to be identified, we will assume the threshold is 0, $t=0$. Given this information, we continue to solve for $p$ in equation \@ref(eq:3):
+
+\begin{align}
+\begin{split} \label{eq:4}
+p
+{}&=P(\alpha+X\beta+\epsilon>0)=P(\epsilon>-\alpha-X\beta) \\
+{}&=P(\epsilon<\alpha+X\beta)\quad\text{since }\mathcal{L}(0, 1) \text{ is symmetric about 0}
+\end{split}
+\end{align}
+
+The final line of equation \@ref(eq:4) is simply the cumulative distribution function of $\mathcal{L}(0, 1)$ evaluated at $\alpha + X\beta$, hence:
+
+\begin{equation} \label{eq:5}
+p=\frac{e^{(\alpha+X\beta)}}{1+e^{(\alpha+X\beta)}}
+\end{equation}
+
+This result in equation \@ref(eq:5) shows that the latent variable formulation for the logistic regression model is equivalent to the generalized linear model formulation for logistic regression in equation \@ref(eq:2). It also reveals one major assumption for the standard logistic regression model to be valid: the random error must be homoskedastic i.e. $\epsilon\sim\mathcal{L}(0, 1)$. If this assumption is violated, then equation \@ref(eq:5) is wrong. Assuming $\epsilon\sim\mathcal{L}(0, \sigma)$ instead where $\sigma$ has a different value for each case, the correct equation is:
+
+\begin{equation} \label{eq:6}
+p=\frac{e^{\big(\frac{\alpha+X\beta}{\sigma}\big)}}{1+e^{\big(\frac{\alpha+X\beta}{\sigma}\big)}}
+\end{equation}
+
+Hence if the random error is heteroskedastic, the standard logistic regression model as implemented in statistical software packages will be inadequate if the model is applied to the dichotomized outcome.
+
+# How problematic can this form of heteroskedasticity be?
+
+To illustrate the problem, I present a simple example. Assume the following regression equation for a continuous variable, $z_i$: $z_i = x_i + \epsilon_i$, where $i=1, 2, ..., 5000$, $x_i\sim\mathcal{N}(0, 1)$ and $\epsilon_i\sim\mathcal{L}\big(0, 0.5 + \frac{1}{4}\sqrt{e^{x_i}}\big)$, so the error variance is non-constant and depends on $x_i$. I dichotomize $z_i$ at 0 to create a new binary response, $y_i$, such that $y_i = 1$ where $z_i > 0$ and $y_i = 0$ when $z_i \leq 0$. So $z_i$ is the continuous variable underlying the binary outcome, $y_i$. For comparison, I also generated a homoskedastic $z_i$ and $y_i$ under the condition that $\epsilon_i\sim\mathcal{L}(0, 1)$. As is visible from Figure \@ref(fig:fig1), the average relationship between $x_i$ and each $z_i$ is not that different under homoskedasticity and heteroskedasticity, but the heteroskedastic $z_i$ visibly displays non-constant error variance.
+
+```{r fig1, fig.cap = "Relationship between x and continuous outcome under heteroskedasticity (left panel) and homoskedasticity (right panel). Under heteroskedasticity, the variance of z is larger at higher values of x.", fig.height = 3}
+n <- 5000
+set.seed(n + 5)
+dat1 <- data.frame(ID = 1:n, x = rnorm(5000))
+dat1 <- within(dat1, { het = rlogis(n, 0, .5 + sqrt(exp(x)) / 4); hom = rlogis(n) })
+dat1 <- within(dat1, { zhet <- x + het; zhom <- x + hom })
+dat1 <- within(dat1, { yhet <- (zhet > 0) + 0; yhom <- (zhom > 0) + 0 })
+dat1l <- tidyr::gather(dat1, rel, score, zhom:yhet)
+dat1l$rel1 <- ifelse(grepl("het", dat1l$rel), "Heteroskedasticity", "Homoskedasticity")
+dat1l$rel2 <- ifelse(grepl("z", dat1l$rel), "Continuous", "Binary")
+ggplot(dat1l[grepl("z", dat1l$rel), ], aes(x, score)) + facet_wrap(~ rel1) + geom_point(shape = 1) +
+  geom_smooth(method = "lm") + theme_bw() + labs(y = "z")
+```
+
+Next, I regressed the continuous variable, $z_i$, on $x_i$ using linear regression. Regardless of the error variance structure, the linear regression model had a decent recovery of the coefficient for $x_i$; both coefficients were quite close to 1 (see first two columns of Table 1). This is consistent with the theory on linear regression models: unbiased coefficient estimation does not dependent on assumptions like homoskedasticity or normality of errors [@Gelman2007, p. 46].
+
+```{r tab1, results = "asis"}
+stargazer(
+  lm(zhom ~ x, dat1), lm(zhet ~ x, dat1), glm(yhom ~ x, binomial, dat1), glm(yhet ~ x, binomial, dat1),
+  header = FALSE, star.cutoffs = c(.05, .01, .001),
+  dep.var.labels = c("Homoskedastic z", "Heteroskedastic z", "Homoskedastic y", "Heteroskedastic y"),
+  model.names = FALSE, omit.stat = c("ll", "rsq", "adj.rsq", "aic", "ser", "f"),
+  font.size = "small", notes.align = "l", model.numbers = FALSE,
+  notes = c("The models for z are linear regression models. The models for y are logistic",
+            "regression models."), title = "Regression of outcome variables on x")
+```
+
+I next regressed the binary variable, $y_i$, on $x_i$ using logistic regression. Under homoskedastic error variance, the coefficient of $x_i$ was 1.027, close to 1. However, under heteroskedastic error variance, the coefficient of $x_i$ was about 30% higher $\big((1.316-1)\times 100\%\big)$ than what I specified in the data generation process. In this situation, we have inflation of the coefficient. Depending on the form of heteroskedasticity, the result might be coefficient deflation.
+
+This happens because the standard logistic regression model is misspecified under heteroskedasticity. And one cannot recover the true logistic regression coefficients using standard maximum likelihood estimation of the logistic regression model.
+
+# Discussion
+
+If the functional form of heteroskedasticity is known, then it is possible to modify the likelihood function used in maximum likelihood estimation of the logistic regression model. The literature is more developed in the case of probit models, where there exists a class of models known as _heteroskedastic probit models_ [@alvarez1995american]. However, even if the researcher can identify the functional form for heteroskedasticity, there is no guarantee that estimating the model will result in a correct solution. Potential problems include multiple solutions with near equivalent fit to the data, near singular Hessian matrices, large standard errors and convergence failures [@Keele2006].
+
+Hence, I recommend that when researchers have access to the original continuous variable, they should model this variable regardless of questions of substantive interest. If education researchers are interested in studying relationships at thresholds that are very different from the mean of the outcome, quantile regression [@koenker2001quantile] is one approach for exploring the relationship between the predictors and continuous outcome at different quantiles of the outcome. There are methods for converting linear regression coefficients to logits and odds ratios [@Moser2004] but they also rely on the aforementioned homoskedasticity assumption.
+
+Finally, the problem of heteroscedasticity described above can exist even when the outcome variable is truly binary, or the binary outcome is difficult to rationalize as the manifestation of a dichotomized continuous variable. I focus on the case where the investigator has access to the continuous variable here because the situation is readily salvageable: analyze the continuous outcome directly. In situations where the investigator does not have access to the underlying continuous variable, but heteroskedasticity may be a concern, more flexible regression approaches such as generalized additive models [@hastie2017generalized] and kernel regularized least squares [with logistic loss, @Hainmueller2014] may yield results that are more likely to reflect the true relations in the data.
+
+# References
+
+```{r create_r-references}
+r_refs(file = "r-references.bib")
+```
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id = "refs"></div>
+\endgroup

@@ -81,6 +81,8 @@
 
 
 <main>
+<p><strong>See <a href="/post/2018/10/20/possibility-of-heteroskedasticity-is-a-good-reason-not-to-dichotomize-a-continuous-variable-prior-to-logistic-regression./">here</a> for an update, I recommend not dichotomizing, but it pays to read this first.</strong></p>
+
 <p>A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest. The substantive question often falls under the lines of modeling the probability of someone exceeding/falling short of this clinically significant threshold. So we dichotomize the continuous measure and analyze the new binary response using something like logistic regression.</p>
 
 <p>Going back to intro stats, you hear things like: &ldquo;don&rsquo;t dichotomize your predictors, you&rsquo;ll throw away information/variance/power &hellip;&rdquo;. Of course the same applies to outcomes, and most people would rather a regular linear regression than logistic regression. However, in the scenario above, we often justify dichotomizing the outcome for substantive reasons.</p>
@@ -101,7 +103,7 @@
 <li>We can summarize the above as: $$y_b = 1 \quad \mathrm{if}\quad \alpha + X\beta + \epsilon &gt; t \quad \mathrm{otherwise}\quad y_b = 0$$.</li>
 <li>If we adjust the threshold, say drop it by 1 point, it does not change $X\beta$, it only affects the intercept: $$y_b = 1\quad \mathrm{if}\quad \alpha - 1 + X\beta + \epsilon &gt; t - 1$$</li>
 <li>The point here it that the only coefficient affected by changing the threshold is the intercept, $\alpha$; the $\beta$ are not affected by adjusting the threshold. So the relationships we do care about are not affected by the threshold $-$ more on this later.</li>
-<li>Finally, in logistic regression, we do not estimate $\epsilon$, we assume it is logistic. That affects things such that if we want to use the linear regression on $y_c$ to obtain the results from logistic regression, we need to make some adjustments.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup></li>
+<li>Finally, in logistic regression, we do not estimate $\epsilon$, we assume it is standard logistic. That affects things such that if we want to use the linear regression on $y_c$ to obtain the results from logistic regression, we need to make some adjustments.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup></li>
 </ol>
 
 <p>So here&rsquo;s what they recommend:</p>
