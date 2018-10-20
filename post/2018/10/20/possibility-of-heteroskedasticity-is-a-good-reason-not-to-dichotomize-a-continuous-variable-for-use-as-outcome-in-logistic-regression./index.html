@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Possibility of heteroskedasticity is a good reason not to dichotomize a continuous variable for use as outcome in logistic regression. | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Possibility of heteroskedasticity is a good reason not to dichotomize a continuous variable for use as outcome in logistic regression.</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2018/10/20</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> 
+  
+  
+  
+  Tags: <a href="/tags/regression">regression</a> <a href="/tags/logistic-regression">logistic-regression</a> <a href="/tags/heteroskedasticity">heteroskedasticity</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>Continuing on whether it&rsquo;s a good idea to dichotomize continuous variables prior to analysis for substantive reasons, I think I settle on the side of bad idea. The major reason is potential heteroskedasticity of the error term in the linear regression model for the original continuous variable.</p>
+
+<p>This is an interesting issue, but one that I do not want to devote time to write about. So I decided to write a brief methods note. The goal is that the document is easy to read, simple and at least causes any reader to rethink dichotomization if they do it normally. However, none of it is new.</p>
+
+<p><embed src="/pdf/dicho_het_log/dicho_het_log.pdf" width="800px" height="700px" /></p>
+
+<p>Links:</p>
+
+<ul>
+<li><a href="/pdf/dicho_het_log/dicho_het_log.pdf">PDF</a></li>
+<li><a href="/pdf/dicho_het_log/dicho_het_log.Rmd">Rmarkdown document which contains source here</a> (with <a href="/pdf/dicho_het_log/r-references.bib">references</a>).</li>
+<li>I used <a href="https://github.com/crsh/papaja">papaja</a> to compile the document.</li>
+</ul>
+
+<p>N.B.: I don&rsquo;t mention it in the methodological note, but the reason methods like generalized additive models and kernel regularized least squares with logistic loss might work is heteroskedasticity in the continuous variable manifests as a different mean function than the inverse logit function. So methods that relax the linearity assumptions of regression (linear/logistic) can do a good job estimating the true relations in the data.</p>
+
+</main>
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+
