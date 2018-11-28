@@ -212,7 +212,7 @@ $$</p>
 <p>Bayesian software can fit a complicated model like this. We&rsquo;d have to specify priors for the different components of this equation. Page 144 of the Stan manual provides some priors for the 2PL item-response theory model that we can apply here as a starting point:</p>
 
 <ul>
-<li>loadings will be log-normal constraining them to be positive, $\alpha_i\sim\mathrm{Lognormal}(0,\sigma_\alpha)$</li>
+<li>loadings will be log-normal constraining them to be positive, $\alpha_i\sim\mathrm{Lognormal}(0,\sigma_\alpha)$. For $\sigma_\alpha$, we can assume it&rsquo;s half-Cauchy, $\sigma_\alpha\sim C^{+}(0, 2.5)$.</li>
 <li>there is usually enough information to estimate item intercepts/difficulties, we can use a uniform prior</li>
 <li>item errors can be assumed to be inverse gamma, $\epsilon_i\sim\mathrm{InvGamma}(1,1)$.</li>
 <li>the latent scores are multivariate normal, $\mathbf{\theta}_{pf}\sim\mathcal{N}_f(\mathbf{0,1})$</li>
