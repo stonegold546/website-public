@@ -198,7 +198,7 @@ $$</p>
 <p>where we permit the residual error, $\epsilon_i$, to be different depending on the item. This is a heteroskedastic regression model. One would have to switch to from <code>lme4</code> to <code>nlme</code> or <code>glmmTMB</code> in R to estimate it; it should be possible in HLM. In <code>lavaan</code>, the model syntax would be:</p>
 
 <pre><code class="language-r"># Drop the error variance constraints
-&quot;F1 =~ a * X1 + a * X2 + a * X3\nF2 =~ b * X4 + b * X5\nF3 =~ c * X6 + c * X7 + c * X8&quot;
+&quot;F1 =~ a * X1 + a * X2 + a * X3\nF2 =~ b * X4 + b * X5 + b * X6\nF3 =~c * X7 + c * X8 + c * X9&quot;
 </code></pre>
 
 <p>The latest model is very close to a standard CFA model. The final change is that we need to permit the item loadings to vary by item, not by factor. Once we do this, we can no longer fit the model with multilevel regression software. The equation becomes:</p>
