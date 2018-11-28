@@ -6,10 +6,21 @@
     <description>Recent content in Home on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 20 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 10 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Multidimensional CFA with RStan</title>
+      <link>https://www.jamesuanhoro.com/post/2018/11/10/multidimensional-cfa-with-rstan/</link>
+      <pubDate>Sat, 10 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2018/11/10/multidimensional-cfa-with-rstan/</guid>
+      <description>For starters, here&amp;rsquo;s the Stan code. And here&amp;rsquo;s the R script: Stan code. If you are already familiar with RStan, the basic concepts you need to combine are standard multilevel models with correlated random slopes and heteroskedastic errors.
+I will embed R code into the demonstration. The required packages are lavaan, lme4 and RStan.
+I like to understand most statistical methods as regression models. This way, it&amp;rsquo;s easy to understand the claims underlying a large number of techniques.</description>
+    </item>
     
     <item>
       <title>Possibility of heteroskedasticity is a good reason not to dichotomize a continuous variable for use as outcome in logistic regression.</title>

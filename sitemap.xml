@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2018/11/10/multidimensional-cfa-with-rstan/</loc>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2018/10/20/possibility-of-heteroskedasticity-is-a-good-reason-not-to-dichotomize-a-continuous-variable-for-use-as-outcome-in-logistic-regression./</loc>
     <lastmod>2018-10-20T00:00:00+00:00</lastmod>
   </url>
@@ -68,6 +73,12 @@
   </url>
   
   <url>
+    <loc>https://www.jamesuanhoro.com/tags/bayesian/</loc>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/categories/</loc>
     <priority>0</priority>
   </url>
@@ -80,7 +91,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</loc>
-    <lastmod>2017-11-16T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -104,7 +115,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -145,7 +156,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/multilevel-regression/</loc>
-    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -175,7 +186,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -191,13 +202,19 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/robust-regression/</loc>
     <lastmod>2018-10-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/rstan/</loc>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -221,7 +238,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -233,7 +250,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/</loc>
-    <lastmod>2017-08-11T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
