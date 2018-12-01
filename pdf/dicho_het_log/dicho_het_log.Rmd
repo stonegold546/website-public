@@ -44,6 +44,7 @@ output            : papaja::apa6_pdf
 ```{r setup, include = FALSE}
 library("papaja")
 library(ggplot2)
+library(dplyr)
 library(stargazer)
 ```
 
@@ -103,23 +104,32 @@ Hence if the random error is heteroskedastic, the standard logistic regression m
 
 # How problematic can this form of heteroskedasticity be?
 
-To illustrate the problem, I present a simple example. Assume the following regression equation for a continuous variable, $z_i$: $z_i = x_i + \epsilon_i$, where $i=1, 2, ..., 5000$, $x_i\sim\mathcal{N}(0, 1)$ and $\epsilon_i\sim\mathcal{L}\big(0, 0.5 + \frac{1}{4}\sqrt{e^{x_i}}\big)$, so the error variance is non-constant and depends on $x_i$. I dichotomize $z_i$ at 0 to create a new binary response, $y_i$, such that $y_i = 1$ where $z_i > 0$ and $y_i = 0$ when $z_i \leq 0$. So $z_i$ is the continuous variable underlying the binary outcome, $y_i$. For comparison, I also generated a homoskedastic $z_i$ and $y_i$ under the condition that $\epsilon_i\sim\mathcal{L}(0, 1)$. As is visible from Figure \@ref(fig:fig1), the average relationship between $x_i$ and each $z_i$ is not that different under homoskedasticity and heteroskedasticity, but the heteroskedastic $z_i$ visibly displays non-constant error variance.
+To illustrate the problem, I present a simple example. Assume the following regression equation for a continuous variable, $z_i$: $z_i = 0.75 \times x_i + \epsilon_i$, where $i=1, 2, \dots, 5000$, $x_i\sim\mathrm{Bern}(0.5)$ and $\epsilon_i\sim\mathcal{L}(0, \gamma_0 + \gamma_1x_i)$, so the error variance depends on $x_i$. We can consider $x_i$ random assignment to treatment $(x_i=1)$ and control $(x_i=0)$ groups, and $z_i$ to be exam performance. I dichotomize $z_i$ at 0 to create a new binary response, $y_i$, such that $y_i = 1$ when $z_i > 0$ and $y_i = 0$ when $z_i \leq 0$. So $z_i$ is exam performance underlying the binary outcome, $y_i$ which we will consider to an indicator of passing the exam. I set $\{\gamma_0, \gamma_1\} = \{1, 0\}$ to create a dataset with homoskedastic errors; then set $\{\gamma_0, \gamma_1\} = \{1.5, -1\}$ to create another dataset with heteroskedastic errors.
 
-```{r fig1, fig.cap = "Relationship between x and continuous outcome under heteroskedasticity (left panel) and homoskedasticity (right panel). Under heteroskedasticity, the variance of z is larger at higher values of x.", fig.height = 3}
+As is visible from Figure \@ref(fig:fig1), the average relationship between $x_i$ and each $z_i$ is not that different under homoskedasticity and heteroskedasticity, but the heteroskedastic $z_i$ visibly displays lesser error variance for the treatment group. The treatment not only improved performance on average, it shrunk the variability of the treatment group.
+
+```{r fig1, fig.cap = "Relationship between group assignment and continuous outcome under heteroskedasticity (top panel) and homoskedasticity (bottom panel). The vertical dashed lines are group means. Under heteroskedasticity, the variance of z is smaller for the treatment group.", fig.height = 4}
 n <- 5000
-set.seed(n + 5)
-dat1 <- data.frame(ID = 1:n, x = rnorm(5000))
-dat1 <- within(dat1, { het = rlogis(n, 0, .5 + sqrt(exp(x)) / 4); hom = rlogis(n) })
-dat1 <- within(dat1, { zhet <- x + het; zhom <- x + hom })
+set.seed(n + 15)
+dat1 <- data.frame(ID = 1:n, x = rbinom(n, 1, .5))
+dat1$xf <- factor(dat1$x, levels = 0:1, labels = c("Control", "Treatment"))
+dat1 <- within(dat1, {
+  zhom <- .75 * x + rlogis(n, scale = 1)
+  zhet <- .75 * x + rlogis(n, scale = sqrt(1.5 - 1 * x))
+})
 dat1 <- within(dat1, { yhet <- (zhet > 0) + 0; yhom <- (zhom > 0) + 0 })
-dat1l <- tidyr::gather(dat1, rel, score, zhom:yhet)
+dat1l <- tidyr::gather(dat1, rel, score, zhet:yhet)
 dat1l$rel1 <- ifelse(grepl("het", dat1l$rel), "Heteroskedasticity", "Homoskedasticity")
 dat1l$rel2 <- ifelse(grepl("z", dat1l$rel), "Continuous", "Binary")
-ggplot(dat1l[grepl("z", dat1l$rel), ], aes(x, score)) + facet_wrap(~ rel1) + geom_point(shape = 1) +
-  geom_smooth(method = "lm") + theme_bw() + labs(y = "z")
+dat1l <- left_join(dat1l, summarise(group_by(dat1l, x, rel1, rel2), avg = mean(score)))
+ggplot(dat1l[grepl("z", dat1l$rel), ], aes(score, col = xf)) + facet_wrap(~ rel1, ncol = 1) +
+  geom_density() + theme_bw() + labs(y = "Density", x = "Performance", col = "Group") +
+  geom_vline(aes(xintercept = avg, col = xf), linetype = 2) +
+  scale_x_continuous(breaks = c(seq(-9, 10, 2), 0)) +
+  theme(legend.position = "top") + coord_cartesian(xlim = c(-6, 7))
 ```
 
-Next, I regressed the continuous variable, $z_i$, on $x_i$ using linear regression. Regardless of the error variance structure, the linear regression model had a decent recovery of the coefficient for $x_i$; both coefficients were quite close to 1 (see first two columns of Table 1). This is consistent with the theory on linear regression models: unbiased coefficient estimation does not dependent on assumptions like homoskedasticity or normality of errors [@Gelman2007, p. 46].
+Next, I regressed the continuous variable, $z_i$, on $x_i$ using linear regression. Regardless of the error variance structure, the linear regression model had a decent recovery of the coefficient for $x_i$; both coefficients were within 5% of 0.75 (see first two columns of Table 1). This is consistent with the literature on linear regression models fit with OLS: unbiased coefficient estimation does not dependent on assumptions like homoskedasticity or normality of errors [@Gelman2007, p. 46].
 
 ```{r tab1, results = "asis"}
 stargazer(
@@ -132,7 +142,7 @@ stargazer(
             "regression models."), title = "Regression of outcome variables on x")
 ```
 
-I next regressed the binary variable, $y_i$, on $x_i$ using logistic regression. Under homoskedastic error variance, the coefficient of $x_i$ was 1.027, close to 1. However, under heteroskedastic error variance, the coefficient of $x_i$ was about 30% higher $\big((1.316-1)\times 100\%\big)$ than what I specified in the data generation process. In this situation, we have inflation of the coefficient. Depending on the form of heteroskedasticity, the result might be coefficient deflation.
+I next regressed the binary variable, $y_i$, on $x_i$ using logistic regression. Under homoskedastic error variance, the coefficient of $x_i$ was 0.719, within 5% of 0.75. However, under heteroskedastic error variance, the coefficient of $x_i$ was about 35% higher $\big((1.011-0.75)/0.75\times 100\%\big)$ than what I specified in the data generation process. In this situation, we have inflation of the coefficient. Depending on the form of heteroskedasticity, the result might be coefficient deflation. Consequently, this misspecification returns incorrect probabilities of success for both groups. Under homoskedasticity, the treatment and control groups had 67.2% $(1+e^{0.013+0.719})^{-1}$ and 50.3% $(1+e^{0.013})^{-1}$ chance of passing the exam on average. Under heteroskedasticity, the treatment and control groups had 73.3% $(1+e^{-0.044+1.011})^{-1}$ and 48.9% $(1+e^{-0.044})^{-1}$ chance of passing the exam on average.
 
 This happens because the standard logistic regression model is misspecified under heteroskedasticity. And one cannot recover the true logistic regression coefficients using standard maximum likelihood estimation of the logistic regression model.
 
