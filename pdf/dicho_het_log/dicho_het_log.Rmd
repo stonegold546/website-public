@@ -104,7 +104,7 @@ Hence if the random error is heteroskedastic, the standard logistic regression m
 
 # How problematic can this form of heteroskedasticity be?
 
-To illustrate the problem, I present a simple example. Assume the following regression equation for a continuous variable, $z_i$: $z_i = 0.75 \times x_i + \epsilon_i$, where $i=1, 2, \dots, 5000$, $x_i\sim\mathrm{Bern}(0.5)$ and $\epsilon_i\sim\mathcal{L}(0, \gamma_0 + \gamma_1x_i)$, so the error variance depends on $x_i$. We can consider $x_i$ random assignment to treatment $(x_i=1)$ and control $(x_i=0)$ groups, and $z_i$ to be exam performance. I dichotomize $z_i$ at 0 to create a new binary response, $y_i$, such that $y_i = 1$ when $z_i > 0$ and $y_i = 0$ when $z_i \leq 0$. So $z_i$ is exam performance underlying the binary outcome, $y_i$ which we will consider to an indicator of passing the exam. I set $\{\gamma_0, \gamma_1\} = \{1, 0\}$ to create a dataset with homoskedastic errors; then set $\{\gamma_0, \gamma_1\} = \{1.5, -1\}$ to create another dataset with heteroskedastic errors.
+To illustrate the problem, I present a simple example. Assume the following regression equation for a continuous variable, $z_i$: $z_i = 0.75 \times x_i + \epsilon_i$, where $i=1, 2, \dots, 5000$, $x_i\sim\mathrm{Bern}(0.5)$ and $\epsilon_i\sim\mathcal{L}(0, \gamma_0 + \gamma_1x_i)$, so the error variance depends on $x_i$. We can consider $x_i$ random assignment to treatment $(x_i=1)$ and control $(x_i=0)$ groups, and $z_i$ to be exam performance. I dichotomize $z_i$ at 0 to create a new binary response, $y_i$, such that $y_i = 1$ when $z_i > 0$ and $y_i = 0$ when $z_i \leq 0$. So $z_i$ is exam performance underlying the binary outcome, $y_i$ which we will consider to an indicator of passing the exam. I set $\{\gamma_0, \gamma_1\} = \{1, 0\}$ to create a dataset with homoskedastic errors; then set $\{\gamma_0, \gamma_1\} = \{\sqrt{1.5}, \frac{(\sqrt{3}-1)}{\sqrt{2}}\}$ to create another dataset with heteroskedastic errors.
 
 As is visible from Figure \@ref(fig:fig1), the average relationship between $x_i$ and each $z_i$ is not that different under homoskedasticity and heteroskedasticity, but the heteroskedastic $z_i$ visibly displays lesser error variance for the treatment group. The treatment not only improved performance on average, it shrunk the variability of the treatment group.
 
@@ -115,7 +115,7 @@ dat1 <- data.frame(ID = 1:n, x = rbinom(n, 1, .5))
 dat1$xf <- factor(dat1$x, levels = 0:1, labels = c("Control", "Treatment"))
 dat1 <- within(dat1, {
   zhom <- .75 * x + rlogis(n, scale = 1)
-  zhet <- .75 * x + rlogis(n, scale = sqrt(1.5 - 1 * x))
+  zhet <- .75 * x + rlogis(n, scale = sqrt(c(1.5, 0.5)[x + 1]))
 })
 dat1 <- within(dat1, { yhet <- (zhet > 0) + 0; yhom <- (zhom > 0) + 0 })
 dat1l <- tidyr::gather(dat1, rel, score, zhet:yhet)
@@ -146,13 +146,55 @@ I next regressed the binary variable, $y_i$, on $x_i$ using logistic regression.
 
 This happens because the standard logistic regression model is misspecified under heteroskedasticity. And one cannot recover the true logistic regression coefficients using standard maximum likelihood estimation of the logistic regression model.
 
+<!-- If the logistic regression model is correct, there should be a linear relationship between the predicted probabilities and the observed binary response variable, with an intercept of 0 and a slope of 1 []. I have plotted the binary outcome, $y$, against the predicted probabilities in Figure \@ref(fig:fig2). Under homoskedasticity, the smoothed relationship (smoothed line) is well-approximated by a linear relationship (dashed line); under heteroskedasticity, the smoothed relationship is not well-approximated by a linear relationship. -->
+
+<!-- \begin{align} -->
+<!-- \begin{split} \label{eq:7} -->
+<!-- \text{Model }1{}&: y = \beta_0 + \beta_1 \times \hat{p}\\ -->
+<!-- \text{Model }2{}&: y = \beta_0 + \beta_1 \times \hat{p} + \beta_2 \times \hat{p}^2 -->
+<!-- \end{split} -->
+<!-- \end{align} -->
+
+<!-- where $\hat{p}$ are the predicted probabilities. I used a likelihood-ratio test to compare models 1 and 2 under homoskedasticity and heteroskedasticity. -->
+
+```{r fig2, eval = F, fig.cap = "Plot of binary outcome against predicted probabilities under heteroskedasticity (left panel) and homoskedasticity (right panel). Dashed line represents the expected relationship if the logistic regression model is correctly specified. Smoothed lines are generalized additive model smoothers. Under heteroskedasticity, the smoothed line deviates from the expected relationship.", fig.height = 4}
+# rand.samp <- sample(1:n, .5 * n)
+# train.dat <- dat1[rand.samp, ]; test.dat <- dat1[!(1:n %in% rand.samp), ]
+# fit.hom <- glm(yhom ~ x, binomial, train.dat)
+# test.dat$pred.hom <- predict(fit.hom, newdata = test.dat, type = "response")
+# fit.het <- glm(yhet ~ x, binomial, train.dat)
+# test.dat$pred.het <- predict(fit.het, newdata = test.dat, type = "response")
+# test.dat.l <- with(test.dat, data.frame(ID = rep(ID, 2), y = c(yhom, yhet), p = c(pred.hom, pred.het)))
+# test.dat.l$mod <- sort(rep(1:2, 2500))
+# test.dat.l$mod <- ifelse(test.dat.l$mod == 1, "Homoskedastic", "Heteroskedastic")
+# ggplot(test.dat.l, aes(p, y)) + facet_wrap(~ mod) + geom_smooth(alpha = .5) +
+#   theme_bw() + geom_abline(slope = 1, intercept = 0, linetype = 2) +
+#   geom_point(shape = 1) + labs(y = "Observed binary response", x = "Predicted probability") +
+#   scale_x_continuous(labels = scales::percent) +
+#   scale_y_continuous(breaks = 0:1)
+dat1$pred.hom <- fitted(glm(yhom ~ x, binomial, dat1))
+dat1$pred.het <- fitted(glm(yhet ~ x, binomial, dat1))
+test.dat.l <- with(dat1, data.frame(ID = rep(ID, 2), y = c(yhom, yhet), p = c(pred.hom, pred.het)))
+test.dat.l$mod <- sort(rep(1:2, nrow(dat1)))
+test.dat.l$mod <- ifelse(test.dat.l$mod == 1, "Homoskedastic", "Heteroskedastic")
+ggplot(test.dat.l, aes(p, y)) + facet_wrap(~ mod) + geom_smooth(alpha = .35, col = "#5c5c5c") +
+  # geom_smooth(method = "lm", col = "green", linetype = 2, formula = y ~ poly(x, 2), alpha = .5) +
+  theme_bw() + geom_abline(slope = 1, intercept = 0, linetype = 2) +
+  geom_jitter(height = .05, size = .0005, shape = 1) +
+  labs(y = "Observed binary response", x = "Predicted probability") +
+  coord_cartesian(xlim = c(0, 1)) + scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(breaks = 0:1)
+```
+
+<!-- Under homoskedasticity, the improvement to the model by including a squared probability term in the model was not statistically significant, $\chi^2_1=3.56,p=.059$. Under heteroskedasticity, the improvement to the model by including a squared probability term in the model was statistically significant, $\chi^2_1=27.17,p<.001$. This test suggests that the logistic regression model I performed was not correct for the data under heteroskedasticity. -->
+
 # Discussion
 
-If the functional form of heteroskedasticity is known, then it is possible to modify the likelihood function used in maximum likelihood estimation of the logistic regression model. The literature is more developed in the case of probit models, where there exists a class of models known as _heteroskedastic probit models_ [@alvarez1995american]. However, even if the researcher can identify the functional form for heteroskedasticity, there is no guarantee that estimating the model will result in a correct solution. Potential problems include multiple solutions with near equivalent fit to the data, near singular Hessian matrices, large standard errors and convergence failures [@Keele2006].
+If the functional form of heteroskedasticity is known, then it is possible to modify the likelihood function used in maximum likelihood estimation of the logistic regression model. The literature is more developed in the case of probit models, where there exists a class of models known as _heteroskedastic probit models_ [@alvarez1995american]. However, even if the researcher can identify the functional form for heteroskedasticity, there is no guarantee that estimating the model will result in a correct solution because a ratio of parameters exists in the log-likelihood function [@Keele2006]. And potential problems include multiple solutions with near equivalent fit to the data, near singular Hessian matrices, large standard errors and convergence failures.
 
 Hence, I recommend that when researchers have access to the original continuous variable, they should model this variable regardless of questions of substantive interest. If education researchers are interested in studying relationships at thresholds that are very different from the mean of the outcome, quantile regression [@koenker2001quantile] is one approach for exploring the relationship between the predictors and continuous outcome at different quantiles of the outcome. There are methods for converting linear regression coefficients to logits and odds ratios [@Moser2004] but they also rely on the aforementioned homoskedasticity assumption.
 
-Finally, the problem of heteroscedasticity described above can exist even when the outcome variable is truly binary, or the binary outcome is difficult to rationalize as the manifestation of a dichotomized continuous variable. I focus on the case where the investigator has access to the continuous variable here because the situation is readily salvageable: analyze the continuous outcome directly. In situations where the investigator does not have access to the underlying continuous variable, but heteroskedasticity may be a concern, more flexible regression approaches such as generalized additive models [@hastie2017generalized] and kernel regularized least squares [with logistic loss, @Hainmueller2014] may yield results that are more likely to reflect the true relations in the data.
+Finally, the problem of heteroscedasticity described above can exist even when the outcome variable is truly binary, or the binary outcome is difficult to rationalize as the manifestation of a dichotomized continuous variable. I focus on the case where the investigator has access to the continuous variable here because the situation is readily salvageable: analyze the continuous outcome directly. In situations where the investigator does not have access to the underlying continuous variable, but heteroskedasticity may be a concern, more flexible regression approaches such as generalized additive models [@hastie2017generalized] and kernel regularized least squares [with logistic loss, @Hainmueller2014] may yield results that are more likely to reflect the true relations in the data. An additional alternative is to adopt a Bayesian framework using weakly informative priors to improve identification of the parameters in the log-likelihood function for heteroskedastic models.
 
 # References
 
