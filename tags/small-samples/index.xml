@@ -6,10 +6,20 @@
     <description>Recent content in Small-samples on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 21 Sep 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/tags/small-samples/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>When data are not so informative, it pays to choose the sum score over the factor score</title>
+      <link>https://www.jamesuanhoro.com/post/2019/08/02/when-data-are-not-so-informative-it-pays-to-choose-the-sum-score-over-the-factor-score/</link>
+      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2019/08/02/when-data-are-not-so-informative-it-pays-to-choose-the-sum-score-over-the-factor-score/</guid>
+      <description>When I first came across the recent preprint by McNeish and Gordon Wolf on Twitter on how sum scores are factor scores from a heavily constrained model, my first reaction was: don&amp;rsquo;t we all know this already? Sacha Epskamp asked the same question and there&amp;rsquo;s a discussion that follows about how people who study these topics know this, but applied researchers may not.
+I skimmed the paper and the authors show how sum scores are factor scores when all item error variances are the same and all loadings are the same across items.</description>
+    </item>
     
     <item>
       <title>Little&#39;s MCAR test at different sample sizes</title>

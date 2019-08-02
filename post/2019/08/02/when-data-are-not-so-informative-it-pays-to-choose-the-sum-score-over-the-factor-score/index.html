@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>When data are not so informative, it pays to choose the sum score over the factor score | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">When data are not so informative, it pays to choose the sum score over the factor score</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2019/08/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> 
+  
+  
+  
+  Tags: <a href="/tags/factor-analysis">factor-analysis</a> <a href="/tags/confirmatory-factor-analysis">confirmatory-factor-analysis</a> <a href="/tags/small-samples">small-samples</a> <a href="/tags/factor-score">factor-score</a> <a href="/tags/sum-score">sum-score</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>When I first came across the <a href="https://psyarxiv.com/3wy47/">recent preprint by McNeish and Gordon Wolf</a> on <a href="https://twitter.com/rogierK/status/1153907817687977984">Twitter</a> on how sum scores are factor scores from a heavily constrained model, my first reaction was: don&rsquo;t we all know this already? <a href="https://twitter.com/SachaEpskamp/status/1153908626186051584">Sacha Epskamp asked the same question</a> and there&rsquo;s a discussion that follows about how people who study these topics know this, but applied researchers may not.</p>
+
+<p>I skimmed the paper and the authors show how sum scores are factor scores when all item error variances are the same and all loadings are the same across items. This is a highly constrained model; fwiw, it&rsquo;s no different conceptually from the widely used Rasch model. And the authors argue that it&rsquo;s important to justify this sum score model. They also admit that in many situations, it makes no practical difference which score you use. And they point out that differences between both scores will exist when the loadings are different across items.</p>
+
+<p>Now, although I think the difference between the sum score and factor score is of importance, what is more important is the relationship any of these scores have with the latent trait (assuming such a thing exists). Another widely known fact is that any score from these models differs from the latent trait such that the correlation of these scores to the latent trait is less than one. This is why there is a new line of research by Ines Devlieger (reviving an older line of research) on how to properly use factor scores in models while accounting for the fact that the score is not the trait.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup></p>
+
+<p>Another feeling I had in reaction to the paper is that small sample sizes are quite common in applied research settings and a researcher is probably better off working with the sum score when their sample size is small.<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> Although the CFA may return unbiased estimates of the relationship between items and the factor when the model is true, at small sample sizes, such estimates are likely to be unstable such that a crude guess like: &ldquo;a factor loading of 1 for each item&rdquo; i.e. sum scoring will be better. This is the <a href="https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">bias-variance trade-off</a>.<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup></p>
+
+<p>So I decided to test this issue empirically, my hypothesis being that the sum score will be better related to the latent trait under small sample sizes. After testing, the short answer is:</p>
+
+<blockquote>
+<p>When the data are not so informative (e.g. small sample + weak loadings), the sum score is better than the factor score.</p>
+</blockquote>
+
+<p>Here&rsquo;s how I went about:</p>
+
+<style type="text/css">
+  .gist-data {max-height: 200px;}
+</style>
+
+<script height="1" src="https://gist.github.com/stonegold546/d95c36da8f41c6113a1c812276facaec.js">
+</script>
+
+<p>The <code>sim.fun()</code> function takes a latent variable, <code>lv</code>; a set of loadings, <code>lambda</code>; and the number of times to replicate a simulation and analysis. The first step is to generate multivariate normal data according to the standard CFA formula: $ \mathbf x = \boldsymbol{\Lambda\xi} + \boldsymbol{\delta}$; basically, multiply loadings by latent variable and add error. I wrote the code such that the error variance for each item = 1 - loading ^ 2 for the item. Hence, one can think of the loading squared as the proportion of variance in the item that is accounted for by the latent variable. The final analysis in the function is to compute sum scores, factor scores from a standard unidimensional CFA and coefficient alpha. The function then returns coefficient alpha, and the correlations of sum and factor scores to the supplied latent variable. I repeated this 2,000 times for five sets of loadings:</p>
+
+<p><img src="/img/posts/sum_scores/loadings.png" alt="loadings" /></p>
+
+<p>The latent variable was always a rankit score of sample size 60, hence, very close to standard normal.</p>
+
+<p>I assumed any difference from 1 in the correlation between the scores and the latent variable represented bias, and I calculated the mean squared error to assess estimation quality. I know both scores are somewhat different from the latent variable, so the correlations will generally be under one. I used the absolute value of the correlation of the factor score and latent trait in all calculations.<sup class="footnote-ref" id="fnref:5"><a rel="footnote" href="#fn:5">5</a></sup> Here&rsquo;s what the MSEs look like:</p>
+
+<p><img src="/img/posts/sum_scores/mse.png" alt="mse" /></p>
+
+<p>It&rsquo;s clear that under weak loadings, whether with 9 or 3 items, the sum score is much better correlated to the latent trait than the factor score. To get a better sense of what the correlations are, another plot:</p>
+
+<p><img src="/img/posts/sum_scores/cor.png" alt="correlations" /></p>
+
+<p>We see here that when the loadings are weak, the correlation of the factor score to the latent trait has a very wide range relative to the same correlation for the sum scores. When the loadings are strong, the situation is reversed. Under the heterogeneous condition, the factor score is clearly better.</p>
+
+<p>But even when the loadings are strong, the relationship of the sum score to the trait is not much different from the relationship of the factor score to the trait. Moreover, when there are only three items, one still finds some low correlations (.5, .6, .7) when using the factor score approach - see black spikes under plot in 3 items strong panel.</p>
+
+<p>Nothing here is new. None of these models will ever be correct for data. When data are uninformative, simple crude approaches like a sum score will do the job and may be better than more complicated modeling, unless the more complicated modeling is a well-done Bayesian analysis. When the data are informative, one can probably do better than a factor analysis anyway. If the choice is between several factor analyses or a full SEM, and the data are in the half-way place of converging for the factor analyses but not converging for the larger SEM, see the work of Ines Devlieger.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Devlieger, I., Mayer, A., &amp; Rosseel, Y. (2016). Hypothesis Testing Using Factor Score Regression. <em>Educational and Psychological Measurement, 76</em>(5), 741–770. <a href="https://doi.org/10.1177/0013164415607618">https://doi.org/10.1177/0013164415607618</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2">Devlieger, I., &amp; Rosseel, Y. (2017). <em>Factor Score Path Analysis. Methodology, 13</em>(Supplement 1), 31–38. <a href="https://doi.org/10.1027/1614-2241/a000130">https://doi.org/10.1027/1614-2241/a000130</a>
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
+<li id="fn:3">My general approach these days is do everything so-called <em>subjective Bayesian</em> so that provides an approach for dealing with small samples.
+ <a class="footnote-return" href="#fnref:3">↩</a></li>
+<li id="fn:4">See the <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0207239">paper by Davis-Stober, Dana and Rouder</a> for a good review of the bias-variance trade off in psychology.
+ <a class="footnote-return" href="#fnref:4">↩</a></li>
+<li id="fn:5">The reason for this is at small sample size, the marker variable for the factor analysis may be negatively related to the original factor due to sampling error such that the factor is negatively related to the latent trait.
+ <a class="footnote-return" href="#fnref:5">↩</a></li>
+</ol>
+</div>
+
+</main>
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+
