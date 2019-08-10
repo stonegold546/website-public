@@ -122,7 +122,13 @@
 
 <p>But even when the loadings are strong, the relationship of the sum score to the trait is not much different from the relationship of the factor score to the trait. Moreover, when there are only three items, one still finds some low correlations (.5, .6, .7) when using the factor score approach - see black spikes under plot in 3 items strong panel.</p>
 
-<p>Nothing here is new. None of these models will ever be correct for data. When data are uninformative, simple crude approaches like a sum score will do the job and may be better than more complicated modeling, unless the more complicated modeling is a well-done Bayesian analysis.</p>
+<p>One of the key recommendations of the paper by McNeish and Gordon Wolf is to validate the sum score model. The easiest way to do this is to perform the CFA with loadings constrained equal and error variances constrained equal i.e. the sum score model and test it. Remember, this model like all models is always wrong.<sup class="footnote-ref" id="fnref:6"><a rel="footnote" href="#fn:6">6</a></sup> But if there is insufficient statistical power to detect the misspecification of this model, there is probably insufficient information in the data for more complicated modeling. So I also performed $\chi^2$ testing of the sum score model across replications:</p>
+
+<p><img src="/img/posts/sum_scores/power_misspec.png" alt="power" /></p>
+
+<p>This plot is consistent with the rest of the text. But we should note that even when there is power to detect misspecification of the sum score model, the sum scores are still similarly correlated to the latent trait as the factor scores.</p>
+
+<p>In all, nothing here is new. None of these models will ever be correct for data. When data are uninformative, simple crude approaches like a sum score will do the job and may be better than more complicated modeling, unless the more complicated modeling is a well-done Bayesian analysis.</p>
 <div class="footnotes">
 
 <hr />
@@ -138,6 +144,8 @@
  <a class="footnote-return" href="#fnref:4">↩</a></li>
 <li id="fn:5">The reason for this is at small sample size, the marker variable for the factor analysis may be negatively related to the original factor due to sampling error such that the factor is negatively related to the latent trait.
  <a class="footnote-return" href="#fnref:5">↩</a></li>
+<li id="fn:6">Loadings will never be equal across items, and neither will error variances. See Nester (2006) - An applied statistician’s creed, <a href="https://doi.org/10.2307/2986064">https://doi.org/10.2307/2986064</a>
+ <a class="footnote-return" href="#fnref:6">↩</a></li>
 </ol>
 </div>
 
