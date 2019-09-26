@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2019/09/26/how-do-you-communicate-the-evidence-for-the-practical-significance-of-an-intervention-using-bayesian-methods/</loc>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2019/08/02/when-data-are-not-so-informative-it-pays-to-choose-the-sum-score-over-the-factor-score/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
   </url>
@@ -79,7 +84,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/bayesian/</loc>
-    <lastmod>2018-11-28T00:00:00+00:00</lastmod>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -132,7 +137,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2019-08-02T00:00:00+00:00</lastmod>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -203,7 +208,13 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2019-08-02T00:00:00+00:00</lastmod>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/practical-significance/</loc>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -255,7 +266,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2019-08-02T00:00:00+00:00</lastmod>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -273,7 +284,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/</loc>
-    <lastmod>2018-11-28T00:00:00+00:00</lastmod>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

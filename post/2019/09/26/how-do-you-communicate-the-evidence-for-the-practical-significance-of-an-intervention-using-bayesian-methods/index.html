@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How do you communicate the evidence for the practical significance of an intervention using Bayesian methods? | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">How do you communicate the evidence for the practical significance of an intervention using Bayesian methods?</span></h1>
+<h2 class="author">James Uanhoro</h2>
+<h2 class="date">2019/09/26</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> 
+  
+  
+  
+  Tags: <a href="/tags/bayesian">bayesian</a> <a href="/tags/practical-significance">practical-significance</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>I was listening to <a href="https://www.fharrell.com/">Frank Harrell</a> on the <a href="https://soundcloud.com/plenarysession/206-heart-failure-choosing-a-specialty-the-bayesian-approach-with-dr-frank-harrell">Plenary Sessions podcast talk about Bayesian methods applied to clinical trials</a>. I&rsquo;d recommend anyone interested in or considering applying Bayesian methods listen to the episode.</p>
+
+<p>One thing I liked was their discussion on communicating the evidence for practical significance in a transparent way. They were talking about how a paper they had read had a very good example of this. The episode doesn&rsquo;t have notes so I did not see the paper. But I understood the basic idea to be that you can calculate and report the probability that the treatment effect exceeds all relevant values of practical significance.</p>
+
+<p>I&rsquo;ll go through an example to demonstrate this. The data are Kruschke&rsquo;s hypothetical IQ data from his BEST paper.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> The green points are from the control group (placebo) and the red points are from the treatment group who received a &ldquo;smart&rdquo; drug:</p>
+
+<p><img src="/img/posts/pract_sig/pract_dat.png" alt="data" /></p>
+
+<p>Kruschke performed a Bayesian analysis, assumed the data were <em>t</em>-distributed which accommodated outliers in the data and permitted the data to be heteroskedastic by group membership. The results suggested a very high probability that the treatment effect exceeded zero. Following Harrell&rsquo;s advice, one could go further and produce the following graph:</p>
+
+<p><img src="/img/posts/pract_sig/pract_sig.png" alt="sig" /></p>
+
+<p>Given this graph, the probability that the treatment improved IQ by more than 1 point was barely over 50%. If we consider a 5-point IQ increase the minimum that is worth paying attention to, then the probability that the smart drug improved IQ points was 0. 3 points? Still 0. If we set ourselves the low bar of any kind of improvement i.e. more than 0 points, the probability that the smart drug worked was almost 100%.</p>
+
+<p>If researchers stop at the low bar of any kind of improvement, the almost 100% <em>probability of efficacy</em> is very impressive. However, consider any useful level of practical significance and the probability of efficacy plummets. Researchers can produce this type of graph for any effect or relation that is of interest, and the graph provides a transparent way for readers to assess the effect/relation. Some people have high standards, others have low standards; they can come to their different evaluations given the transparent reporting.</p>
+
+<hr />
+
+<p>I did not run Kruschke&rsquo;s exact model. The model I ran was:</p>
+
+<p>$$\mathbf y \sim t\big(\nu, \beta_0 + \beta_1\times\mathbf x, \exp(\theta_0 + \theta_1\times \mathbf x)\big)$$
+$$\nu \sim \mathrm{gamma}(2, 0.1),\quad \beta_0 \sim \mathrm{Cauchy}(0, 5),\quad \beta_1 \sim \mathcal{N}(0, 15 / 1.96)$$
+$$\theta_0 \sim t(3, 0, 1),\quad \theta_1\sim \mathcal{N}(0, \ln(3) / 1.96)$$</p>
+
+<p>where $\mathbf y$ was the outcome variable and $\mathbf x$ was the treatment indicator. And I calculated the probability that $\beta_1&gt;\text{effect}$ for different values of the effect using the posterior values of $\beta_1$.</p>
+
+<p>The code is available here:</p>
+
+<style type="text/css">
+  .gist-data {max-height: 200px;}
+</style>
+
+<script height="0.5" src="https://gist.github.com/stonegold546/02d6bac1d52c2c3a6ff5de5131dc07fc.js"></script>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Kruschke, J. K. (2013). Bayesian estimation supersedes the t test. Journal of Experimental Psychology: General, 142(2), 573–603. <a href="https://doi.org/10.1037/a0029146">https://doi.org/10.1037/a0029146</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+</ol>
+</div>
+
+</main>
+
+<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+

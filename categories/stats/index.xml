@@ -6,10 +6,20 @@
     <description>Recent content in Stats on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 02 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/categories/stats/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How do you communicate the evidence for the practical significance of an intervention using Bayesian methods?</title>
+      <link>https://www.jamesuanhoro.com/post/2019/09/26/how-do-you-communicate-the-evidence-for-the-practical-significance-of-an-intervention-using-bayesian-methods/</link>
+      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2019/09/26/how-do-you-communicate-the-evidence-for-the-practical-significance-of-an-intervention-using-bayesian-methods/</guid>
+      <description>I was listening to Frank Harrell on the Plenary Sessions podcast talk about Bayesian methods applied to clinical trials. I&amp;rsquo;d recommend anyone interested in or considering applying Bayesian methods listen to the episode.
+One thing I liked was their discussion on communicating the evidence for practical significance in a transparent way. They were talking about how a paper they had read had a very good example of this. The episode doesn&amp;rsquo;t have notes so I did not see the paper.</description>
+    </item>
     
     <item>
       <title>When data are not so informative, it pays to choose the sum score over the factor score</title>
