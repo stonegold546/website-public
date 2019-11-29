@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.jamesuanhoro.com/post/2019/11/25/problems-with-using-odds-ratios-as-effect-sizes-in-binary-logistic-regression-and-alternative-approaches/</loc>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/post/2019/09/26/how-do-you-communicate-the-evidence-for-the-practical-significance-of-an-intervention-using-bayesian-methods/</loc>
     <lastmod>2019-09-26T00:00:00+00:00</lastmod>
   </url>
@@ -106,6 +111,12 @@
   </url>
   
   <url>
+    <loc>https://www.jamesuanhoro.com/tags/effect-size/</loc>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://www.jamesuanhoro.com/tags/factor-analysis/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -125,7 +136,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/glm/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -137,7 +148,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
   </url>
   
   <url>
@@ -148,7 +159,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
-    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -190,7 +201,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/ols/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -208,7 +219,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -266,7 +277,7 @@
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>GLM on James Uanhoro</title>
-    <link>https://www.jamesuanhoro.com/tags/glm/</link>
-    <description>Recent content in GLM on James Uanhoro</description>
+    <title>Effect-size on James Uanhoro</title>
+    <link>https://www.jamesuanhoro.com/tags/effect-size/</link>
+    <description>Recent content in Effect-size on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 25 Nov 2019 11:43:14 -0500</lastBuildDate>
     
-	<atom:link href="https://www.jamesuanhoro.com/tags/glm/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.jamesuanhoro.com/tags/effect-size/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <guid>https://www.jamesuanhoro.com/post/2019/11/25/problems-with-using-odds-ratios-as-effect-sizes-in-binary-logistic-regression-and-alternative-approaches/</guid>
       <description>This is my first (first author) journal article. We started writing it in Summer 2018, with first submission by November 2018. So my thinking has changed somewhat since then. There is a non-pay-walled version below, but the version of record is available at the Journal of Experimental Education, http://www.tandfonline.com/10.1080/00220973.2019.1693328. The best part of the review process was communicating with the editor, Professor Brian French - he was very kind.
 Here&amp;rsquo;s the PDF and GitHub repository with simulation and figure reproduction code in R (very little comments).</description>
-    </item>
-    
-    <item>
-      <title>Simulating data from regression models</title>
-      <link>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</link>
-      <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</guid>
-      <description>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it is extendable to the family of generalized linear models (logistic, Poisson, gamma, &amp;hellip;) and other regression models, say t-regression. It&amp;rsquo;s something Gelman and Hill cover in their regression text.</description>
     </item>
     
   </channel>
