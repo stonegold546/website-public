@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Effect size calculator (with Stan)</title>
+        <!-- <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+        <link rel="stylesheet" href="bms_style.css">
+        <link rel="stylesheet" href="bms_border.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- Production version below -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.5/math.min.js"></script>
+    </head>
+    <body>
+        <div id="loader_div" class="loader loader-border" v-bind:class="{ 'is-active': isActive }"></div>
+
+        <div class="big_container">
+            <div id="Top">
+                <h1>Effect size calculator (with Stan)</h1>
+                <h2>All effect sizes based on Bayesian models run in Stan</h2>
+            </div>
+            
+            <hr>
+            <div class="inner_container">
+                <div id="two_sample_test">
+                    <div>
+                        <h3>Two sample comparison</h3>
+                        <p>Description: The test allows the group means and variances to be different, while permitting outliers in the
+                            data.
+                        </p>
+                        <h5>Please scale your data such that values are at most in the hundreds. For example, if working with annual
+                            incomes, you
+                            can divide by 10,000.
+                        </h5>
+                    </div>
+                    <div class="left_container">
+                        <form id="ts_form" @submit="checkForm" method="post">
+                            <p class="error" v-if="errors.length">
+                                <b>Please correct the following error(s):</b>
+                                <ul>
+                                    <li class="error" v-for="error in errors">{{ error }}</li>
+                                </ul>
+                            </p>
+                    
+                            <p>Paste raw data into textboxes (Separate values by a space, comma or newline)</p>
+                    
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p>Group 1 (treatment), n = {{ n1 }}</p>
+                                        <textarea v-model="ts_y1" name="ts_y1" id="ts_y1" cols="35" rows="5" required></textarea>
+                                    </td>
+                                    <td>
+                                        <p>Group 2 (control), n = {{ n0 }}</p>
+                                        <textarea v-model="ts_y0" name="ts_y0" id="ts_y0" cols="35" rows="5" required></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                    
+                    
+                            <p>What is the largest believable difference between the two group means? An irrational response would be a value
+                                greater than the range of your data. Be skeptical of large group differences.</p>
+                            <input v-model="ts_max_diff" class="ts_input" type="number" name="ts_max_diff" id="ts_max_diff" required
+                                min=0.0001 step="any">
+                            <p>By default, I assume that the ratio of both group standard deviations will not exceed {{max_sr}}. You
+                                can reduce/increase
+                                this number if you expect less/more heteroskedasticity in your data.</p>
+                            <input v-model="ts_max_st_r" class="ts_input" type="number" name="ts_max_st_r" id="ts_max_st_r" min=1.5 max=10
+                                step=0.5 required>
+                            <p>How many iterations should Stan run? The program will return half this number of iterations across 4 chains.
+                                If you enter 500, the program will return 250 posterior samples for each chain.</p>
+                            <input v-model="ts_n_iter" class="ts_input" type="number" name="ts_n_iter" id="ts_n_iter" min=300 max=1500
+                                step=100 required>
+                            <p>Requested interval: <input v-model="ts_int" class="ts_input" type="number" name="ts_int" id="ts_int" min=1
+                                    max=99 step="any" required>%</p>
+                            <input type="submit" value="Submit for analysis">
+                    
+                            <h4>Results (with quantile interval)</h4>
+                            <p>
+                                <textarea name="ts_res" id="ts_res" cols="75" rows="11" readonly=true>{{message}}</textarea>
+                            </p>
+                    
+                            <!-- <div class='canvas' id='t_canvas'>
+                                                    <div class="inside_canvas" style="float: left;">
+                                                        <p>Mean difference</p>
+                                                        <canvas id="eff_mean" aria-label="Mean difference" role="img"></canvas>
+                                                    </div>
+                                                    <div class="inside_canvas" style="float: right;">
+                                                        <p>Standard deviation ratio</p>
+                                                        <canvas id="eff_st" aria-label="Standard deviation ratio" role="img"></canvas>
+                                                    </div>
+                                                </div> -->
+                        </form>
+                    </div>
+                    <div class="center_container">
+
+                    </div>
+                    <div class="right_container">
+                        <p style="text-align: left; font-size: .9rem; margin-top: 25em; font-weight: bold;">
+                            Clicking submit will print out summary results and download four files:
+                            <ol style="text-align: left;">
+                                <li class="list_explainer">A summary file containing summary statistics for parameters and posterior samples.</li>
+                                <li class="list_explainer">A rank plot for the mean difference and SD ratio. Each plot should be uniformly distributed. See: <a href="https://arxiv.org/pdf/1903.08008.pdf" target="_blank">arxiv:1903.08008</a></li>
+                                <li class="list_explainer">A line chart showing the probability that the mean difference exceeds any value. Answers: What is the probability that the difference between the groups exceeded X?</li>
+                                <li class="list_explainer">Same as last chart but for the ratio of the group standard deviations.</li>
+                            </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="inner_container">
+                <div class="left_container">5</div>
+                <div class="center_container"></div>
+                <div class="right_container">7</div>
+            </div> -->
+        </div>
+        <script src="bms_index.js" async defer></script>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+p, h5 {
+  max-width: 50em;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+div, tr {
+  text-align: center;
+}
+/* input {
+  width: 4em;
+} */
+.ts_input {
+  width: 5em;
+}
+.error {
+  color: red;
+}
+#ts_res {
+  font-size: larger;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+.canvas {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+}
+.inside_canvas {
+  height: 400px;
+  width: 48%;
+}
+.big_container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+.inner_container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 0 150px 0;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+.left_container {
+  width: 70%;
+  float: left;
+}
+.center_container {
+  width: 10%;
+  display: inline-block;
+  margin: 0 auto;
+}
+.right_container {
+  width: 20%;
+  float: right;
+}
+.list_explainer {
+  margin: 10px 0;
+  font-size: .9rem;
+}
