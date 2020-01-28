@@ -41,7 +41,7 @@ function createDumpFile (dump, post, params, name) {
     var blob = new Blob([dump.replace('\n', '\r\n')], { type: 'text/plain' })
     var elem = window.document.createElement('a')
     elem.href = window.URL.createObjectURL(blob)
-    elem.download = name + '.txt'
+    elem.download = name + '.tsv'
     document.body.appendChild(elem)
     elem.click()
     document.body.removeChild(elem)
