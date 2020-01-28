@@ -133,7 +133,7 @@ Scale estimate is proportional but not equal to standard deviation.',
                 posteriors = [];
                 paramsList = [];
                 messageSplit = this.base_message.split('\n');
-                dumpText = ['statistic', 'mean', 'median', 'sd', 'low.int', 'hi.int', 'ess', 'rhat'].join(',') + '\n';
+                dumpText = ['statistic', 'mean', 'median', 'sd', 'quantile_interval_lo', 'quantile_interval_hi', 'effective_sample_size', 'rhat'].join(',') + '\n';
                 for (let i = 0; i < 7; i++) {
                     res = unravelJSON(results, params[i], interval_x);
                     messageSplit[i] += res[0];
