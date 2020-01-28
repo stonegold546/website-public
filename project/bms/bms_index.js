@@ -3,10 +3,10 @@ function textAreaToNum (content) {
     return content.filter(function (entry) { return /\S/.test(entry); }).map(Number);
 }
 
-function padElem(elem) {
-    if (!isNaN(elem)) { elem = parseFloat(elem).toFixed(3); }
-    return elem + ' '.repeat(10 - elem.length);
-}
+// function padElem(elem) {
+//     if (!isNaN(elem)) { elem = parseFloat(elem).toFixed(3); }
+//     return elem + ' '.repeat(10 - elem.length);
+// }
 
 function unravelJSON (json, param, interval, percent=false) {
     var param_dat = json[param];
@@ -19,7 +19,7 @@ function unravelJSON (json, param, interval, percent=false) {
     } else {
         res.push('\t' + param_dat['mean'].toFixed(3) + ' (' + qntls[0].toFixed(3) + ', ' + qntls[1].toFixed(3) + ')');
     }
-    res.push([param_dat.mean, param_dat.median, param_dat.sd, qntls[0], qntls[1], param_dat.ess, param_dat.rhat].map(padElem).join(''));
+    res.push([param_dat.mean, param_dat.median, param_dat.sd, qntls[0], qntls[1], param_dat.ess, param_dat.rhat].join(','));
     res.push(posteriors)
     return res;
 }
@@ -33,15 +33,15 @@ var cleanParams = {
 function createDumpFile (dump, post, params, name) {
     var divisor = post.length / 4;
     post = post.map(function (row, idx) {
-        return parseInt(idx / divisor + 1) + '\t' + row.join('\t');
+        return parseInt(idx / divisor + 1) + ',' + row.join(',');
     }).join('\n')
     // console.log(post);
     dump += '\n\n' + 'POSTERIOR DRAWS\n\n' +
-        'chain\t' + params.join('\t') + '\n' + post + '\n';
-    var blob = new Blob([dump.replace('\n', '\r\n')], { type: 'text/plain' })
+        'chain,' + params.join(',') + '\n' + post + '\n';
+    var blob = new Blob([dump.replace('\n', '\r\n')], { type: 'text/csv' })
     var elem = window.document.createElement('a')
     elem.href = window.URL.createObjectURL(blob)
-    elem.download = name + '.tsv'
+    elem.download = name + '.csv'
     document.body.appendChild(elem)
     elem.click()
     document.body.removeChild(elem)
@@ -133,12 +133,12 @@ Scale estimate is proportional but not equal to standard deviation.',
                 posteriors = [];
                 paramsList = [];
                 messageSplit = this.base_message.split('\n');
-                dumpText = ' '.repeat(10) + ['mean', 'median', 'sd', 'low.int', 'hi.int', 'ess', 'rhat'].map(padElem).join('') + '\n';
+                dumpText = ['statistic', 'mean', 'median', 'sd', 'low.int', 'hi.int', 'ess', 'rhat'].join(',') + '\n';
                 for (let i = 0; i < 7; i++) {
                     res = unravelJSON(results, params[i], interval_x);
                     messageSplit[i] += res[0];
                     paramsList.push(cleanParams[params[i]]);
-                    dumpText += padElem(paramsList[i]) + res[1] + '\n';
+                    dumpText += paramsList[i] + ',' + res[1] + '\n';
                     posteriors.push(res[2]);
                 }
 
