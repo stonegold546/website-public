@@ -208,8 +208,8 @@ Risk difference is the average probability of group 1 minus the average probabil
             this.tsb_t1 = null;
             this.tsb_t1 = null;
 
-            var success = [this.tsb_s2, this.tsb_s1];
-            var total = [this.tsb_s2 + this.tsb_f2, this.tsb_s1 + this.tsb_f1];
+            var success = [parseInt(this.tsb_s2), parseInt(this.tsb_s1)];
+            var total = [parseInt(this.tsb_s2) + parseInt(this.tsb_f2), parseInt(this.tsb_s1) + parseInt(this.tsb_f1)];
 
             if (this.errors.length) {
                 loader_div.isActive = false;
