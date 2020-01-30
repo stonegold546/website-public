@@ -16,7 +16,7 @@ div, tr {
 .error {
   color: red;
 }
-#ts_res {
+#ts_res, #tsb_res {
   font-size: larger;
 }
 table {
@@ -43,6 +43,7 @@ table {
   margin: 0 auto;
   padding: 0 0 150px 0;
   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  clear: both;
 }
 .left_container {
   width: 70%;

@@ -8,7 +8,7 @@ function textAreaToNum (content) {
 //     return elem + ' '.repeat(10 - elem.length);
 // }
 
-function unravelJSON (json, param, interval, percent=false) {
+function unravelJSON(json, param, interval, percent = false) {
     var param_dat = json[param];
     var posteriors = param_dat['post'];
     var qntls = jStat.quantiles(posteriors, interval);
@@ -24,10 +24,30 @@ function unravelJSON (json, param, interval, percent=false) {
     return res;
 }
 
+function unravelJsonNoPost(json, param, percent = false) {
+    var param_dat = json[param];
+    var res = [];
+    if (percent) {
+        res.push('\t' + (param_dat['mean'].toFixed(3) * 100).toFixed(2) + '% (' +
+            (param_dat['int.lo'] * 100).toFixed(2) + '%, ' + (param_dat['int.hi'] * 100).toFixed(2) + '%)');
+    } else {
+        res.push('\t' + param_dat['mean'].toFixed(3) + ' (' + param_dat['int.lo'].toFixed(3) + ', ' + param_dat['int.hi'].toFixed(3) + ')');
+    }
+    res.push([param_dat.mean, param_dat.median, param_dat.sd, param_dat['int.lo'], param_dat['int.hi'], param_dat.ess, param_dat.rhat].join(','));
+    return res;
+}
+
 var cleanParams = {
-    m_diff: 'mean_diff', st_ratio: 'sd_ratio',
-    m1: 'mean1', m0: 'mean2', st1: 'scale1', st0: 'scale2',
-    nu: 'df'
+    ttest: {
+        m_diff: 'mean_diff', st_ratio: 'sd_ratio',
+        m1: 'mean1', m0: 'mean2', st1: 'scale1', st0: 'scale2',
+        nu: 'df'
+    },
+    twogrpbin: {
+        m0: 'mean2_logit', m_diff: 'mdiff_logit', 'means_logit[2]': 'mean1_logit',
+        odds_ratio: 'odds_ratio', 'means_prob[1]': 'mean2_prob', 'means_prob[2]': 'mean1_prob',
+        prob_ratio: 'prob_ratio', prob_diff: 'prob_diff'
+    }
 }
 
 function createDumpFile (dump, post, params, name) {
@@ -35,7 +55,6 @@ function createDumpFile (dump, post, params, name) {
     post = post.map(function (row, idx) {
         return parseInt(idx / divisor + 1) + ',' + row.join(',');
     }).join('\n')
-    // console.log(post);
     dump += '\n\n' + 'POSTERIOR DRAWS\n\n' +
         'chain,' + params.join(',') + '\n' + post + '\n';
     var blob = new Blob([dump.replace('\n', '\r\n')], { type: 'text/csv' })
@@ -123,39 +142,136 @@ Scale estimate is proportional but not equal to standard deviation.',
             axios.post(
                 // 'http://localhost:8000/two_sample_test',
                 'https://uanhoro1.pythonanywhere.com/two_sample_test',
-                { params: {
-                    y1: y1, y0: y0, sd_m: this.sd_m, max_diff: parseFloat(this.ts_max_diff), sd_st: this.sd_st,
-                    max_st_r: parseFloat(this.ts_max_st_r), nu_choice: this.nu_choice, n_iter: parseInt(this.ts_n_iter)
-                } }
-            )
-            .then(response => {
-                results = response.data;
-                posteriors = [];
-                paramsList = [];
-                messageSplit = this.base_message.split('\n');
-                dumpText = ['statistic', 'mean', 'median', 'sd', 'quantile_interval_lo', 'quantile_interval_hi', 'effective_sample_size', 'rhat'].join(',') + '\n';
-                for (let i = 0; i < 7; i++) {
-                    res = unravelJSON(results, params[i], interval_x);
-                    messageSplit[i] += res[0];
-                    paramsList.push(cleanParams[params[i]]);
-                    dumpText += paramsList[i] + ',' + res[1] + '\n';
-                    posteriors.push(res[2]);
+                {
+                    params: {
+                        y1: y1, y0: y0, sd_m: this.sd_m, max_diff: parseFloat(this.ts_max_diff), sd_st: this.sd_st,
+                        max_st_r: parseFloat(this.ts_max_st_r), nu_choice: this.nu_choice, n_iter: parseInt(this.ts_n_iter)
+                    }
                 }
+            )
+                .then(response => {
+                    results = response.data;
+                    posteriors = [];
+                    paramsList = [];
+                    messageSplit = this.base_message.split('\n');
+                    dumpText = ['statistic', 'mean', 'median', 'sd', 'quantile_interval_lo', 'quantile_interval_hi', 'effective_sample_size', 'rhat'].join(',') + '\n';
+                    for (let i = 0; i < 7; i++) {
+                        res = unravelJSON(results, params[i], interval_x);
+                        messageSplit[i] += res[0];
+                        paramsList.push(cleanParams.ttest[params[i]]);
+                        dumpText += paramsList[i] + ',' + res[1] + '\n';
+                        posteriors.push(res[2]);
+                    }
 
-                downloadImage(results.mean_hash, 'mean_diff');
-                downloadImage(results.sc_hash, 'scale_ratio');
-                downloadImage(results.rk_hash, 'rank_plots');
+                    downloadImage(results.mean_hash, 'mean_diff');
+                    downloadImage(results.sc_hash, 'scale_ratio');
+                    downloadImage(results.rk_hash, 'rank_plots');
 
-                posteriors = math.transpose(posteriors);
-                createDumpFile(dumpText, posteriors, paramsList, 'two_sample_summary');
+                    posteriors = math.transpose(posteriors);
+                    createDumpFile(dumpText, posteriors, paramsList, 'two_sample_summary');
 
-                this.message = messageSplit.join('\n');
+                    this.message = messageSplit.join('\n');
+                    loader_div.isActive = false;
+                })
+                .catch(error => {
+                    console.log(error)
+                    loader_div.isActive = false;
+                });
+        },
+    }
+})
+
+const tsb_form = new Vue({
+    el: '#tsb_form',
+    data: {
+        base_message: '\
+                                Odds ratio:\n\
+                                Risk ratio:\n\
+                           Risk difference:\n\
+Average probability of group 1 (treatment):\n\
+  Average probability of group 2 (control):\n\
+\n\
+Note: Risk ratio is the average probability of group 1 divided by the average probability of group 2. \
+Risk difference is the average probability of group 1 minus the average probability of group 2.',
+        message: this.base_message, errors: [],
+        tsb_s1: 1513, tsb_f1: 512, tsb_s2: 1459, tsb_f2: 554,
+        tsb_extreme: 'false',
+        tsb_sd_m: 3, tsb_sd_m_diff: 2, tsb_n_iter: 500, tsb_int: 95,
+        tsb_t1: null, tsb_t2: null
+    },
+    methods: {
+        checkForm: function (e) {
+            e.preventDefault();
+            loader_div.isActive = true;
+            this.message = this.base_message;
+            this.errors = [];
+            this.tsb_t1 = null;
+            this.tsb_t1 = null;
+
+            var success = [this.tsb_s2, this.tsb_s1];
+            var total = [this.tsb_s2 + this.tsb_f2, this.tsb_s1 + this.tsb_f1];
+
+            if (this.errors.length) {
                 loader_div.isActive = false;
-            })
-            .catch(error => {
-                console.log(error)
-                loader_div.isActive = false;
-             });
+                return true;
+            }
+
+            this.tsb_t1 = total[1];
+            this.tsb_t2 = total[0];
+
+            var interval_x = (1 - parseFloat(this.ts_int) / 100) / 2;
+            interval_x = [interval_x, 1 - interval_x];
+            var params = ['odds_ratio', 'prob_ratio', 'prob_diff', 'means_prob[2]', 'means_prob[1]'];
+
+            this.tsb_sd_m = this.tsb_extreme == 'true' ? 5 : 3
+
+            axios.post(
+                // 'http://localhost:8000/two_sample_binary',
+                'https://uanhoro1.pythonanywhere.com/two_sample_binary',
+                {
+                    params: {
+                        success: success, total: total,
+                        sd_m: parseFloat(this.tsb_sd_m), sd_m_diff: parseFloat(this.tsb_sd_m_diff),
+                        interval: parseInt(this.tsb_int), n_iter: parseInt(this.tsb_n_iter)
+                    }
+                }
+            )
+                .then(response => {
+                    results = response.data;
+                    paramsList = [];
+                    messageSplit = this.base_message.split('\n');
+                    dumpText = ['statistic', 'mean', 'median', 'sd', 'quantile_interval_lo', 'quantile_interval_hi', 'effective_sample_size', 'rhat'].join(',') + '\n';
+                    for (let i = 0; i < params.length; i++) {
+                        res = [];
+                        if ([3, 4].includes(i)) {
+                            res = unravelJsonNoPost(results, params[i], true);
+                        } else {
+                            res = unravelJsonNoPost(results, params[i]);
+                        }
+                        messageSplit[i] += res[0];
+                        paramsList.push(cleanParams.twogrpbin[params[i]]);
+                        dumpText += paramsList[i] + ',' + res[1] + '\n';
+                    }
+
+                    posteriors = ['m0', 'm_diff', 'odds_ratio', 'prob_ratio', 'prob_diff'].map(function (param) {
+                        return results[param]['post']
+                    })
+                    downloadImage(results.or_hash, 'odds_ratio');
+                    downloadImage(results.pr_hash, 'prob_ratio');
+                    downloadImage(results.pd_hash, 'prob_diff');
+                    downloadImage(results.rk_hash, 'rank_plots');
+
+                    posteriors = math.transpose(posteriors);
+                    createDumpFile(dumpText, posteriors,
+                        ['mean2_logit (intercept)', 'mdiff_logit (effect)', 'odds_ratio', 'prob_ratio', 'prob_diff'], 'two_way_table');
+
+                    this.message = messageSplit.join('\n');
+                    loader_div.isActive = false;
+                })
+                .catch(error => {
+                    console.log(error)
+                    loader_div.isActive = false;
+                });
         },
     }
 })

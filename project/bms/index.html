@@ -27,7 +27,7 @@
                 <h1>Effect size calculator (with Stan)</h1>
                 <h2>All effect sizes based on Bayesian models run in Stan</h2>
             </div>
-            
+
             <hr>
             <div class="inner_container">
                 <div id="two_sample_test">
@@ -87,21 +87,9 @@
                             <p>
                                 <textarea name="ts_res" id="ts_res" cols="75" rows="11" readonly=true>{{message}}</textarea>
                             </p>
-                    
-                            <!-- <div class='canvas' id='t_canvas'>
-                                                    <div class="inside_canvas" style="float: left;">
-                                                        <p>Mean difference</p>
-                                                        <canvas id="eff_mean" aria-label="Mean difference" role="img"></canvas>
-                                                    </div>
-                                                    <div class="inside_canvas" style="float: right;">
-                                                        <p>Standard deviation ratio</p>
-                                                        <canvas id="eff_st" aria-label="Standard deviation ratio" role="img"></canvas>
-                                                    </div>
-                                                </div> -->
                         </form>
                     </div>
                     <div class="center_container">
-
                     </div>
                     <div class="right_container">
                         <p style="text-align: left; font-size: .9rem; margin-top: 25em; font-weight: bold;">
@@ -116,11 +104,104 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="inner_container">
-                <div class="left_container">5</div>
-                <div class="center_container"></div>
-                <div class="right_container">7</div>
-            </div> -->
+            <div class="inner_container">
+                <hr>
+                <div id="two_sample_binary">
+                    <div>
+                        <h3>Two way contingency table</h3>
+                        <p>Description: The test allows you compare the success rate of two groups on a binary outcome.
+                        </p>
+                    </div>
+                    <div class="left_container">
+                        <form id="tsb_form" @submit="checkForm" method="post">
+                            <p class="error" v-if="errors.length">
+                                <b>Please correct the following error(s):</b>
+                                <ul>
+                                    <li class="error" v-for="error in errors">{{ error }}</li>
+                                </ul>
+                            </p>
+                
+                            <p>Enter aggregate data below</p>
+                
+                            <table>
+                                <tr>
+                                    <td></td>
+                                    <td>Yes</td>
+                                    <td>No</td>
+                                    <td>Total</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Group 1 (treatment)
+                                    </td>
+                                    <td>
+                                        <input v-model="tsb_s1" type="number" name="tsb_s1" id="tsb_s1" min=0 step=1 required>
+                                    </td>
+                                    <td>
+                                        <input v-model="tsb_f1" type="number" name="tsb_f1" id="tsb_f1" min=0 step=1 required>
+                                    </td>
+                                    <td>{{ tsb_t1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Group 2 (treatment)
+                                    </td>
+                                    <td>
+                                        <input v-model="tsb_s2" type="number" name="tsb_s2" id="tsb_s2" min=0 step=1 required>
+                                    </td>
+                                    <td>
+                                        <input v-model="tsb_f2" type="number" name="tsb_f2" id="tsb_f2" min=0 step=1 required>
+                                    </td>
+                                    <td>{{ tsb_t2 }}</td>
+                                </tr>
+                            </table>
+
+                            <p>Is the binary event an extremely low or high rate event? Consider event rates under 5% or above 95% as extreme:</p>
+                            <input v-model="tsb_extreme" class="tsb_input" type="radio" name="tsb_extreme" id="tsb_extreme_true" value='true' required>
+                            Extreme event rate
+                            <input v-model="tsb_extreme" class="tsb_input" type="radio" name="tsb_extreme" id="tsb_extreme_false"
+                                value='false' required>
+                            Non extreme event rate
+                            <p>What is the largest odds ratio you would expect? 2 would be relatively large for interventions on academic
+                                achievement. For relations that are obvious to the naked eye, 10 is a reasonable limit. Consider 3 when unsure, be
+                                skeptical.</p>
+                            <input v-model="tsb_sd_m_diff" class="tsb_input" type="number" name="tsb_sd_m_diff" id="tsb_sd_m_diff" required min=1.1
+                                step=0.1 max=20>
+                            <p>How many iterations should Stan run? The program will return half this number of iterations across 4
+                                chains.
+                                If you enter 500, the program will return 250 posterior samples for each chain.</p>
+                            <input v-model="tsb_n_iter" class="tsb_input" type="number" name="tsb_n_iter" id="tsb_n_iter" min=300 max=1500 step=100
+                                required>
+                            <p>Requested interval: <input v-model="tsb_int" class="tsb_input" type="number" name="tsb_int" id="tsb_int" min=1 max=99
+                                    step="any" required>%</p>
+                            <input type="submit" value="Submit for analysis">
+                
+                            <h4>Results (with quantile interval)</h4>
+                            <p>
+                                <textarea name="tsb_res" id="tsb_res" cols="75" rows="9" readonly=true>{{message}}</textarea>
+                            </p>
+                        </form>
+                    </div>
+                    <div class="center_container">
+                
+                    </div>
+                    <div class="right_container">
+                        <p style="text-align: left; font-size: .9rem; margin-top: 20em; font-weight: bold;">
+                            Clicking submit will print out summary results and download four files:
+                            <ol style="text-align: left;">
+                                <li class="list_explainer">A summary file containing summary statistics for parameters and posterior
+                                    samples.</li>
+                                <li class="list_explainer">A rank plot for the odds ratio. Each plot should be
+                                    uniformly distributed. See: <a href="https://arxiv.org/pdf/1903.08008.pdf"
+                                        target="_blank">arxiv:1903.08008</a></li>
+                                <li class="list_explainer">A line chart showing the probability that the odds ratio exceeds any
+                                    value. Answers: What is the probability that the odds ratio of the groups exceeded X?</li>
+                                <li class="list_explainer">Same as last chart but for the ratio of the group probability/risk ratio and difference.</li>
+                            </ol>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
         <script src="bms_index.js" async defer></script>
     </body>
