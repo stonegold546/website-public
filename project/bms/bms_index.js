@@ -15,9 +15,10 @@ function unravelJSON(json, param, interval, percent = false) {
     var res = [];
     if (percent) {
         res.push('\t' + (param_dat['mean'] * 100).toFixed(2) + '% (' +
-            (qntls[0] * 100).toFixed(2) + '%, ' + (qntls[1] * 100).toFixed(2) + '%)');
+            (qntls[0] * 100).toFixed(2) + '%, ' + (qntls[1] * 100).toFixed(2) + '%), ESS: ' + param_dat['ess'].toFixed(0));
     } else {
-        res.push('\t' + param_dat['mean'].toFixed(3) + ' (' + qntls[0].toFixed(3) + ', ' + qntls[1].toFixed(3) + ')');
+        res.push('\t' + param_dat['mean'].toFixed(3) + ' (' + qntls[0].toFixed(3) + ', ' + qntls[1].toFixed(3) +
+        '), ESS: ' + param_dat['ess'].toFixed(0));
     }
     res.push([param_dat.mean, param_dat.median, param_dat.sd, qntls[0], qntls[1], param_dat.ess, param_dat.rhat].join(','));
     res.push(posteriors)
@@ -29,9 +30,10 @@ function unravelJsonNoPost(json, param, percent = false) {
     var res = [];
     if (percent) {
         res.push('\t' + (param_dat['mean'].toFixed(3) * 100).toFixed(2) + '% (' +
-            (param_dat['int.lo'] * 100).toFixed(2) + '%, ' + (param_dat['int.hi'] * 100).toFixed(2) + '%)');
+            (param_dat['int.lo'] * 100).toFixed(2) + '%, ' + (param_dat['int.hi'] * 100).toFixed(2) + '%), ESS: ' + param_dat['ess'].toFixed(0));
     } else {
-        res.push('\t' + param_dat['mean'].toFixed(3) + ' (' + param_dat['int.lo'].toFixed(3) + ', ' + param_dat['int.hi'].toFixed(3) + ')');
+        res.push('\t' + param_dat['mean'].toFixed(3) + ' (' + param_dat['int.lo'].toFixed(3) + ', ' + param_dat['int.hi'].toFixed(3) +
+            '), ESS: ' + param_dat['ess'].toFixed(0));
     }
     res.push([param_dat.mean, param_dat.median, param_dat.sd, param_dat['int.lo'], param_dat['int.hi'], param_dat.ess, param_dat.rhat].join(','));
     return res;
@@ -86,22 +88,22 @@ const ts_form = new Vue({
     el: '#ts_form',
     data: {
         base_message: '\
-                          Mean difference:\n\
-       Ratio of group standard deviations:\n\
-              Mean of group 1 (treatment):\n\
-                Mean of group 2 (control):\n\
-             Scale of group 1 (treatment):\n\
-               Scale of group 2 (control):\n\
-Degrees of freedom of t distribution (df):\n\
+                   Mean difference:\n\
+Ratio of group standard deviations:\n\
+       Mean of group 1 (treatment):\n\
+         Mean of group 2 (control):\n\
+      Scale of group 1 (treatment):\n\
+        Scale of group 2 (control):\n\
+   t dist. degrees of freedom (df):\n\
 \n\
 Note: df close to 0 suggests outliers in data. As df increases, outliers are less prominent in data. df >= 30 is hardly distinguishable from normality.\n\
-Scale estimate is proportional but not equal to standard deviation.',
+Scale estimate is proportional but not equal to standard deviation. ESS is effective sample size.',
         message: this.base_message, max_sr: 3,
         sd_m: 5, sd_st: 1, nu_choice: 0, errors: [],
         ts_y1: '56.8, 60.1, 50.3, 48.8, 61.0, 47.3, 60.3, 58.8, 48.2, 50.8, 43.6, 58.8, 51.4, 55.4, 62.0, 60.4, 63.2, 65.4, 33.5, 57.0, 43.9, 55.7, 56.4',
         ts_y0: '59.6, 50.0, 52.8, 57.5, 51.1, 47.7, 52.4, 35.7, 50.0, 43.9, 53.7, 51.4, 55.2, 46.0, 52.8, 39.0, 44.1, 58.6, 52.0, 56.7, 50.3, 58.4, 53.9, 46.4, 54.4, 55.3, 45.2',
         ts_max_diff: 5, ts_max_st_r: 3,
-        ts_n_iter: 500, ts_int: 95, n1: null, n0: null
+        ts_n_iter: 1500, ts_int: 95, n1: null, n0: null
     },
     methods: {
         checkForm: function (e) {
@@ -185,18 +187,18 @@ const tsb_form = new Vue({
     el: '#tsb_form',
     data: {
         base_message: '\
-                                Odds ratio:\n\
-                                Risk ratio:\n\
-                           Risk difference:\n\
-Average probability of group 1 (treatment):\n\
-  Average probability of group 2 (control):\n\
+                       Odds ratio:\n\
+                       Risk ratio:\n\
+                  Risk difference:\n\
+Average prob. group 1 (treatment):\n\
+  Average prob. group 2 (control):\n\
 \n\
 Note: Risk ratio is the average probability of group 1 divided by the average probability of group 2. \
-Risk difference is the average probability of group 1 minus the average probability of group 2.',
+Risk difference is the average probability of group 1 minus the average probability of group 2. ESS is effective sample size.',
         message: this.base_message, errors: [],
         tsb_s1: 1513, tsb_f1: 512, tsb_s2: 1459, tsb_f2: 554,
         tsb_extreme: 'false',
-        tsb_sd_m: 3, tsb_sd_m_diff: 2, tsb_n_iter: 500, tsb_int: 95,
+        tsb_sd_m: 3, tsb_sd_m_diff: 2, tsb_n_iter: 2000, tsb_int: 95,
         tsb_t1: null, tsb_t2: null
     },
     methods: {
