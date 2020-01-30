@@ -225,7 +225,7 @@ Risk difference is the average probability of group 1 minus the average probabil
             interval_x = [interval_x, 1 - interval_x];
             var params = ['odds_ratio', 'prob_ratio', 'prob_diff', 'means_prob[2]', 'means_prob[1]'];
 
-            this.tsb_sd_m = this.tsb_extreme == 'true' ? 5 : 3
+            this.tsb_sd_m = this.tsb_extreme == 'true' ? 5 : 2
 
             axios.post(
                 // 'http://localhost:8000/two_sample_binary',

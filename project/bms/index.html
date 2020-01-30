@@ -185,11 +185,8 @@
                         <input v-model="tsb_extreme" class="tsb_input" type="radio" name="tsb_extreme"
                             id="tsb_extreme_false" value='false' required>
                         Non extreme event rate
-                        <p>What is the largest odds ratio you would expect? 2 would be relatively large for
-                            interventions on academic
-                            achievement. For relations that are obvious to the naked eye, 10 is a reasonable limit.
-                            Consider 3 when unsure, be
-                            skeptical.</p>
+                        <p>What is the largest odds ratio you would expect? Consider 2 for outcomes that are difficult to change. For relations that are obvious to the naked eye, 10 is a reasonable limit.
+                            Consider 3 when unsure, be skeptical.</p>
                         <input v-model="tsb_sd_m_diff" class="tsb_input" type="number" name="tsb_sd_m_diff"
                             id="tsb_sd_m_diff" required min=1.1 step=0.1 max=20>
                         <p>How many iterations should Stan run? The program will return half this number of iterations
