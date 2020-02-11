@@ -37,9 +37,13 @@
             <div id="two_sample_test">
                 <div>
                     <h3>Two sample comparison</h3>
-                    <p>Description: The test allows the group means and variances to be different, while permitting
-                        outliers in the
-                        data.
+                    <p>Description: The test allows the group means and variances to be different.</p>
+                    <p>
+                        You can either:
+                        <ol>
+                            <li>Permit outliers in the data (assuming <em>t</em> rather than Normal data); OR</li>
+                            <li>Compare the groups at different percentiles (quantile regression)</li>
+                        </ol>
                     </p>
                     <h5>Please scale your data such that values are at most in the hundreds. For example, if working
                         with annual
@@ -73,7 +77,17 @@
                             </tr>
                         </table>
 
-
+                        <p>Do you want to compare the data at a specific percentile:</p>
+                        <input v-model="ts_quantile" class="ts_input" type="radio" name="ts_quantile" id="ts_quantile_true" value='true'
+                            required>
+                        Yes
+                        <input v-model="ts_quantile" class="ts_input" type="radio" name="ts_quantile" id="ts_quantile_false" value='false'
+                            required>
+                        No
+                        <div class="appear_div" v-show="ts_quantile === 'true'">
+                            <p>Percentile for quantile test: <input v-model="ts_prob" class="ts_input" type="number" name="ts_prob" id="ts_prob" min=10 max=90
+                                    step="any" required>%</p>
+                        </div>
                         <p>What is the largest believable difference between the two group means? An irrational response
                             would be a value
                             greater than the range of your data. Be skeptical of large group differences.</p>

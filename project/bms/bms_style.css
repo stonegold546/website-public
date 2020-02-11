@@ -62,3 +62,6 @@ table {
   margin: 10px 0;
   font-size: .9rem;
 }
+.appear_div {
+  background-color: lightblue;
+}

@@ -41,8 +41,8 @@ function unravelJsonNoPost(json, param, percent = false) {
 
 var cleanParams = {
     ttest: {
-        m_diff: 'mean_diff', st_ratio: 'sd_ratio',
-        m1: 'mean1', m0: 'mean2', st1: 'scale1', st0: 'scale2',
+        m_diff: 'location_diff', st_ratio: 'sd_ratio',
+        m1: 'location1', m0: 'location2', st1: 'scale1', st0: 'scale2',
         nu: 'df'
     },
     twogrpbin: {
@@ -88,10 +88,10 @@ const ts_form = new Vue({
     el: '#ts_form',
     data: {
         base_message: '\
-                   Mean difference:\n\
+               Location difference:\n\
 Ratio of group standard deviations:\n\
-       Mean of group 1 (treatment):\n\
-         Mean of group 2 (control):\n\
+   Location of group 1 (treatment):\n\
+     Location of group 2 (control):\n\
       Scale of group 1 (treatment):\n\
         Scale of group 2 (control):\n\
    t dist. degrees of freedom (df):\n\
@@ -104,7 +104,7 @@ Scale estimate is proportional but not equal to standard deviation. ESS is effec
         ts_y0: '59.6, 50.0, 52.8, 57.5, 51.1, 47.7, 52.4, 35.7, 50.0, 43.9, 53.7, 51.4, 55.2, 46.0, 52.8, 39.0, 44.1, 58.6, 52.0, 56.7, 50.3, 58.4, 53.9, 46.4, 54.4, 55.3, 45.2',
         // ts_y1: '101, 100, 102, 104, 102, 97, 105, 105, 98, 101, 100, 123, 105, 103, 100, 95, 102, 106, 109, 102, 82, 102, 100, 102, 102, 101, 102, 102, 103, 103, 97, 97, 103, 101, 97, 104, 96, 103, 124, 101, 101, 100, 101, 101, 104, 100, 101',
         // ts_y0: '99, 101, 100, 101, 102, 100, 97, 101, 104, 101, 102, 102, 100, 105, 88, 101, 100, 104, 100, 100, 100, 101, 102, 103, 97, 101, 101, 100, 101, 99, 101, 100, 100, 101, 100, 99, 101, 100, 102, 99, 100, 99',
-        ts_max_diff: 5, ts_max_st_r: 3,
+        ts_max_diff: 5, ts_max_st_r: 3, ts_quantile: 'false', ts_prob: 50,
         ts_n_iter: 1500, ts_int: 95, n1: null, n0: null
     },
     methods: {
@@ -141,7 +141,12 @@ Scale estimate is proportional but not equal to standard deviation. ESS is effec
 
             var interval_x = (1 - parseFloat(this.ts_int) / 100) / 2;
             interval_x = [interval_x, 1 - interval_x];
-            var params = ['m_diff', 'st_ratio', 'm1', 'm0', 'st1', 'st0', 'nu'];
+            var prob = parseFloat(this.ts_prob);
+            var params = ['m_diff', 'st_ratio', 'm1', 'm0', 'st1', 'st0'];
+            if (this.ts_quantile == 'false') {
+                prob = 0;
+                params.push('nu');
+            }
 
             axios.post(
                 // 'http://localhost:8000/two_sample_test',
@@ -149,7 +154,8 @@ Scale estimate is proportional but not equal to standard deviation. ESS is effec
                 {
                     params: {
                         y1: y1, y0: y0, sd_m: this.sd_m, max_diff: parseFloat(this.ts_max_diff), sd_st: this.sd_st,
-                        max_st_r: parseFloat(this.ts_max_st_r), nu_choice: this.nu_choice, n_iter: parseInt(this.ts_n_iter)
+                        max_st_r: parseFloat(this.ts_max_st_r), nu_choice: this.nu_choice, n_iter: parseInt(this.ts_n_iter),
+                        prob: prob
                     }
                 }
             )
@@ -159,7 +165,7 @@ Scale estimate is proportional but not equal to standard deviation. ESS is effec
                     paramsList = [];
                     messageSplit = this.base_message.split('\n');
                     dumpText = ['statistic', 'mean', 'median', 'sd', 'quantile_interval_lo', 'quantile_interval_hi', 'effective_sample_size', 'rhat'].join(',') + '\n';
-                    for (let i = 0; i < 7; i++) {
+                    for (let i = 0; i < params.length; i++) {
                         res = unravelJSON(results, params[i], interval_x);
                         messageSplit[i] += res[0];
                         paramsList.push(cleanParams.ttest[params[i]]);
@@ -167,7 +173,7 @@ Scale estimate is proportional but not equal to standard deviation. ESS is effec
                         posteriors.push(res[2]);
                     }
 
-                    downloadImage(results.mean_hash, 'mean_diff');
+                    downloadImage(results.mean_hash, 'location_diff');
                     downloadImage(results.sc_hash, 'scale_ratio');
                     downloadImage(results.rk_hash, 'rank_plots');
 
