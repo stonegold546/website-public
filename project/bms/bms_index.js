@@ -49,6 +49,11 @@ var cleanParams = {
         m0: 'mean2_logit', m_diff: 'mdiff_logit', 'means_logit[2]': 'mean1_logit',
         odds_ratio: 'odds_ratio', 'means_prob[1]': 'mean2_prob', 'means_prob[2]': 'mean1_prob',
         prob_ratio: 'prob_ratio', prob_diff: 'prob_diff'
+    },
+    ttest_beta: {
+        m_diff: 'location_diff', st_ratio: 'sd_ratio',
+        m1: 'location1', m0: 'location2', st1: 'scale1', st0: 'scale2',
+        shape1_alpha: 'shape1_alpha', shape1_beta: 'shape1_beta', shape0_alpha: 'shape2_alpha', shape0_beta: 'shape2_beta'
     }
 }
 
@@ -206,7 +211,7 @@ Risk difference is the average probability of group 1 minus the average probabil
         message: this.base_message, errors: [],
         tsb_s1: 1513, tsb_f1: 512, tsb_s2: 1459, tsb_f2: 554,
         tsb_extreme: 'false',
-        tsb_sd_m: 3, tsb_sd_m_diff: 2, tsb_n_iter: 2000, tsb_int: 95,
+        tsb_sd_m: 2, tsb_sd_m_diff: 2, tsb_n_iter: 2000, tsb_int: 95,
         tsb_t1: null, tsb_t2: null
     },
     methods: {
@@ -274,6 +279,121 @@ Risk difference is the average probability of group 1 minus the average probabil
                     posteriors = math.transpose(posteriors);
                     createDumpFile(dumpText, posteriors,
                         ['mean2_logit (intercept)', 'mdiff_logit (effect)', 'odds_ratio', 'prob_ratio', 'prob_diff'], 'two_way_table');
+
+                    this.message = messageSplit.join('\n');
+                    loader_div.isActive = false;
+                })
+                .catch(error => {
+                    console.log(error)
+                    loader_div.isActive = false;
+                });
+        },
+    }
+})
+
+const ts_beta_form = new Vue({
+    el: '#ts_beta_form',
+    data: {
+        base_message: '\
+               Location difference:\n\
+Ratio of group standard deviations:\n\
+   Location of group 1 (treatment):\n\
+     Location of group 2 (control):\n\
+      Scale of group 1 (treatment):\n\
+        Scale of group 2 (control):\n\
+\n\
+Note: ESS is effective sample size.',
+        message: this.base_message,
+        ts_beta_sd_m: 2, errors: [],
+        ts_beta_y1: '11.25270, 11.10845, 11.88285, 12.11419, 12.71712, 11.20219, 12.00022, 12.00558, 12.36951, 11.88795, 11.47678, 11.32410, 12.28372, 10.97333, 12.35331, 12.03695, 11.54523, 11.02133, 12.22595, 12.63262, 12.64785, 12.13136, 11.21333',
+        ts_beta_y0: '11.65329, 12.30493, 11.40307, 12.00600, 11.78474, 12.39733, 12.85071, 12.18206, 12.94625, 12.70237, 11.22178, 11.34373, 12.79823, 11.70351, 11.68601, 12.77216, 12.50467, 12.16233, 11.92035, 12.56167, 11.98581, 11.55953, 12.94332, 12.09071, 12.78118, 11.71895, 12.52559',
+        ts_beta_min: 3, ts_beta_max: 13,
+        ts_beta_max_diff: 1,
+        ts_beta_extreme: 'true',
+        ts_beta_n_iter: 2000, ts_beta_int: 95, n1: null, n0: null
+    },
+    methods: {
+        checkForm: function (e) {
+            e.preventDefault();
+            loader_div.isActive = true;
+            this.message = this.base_message;
+            this.errors = [];
+            this.n1 = null;
+            this.n0 = null;
+
+            var y1 = textAreaToNum(this.ts_beta_y1);
+            var y0 = textAreaToNum(this.ts_beta_y0);
+            var anyNaN1 = y1.map(isNaN).reduce((a, b) => a + b, 0);
+            var anyNaN0 = y0.map(isNaN).reduce((a, b) => a + b, 0);
+
+            if (anyNaN1) {
+                this.errors.push('Invalid values for group 1.');
+            }
+            if (anyNaN0 > 0) {
+                this.errors.push('Invalid values for group 2');
+            }
+            if (y1.length < 4 || y0.length < 4) {
+                this.errors.push('Minimum of four values required per group.');
+            }
+            if (math.max(y1) > parseFloat(this.ts_beta_max) || math.max(y0) > parseFloat(this.ts_beta_max)) {
+                this.errors.push('Maximum value in data cannot exceed theoretical maximum.');
+            }
+            if (math.min(y1) < parseFloat(this.ts_beta_min) || math.min(y0) < parseFloat(this.ts_beta_min)) {
+                this.errors.push('Minimum value cannot be less theoretical minimum.');
+            }
+
+            if (this.errors.length) {
+                loader_div.isActive = false;
+                return true;
+            }
+
+            this.n1 = y1.length;
+            this.n0 = y0.length;
+
+            var interval_x = (1 - parseFloat(this.ts_beta_int) / 100) / 2;
+            interval_x = [interval_x, 1 - interval_x];
+            var prob = parseFloat(this.ts_beta_prob);
+            var params = ['m_diff', 'st_ratio', 'm1', 'm0', 'st1', 'st0', 'shape1_alpha', 'shape1_beta', 'shape0_alpha', 'shape0_beta'];
+            if (this.ts_beta_quantile == 'false') {
+                prob = 0;
+                params.push('nu');
+            }
+
+            var sd_m = this.ts_beta_extreme == 'true' ? 5 : 2
+
+            axios.post(
+                // 'http://localhost:8000/two_sample_test_beta',
+                'https://uanhoro1.pythonanywhere.com/two_sample_test_beta',
+                {
+                    params: {
+                        y1: y1, y0: y0, min_val: parseFloat(this.ts_beta_min), max_val: parseFloat(this.ts_beta_max),
+                        sd_m: sd_m, max_diff: parseFloat(this.ts_beta_max_diff), n_iter: parseInt(this.ts_beta_n_iter),
+                        interval: parseInt(this.ts_beta_int)
+                    }
+                }
+            )
+                .then(response => {
+                    results = response.data;
+                    posteriors = [];
+                    paramsList = [];
+                    messageSplit = this.base_message.split('\n');
+                    dumpText = ['statistic', 'mean', 'median', 'sd', 'quantile_interval_lo', 'quantile_interval_hi', 'effective_sample_size', 'rhat'].join(',') + '\n';
+                    for (let i = 0; i < params.length; i++) {
+                        res = unravelJsonNoPost(results, params[i]);
+                        if (i <= 5) messageSplit[i] += res[0];
+                        paramsList.push(cleanParams.ttest_beta[params[i]]);
+                        dumpText += paramsList[i] + ',' + res[1] + '\n';
+                    }
+
+                    posteriors = params.map(function (param) {
+                        return results[param]['post']
+                    })
+                    downloadImage(results.mean_hash, 'location_diff');
+                    downloadImage(results.sc_hash, 'scale_ratio');
+                    downloadImage(results.rk_hash, 'rank_plots');
+
+                    posteriors = math.transpose(posteriors);                    
+                    createDumpFile(dumpText, posteriors, params, 'two_sample_bounded_summary');
 
                     this.message = messageSplit.join('\n');
                     loader_div.isActive = false;

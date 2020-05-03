@@ -38,7 +38,7 @@
         <div class="inner_container">
             <div id="two_sample_test">
                 <div>
-                    <h3>Two sample comparison</h3>
+                    <h3>Two sample comparison for unbounded continuous data</h3>
                     <p>Description: The test allows the group means and variances to be different.</p>
                     <p>
                         You can either:
@@ -241,6 +241,97 @@
                             </li>
                             <li class="list_explainer">Same as last chart but for the ratio of the group
                                 probability/risk ratio and difference.</li>
+                        </ol>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="inner_container">
+            <hr>
+            <div id="two_sample_test">
+                <div>
+                    <h3>Two sample comparison for bounded continuous data</h3>
+                    <p>Description: The model assumes the data are beta-distributed and allows the group means and variances to be different.
+                        Model should be better for continuous data when there are values close to the extremes.
+                        Sample data would be averaged Likert scores, proportions.</p>
+                    <h5>This model censors values that are either the exact minimum or maximum. For a response with 1 and 7 as theoretical
+                        minimum and maximum, 1 and 7 are censored to a value just above 1 and just under 7 respectively, see: See: <a
+                            href="https://dx.doi.org/10.1037/1082-989X.11.1.54" target="_blank">doi:10.1037/1082-989X.11.1.54</a></li>.
+                    </h5>
+                </div>
+                <div class="left_container">
+                    <form id="ts_beta_form" @submit="checkForm" method="post">
+                        <p class="error" v-if="errors.length">
+                            <b>Please correct the following error(s):</b>
+                            <ul>
+                                <li class="error" v-for="error in errors">{{ error }}</li>
+                            </ul>
+                        </p>
+        
+                        <p>Paste raw data into textboxes (Separate values by a space, comma or newline)</p>
+        
+                        <table>
+                            <tr>
+                                <td>
+                                    <p>Group 1 (treatment), n = {{ n1 }}</p>
+                                    <textarea v-model="ts_beta_y1" name="ts_beta_y1" id="ts_beta_y1" cols="35" rows="5" required></textarea>
+                                </td>
+                                <td>
+                                    <p>Group 2 (control), n = {{ n0 }}</p>
+                                    <textarea v-model="ts_beta_y0" name="ts_beta_y0" id="ts_beta_y0" cols="35" rows="5" required></textarea>
+                                </td>
+                            </tr>
+                        </table>
+        
+                        <p>What is the theoretical minimum of these data?</p>
+                        <input v-model="ts_beta_min" class="ts_beta_input" type="number" name="ts_beta_min" id="ts_beta_min" required
+                            step="any">
+                        <p>What is the theoretical maximum of these data?</p>
+                        <input v-model="ts_beta_max" class="ts_beta_input" type="number" name="ts_beta_max" id="ts_beta_max" required
+                            step="any">
+                        <p>Are the data clustered at the extremes i.e. extremely low or high values?</p>
+                        <input v-model="ts_beta_extreme" class="ts_beta_input" type="radio" name="ts_beta_extreme" id="ts_beta_extreme_true" value='true'
+                            required>
+                        Yes
+                        <input v-model="ts_beta_extreme" class="ts_beta_input" type="radio" name="ts_beta_extreme" id="ts_beta_extreme_false" value='false'
+                            required>
+                        No
+                        <p>What is the largest believable difference between the two group means? An irrational response
+                            would be a value
+                            greater than the range of your data. Be skeptical of large group differences.</p>
+                        <input v-model="ts_beta_max_diff" class="ts_beta_input" type="number" name="ts_beta_max_diff" id="ts_beta_max_diff"
+                            required min=0.0001 step="any">
+                        <p>How many iterations should Stan run? The program will return half this number of iterations
+                            across 4 chains.
+                            If you enter 2000, the program will return 1000 posterior samples for each chain.</p>
+                        <input v-model="ts_beta_n_iter" class="ts_beta_input" type="number" name="ts_beta_n_iter" id="ts_beta_n_iter" min=1000
+                            max=2500 step=100 required>
+                        <p>Requested interval: <input v-model="ts_beta_int" class="ts_beta_input" type="number" name="ts_beta_int" id="ts_beta_int"
+                                min=1 max=99 step="any" required>%</p>
+                        <input type="submit" value="Submit for analysis">
+        
+                        <h4>Results (with quantile interval)</h4>
+                        <p>
+                            <textarea name="ts_beta_res" id="ts_beta_res" cols="75" rows="8" readonly=true>{{message}}</textarea>
+                        </p>
+                    </form>
+                </div>
+                <div class="center_container">
+                </div>
+                <div class="right_container">
+                    <p style="text-align: left; font-size: .9rem; margin-top: 25em; font-weight: bold;">
+                        Clicking submit will print out summary results and download four files:
+                        <ol style="text-align: left;">
+                            <li class="list_explainer">A summary file containing summary statistics for parameters and
+                                posterior samples.</li>
+                            <li class="list_explainer">A rank plot for the mean difference and SD ratio. Each plot
+                                should be uniformly distributed. See: <a href="https://arxiv.org/pdf/1903.08008.pdf"
+                                    target="_blank">arxiv:1903.08008</a></li>
+                            <li class="list_explainer">A line chart showing the probability that the mean difference
+                                exceeds any value. Answers: What is the probability that the difference between the
+                                groups exceeded X?</li>
+                            <li class="list_explainer">Same as last chart but for the ratio of the group standard
+                                deviations.</li>
                         </ol>
                     </p>
                 </div>
