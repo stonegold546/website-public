@@ -251,13 +251,16 @@
             <div id="two_sample_test">
                 <div>
                     <h3>Two sample comparison for bounded continuous data</h3>
-                    <p>Description: The model assumes the data are beta-distributed and allows the group means and variances to be different.
-                        Model should be better for continuous data when there are values close to the extremes.
-                        Sample data would be averaged Likert scores, proportions.</p>
-                    <h5>This model censors values that are either the exact minimum or maximum. For a response with 1 and 7 as theoretical
-                        minimum and maximum, 1 and 7 are censored to a value just above 1 and just under 7 respectively, see: See: <a
+                    <p>Description: The model assumes the data are continuous and bounded.</p>
+                    <p>
+                        The model works better than the continuous approach above when the data are close to the extremes. Sample data are averaged
+                        Likert responses, proportions, ...
+                    </p>
+
+                    <!-- <h5>This model censors values that are either the exact minimum or maximum. For a response with 1 and 7 as theoretical
+                        minimum and maximum, 1 and 7 are censored to a value just above 1 and just under 7 respectively, see: <a
                             href="https://dx.doi.org/10.1037/1082-989X.11.1.54" target="_blank">doi:10.1037/1082-989X.11.1.54</a></li>.
-                    </h5>
+                    </h5> -->
                 </div>
                 <div class="left_container">
                     <form id="ts_beta_form" @submit="checkForm" method="post">
