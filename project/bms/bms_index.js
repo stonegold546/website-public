@@ -1,3 +1,5 @@
+// TODO: Pick real-life example for beta and create side bar notes
+
 function textAreaToNum (content) {
     var content = content.toString().replace(/\n/g, ',').replace(/\s/g, ',').split(',');
     return content.filter(function (entry) { return /\S/.test(entry); }).map(Number);
@@ -305,10 +307,10 @@ Ratio of group standard deviations:\n\
 Note: ESS is effective sample size.',
         message: this.base_message,
         ts_beta_sd_m: 2, errors: [],
-        ts_beta_y1: '11.25270, 11.10845, 11.88285, 12.11419, 12.71712, 11.20219, 12.00022, 12.00558, 12.36951, 11.88795, 11.47678, 11.32410, 12.28372, 10.97333, 12.35331, 12.03695, 11.54523, 11.02133, 12.22595, 12.63262, 12.64785, 12.13136, 11.21333',
-        ts_beta_y0: '11.65329, 12.30493, 11.40307, 12.00600, 11.78474, 12.39733, 12.85071, 12.18206, 12.94625, 12.70237, 11.22178, 11.34373, 12.79823, 11.70351, 11.68601, 12.77216, 12.50467, 12.16233, 11.92035, 12.56167, 11.98581, 11.55953, 12.94332, 12.09071, 12.78118, 11.71895, 12.52559',
-        ts_beta_min: 3, ts_beta_max: 13,
-        ts_beta_max_diff: 1,
+        ts_beta_y1: '43, 79, 78, 72, 94, 89, 86, 73, 78, 87, 71, 97, 67, 86, 92, 83, 92, 89, 88, 96, 64, 78, 93, 52, 73, 84, 62, 64, 67, 70, 81, 84, 85, 89, 83, 94, 54, 93, 86, 86, 65, 81, 76, 80, 81, 83, 69, 78',
+        ts_beta_y0: '70, 66, 84, 81, 91, 91, 68, 65, 74, 84, 99, 49, 87, 87, 48, 80, 93, 71, 78, 75, 66, 82, 59, 79, 68, 65, 81, 44, 49, 62, 70, 86, 85, 80, 91, 87, 69, 80, 81, 90, 76, 88, 96, 82, 85, 60, 96, 76, 63, 68, 73',
+        ts_beta_min: 0, ts_beta_max: 100,
+        ts_beta_max_diff: 5,
         ts_beta_extreme: 'true',
         ts_beta_n_iter: 2000, ts_beta_int: 95, n1: null, n0: null
     },
