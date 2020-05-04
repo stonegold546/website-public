@@ -1,5 +1,3 @@
-// TODO: Pick real-life example for beta and create side bar notes
-
 function textAreaToNum (content) {
     var content = content.toString().replace(/\n/g, ',').replace(/\s/g, ',').split(',');
     return content.filter(function (entry) { return /\S/.test(entry); }).map(Number);
@@ -311,7 +309,7 @@ Note: ESS is effective sample size.',
         ts_beta_y0: '70, 66, 84, 81, 91, 91, 68, 65, 74, 84, 99, 49, 87, 87, 48, 80, 93, 71, 78, 75, 66, 82, 59, 79, 68, 65, 81, 44, 49, 62, 70, 86, 85, 80, 91, 87, 69, 80, 81, 90, 76, 88, 96, 82, 85, 60, 96, 76, 63, 68, 73',
         ts_beta_min: 0, ts_beta_max: 100,
         ts_beta_max_diff: 5,
-        ts_beta_extreme: 'true',
+        ts_beta_extreme: 'false',
         ts_beta_n_iter: 2000, ts_beta_int: 95, n1: null, n0: null
     },
     methods: {
