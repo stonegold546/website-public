@@ -359,7 +359,7 @@ Note: ESS is effective sample size.',
                 params.push('nu');
             }
 
-            var sd_m = this.ts_beta_extreme == 'true' ? 5 : 2
+            var sd_m = this.ts_beta_extreme == 'true' ? 1 : 2
 
             axios.post(
                 // 'http://localhost:8000/two_sample_test_beta',
