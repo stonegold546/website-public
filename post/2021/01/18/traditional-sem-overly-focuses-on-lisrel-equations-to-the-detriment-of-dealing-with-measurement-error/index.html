@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Traditional SEM overly focuses on LISREL equations to the detriment of dealing with measurement error | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Traditional SEM overly focuses on LISREL equations to the detriment of dealing with measurement error</span></h1>
+
+<h2 class="date">2021/01/18</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/stats">stats</a> 
+  
+  
+  
+  Tags: <a href="/tags/structural-equation-modeling">structural-equation-modeling</a> <a href="/tags/measurement-error">measurement-error</a> <a href="/tags/binary">binary</a> <a href="/tags/tetrachoric">tetrachoric</a> <a href="/tags/regression">regression</a> 
+  
+  
+</p>
+</div>
+
+
+
+<main>
+
+
+<p>So I don&rsquo;t listen to the Quantitude podcast. It&rsquo;s really difficult for me to get into it when my playlist includes podcasts with episodes titles like: <a href="https://habibtiplease.substack.com/p/episode-16-interstellar-jihad/">Interstellar Jihad</a>. However, I saw several tweets inspired by the SEM vs. regression episode. And I have too many thoughts, opinions, feelings to stay quiet. I lay them out here.</p>
+
+<div class="toc">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#sem-is-regression">SEM is regression</a></li>
+<li><a href="#a-case-of-cultural-differences">A case of cultural differences</a></li>
+<li><a href="#the-actual-difference-is-lisrel">The actual difference is LISREL</a></li>
+<li><a href="#but-too-much-lisrel-not-enough-measurement-error">But too much LISREL, not enough measurement error</a></li>
+<li><a href="#lisrel-works-well-for-normal-data-normal-model-no-manifest-covariates-models">LISREL works well for normal-data normal-model no manifest covariates models</a></li>
+<li><a href="#covariance-matrix-lisrel-likely-fails-with-discrete-indicators">Covariance matrix -&gt; LISREL likely fails with discrete indicators</a></li>
+<li><a href="#lisrel-likely-fails-for-sems-with-observed-covariates-e-g-mimic-model">LISREL likely fails for SEMs with observed covariates (e.g. MIMIC model)</a></li>
+<li><a href="#in-closing">In closing, &hellip;</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+<h3 id="sem-is-regression">SEM is regression</h3>
+
+<p>So this is pretty much established and known by methodologists. The basic SEM models are mathematically identical to very specific regression models e.g.</p>
+
+<ul>
+<li>A multi-dimensional CFA is a multilevel regression (with the long-format item response data) where each random effect (by respondent) is a factor, the loadings are random effect SDs that vary by item (non-linear regression), varying error variances pertain to heteroskedasticity, means are item intercepts (often estimated as fixed effects).</li>
+<li>A Full SEM (measurement + structural) $\equiv$ some type of CFA $=$ multilevel regression.</li>
+<li>Binary SEM (using tetrachoric correlations) $=$ multilevel probit regression</li>
+<li>Ordinal SEM (using polychoric correlations) $=$ multilevel cumulative-probit regression</li>
+</ul>
+
+<h3 id="a-case-of-cultural-differences">A case of cultural differences</h3>
+
+<p>Now differences exist between the practice of SEM and standard regression approaches. If your SEM introduction was anything like mine, you learned that:</p>
+
+<ul>
+<li>measurement error biases the estimation of structural paths  within a system of equations and SEM mitigates against this bias</li>
+<li>the LISREL model (whether 4 or 5 or 9 or 20 matrices version) is at the core of SEM - more on this later</li>
+<li>After estimating a model that matches your theory, you need to check model-data fit often using global fit indices (<a href="/post/2017/10/28/misspecification-and-fit-indices-in-covariance-based-sem/">I don&rsquo;t like this</a>) - a lot of SEM energy is expended on this last part</li>
+</ul>
+
+<p>In practice, SEMers have developed a variety of software to enable estimating parameters in a system of equations. While the most common regression methods and software focus on univariate outcomes. Interestingly, you could fit the exact same model under both approaches and the gold-standard model validation techniques would be completely different. Hence my comment that the differences are cultural.</p>
+
+<h3 id="the-actual-difference-is-lisrel">The actual difference is LISREL</h3>
+
+<p>From a methodological perspective, the actual difference is LISREL. The LISREL equations are the solution to a very specific formulation of a regression problem that allow us compute all the parameters we like to interpret in an SEM.</p>
+
+<p>So SEM estimation works like this for the most part:</p>
+
+<ol>
+<li>Compute covariance matrix of data</li>
+<li>Solve LISREL equations</li>
+</ol>
+
+<p>Are the data binary/ordinal? Instead, calculate a tetrachoric/polychoric correlation matrix, do LISREL.</p>
+
+<p>And LISREL works nicely for the very precise regression problem it&rsquo;s set up to solve. With Bayesian estimation, your models run so much faster when using the LISREL equations.</p>
+
+<h3 id="but-too-much-lisrel-not-enough-measurement-error">But too much LISREL, not enough measurement error</h3>
+
+<p>If you were in an SEM class, you might believe that SEM is <strong>the</strong> way to address measurement error problems. Some teachers might mention <a href="https://en.wikipedia.org/wiki/Correction_for_attenuation">adjustments for attenuation</a>.</p>
+
+<p>You would likely miss out on the rich discussions of measurement error developed in the wider regression literature e.g. <a href="https://sci-hub.se/10.1257/jep.15.4.57">a pretty good review of measurement error in econometrics by Hausman</a>, <a href="https://www.stat.tamu.edu/~carroll/eiv.SecondEdition/">book on different approaches to measurement error in regression</a>.</p>
+
+<p>Many folks I interact with tend to believe that regression approaches often ignore measurement error and SEMs do not. I&rsquo;d counter that SEM presents just one solution for dealing with measurement.</p>
+
+<h3 id="lisrel-works-well-for-normal-data-normal-model-no-manifest-covariates-models">LISREL works well for normal-data normal-model no manifest covariates models</h3>
+
+<p>Given the focus on measurement error, the LISREL model is only ideal in the normal-data normal-model situation no manifest covariates. Why so?</p>
+
+<p>In the regression problem LISREL is set up to solve, the indicators form the outcome variable. Something I&rsquo;ve never heard talked about in an SEM class is how to deal with measurement error in these variables themselves.</p>
+
+<p>That may be because <em>it is already known</em> that measurement error in linear regression outcomes does not bias estimates, however, there is some loss of power. Hence, continuous indicators with measurement error themselves (likely a given in practice) will result in unbiased estimates $-$ <a href="https://sci-hub.se/10.1257/jep.15.4.57">see Hausman paper above</a>.</p>
+
+<h3 id="covariance-matrix-lisrel-likely-fails-with-discrete-indicators">Covariance matrix -&gt; LISREL likely fails with discrete indicators</h3>
+
+<p>However, measurement error in binary indicators actually leads to biased parameter estimates. Measurement error manifests as miss-classification $-$ a yes is recorded as no and vice-versa. Low rates of miss-classification can lead to significant bias in estimates. And in my experience, SEM research is often nitpicky over less consequential issues.</p>
+
+<p>Hence, the standard tetrachoric correlation -&gt; LISREL pipeline fails to address the measurement error problems one set out to solve.</p>
+
+<p>It actually happens that one approach to this problem is the 4PL IRT model which can be motivated as a measurement error model for binary indicators with miss-classification. What IRT folks call &ldquo;guessing&rdquo; is simply a wrong response classified as a correct one, while &ldquo;slipping&rdquo; is a correct response classified as a wrong one i.e. measurement error.</p>
+
+<p>However, if you practiced SEM, you might believe that computing tetrachoric correlations is the gold-standard with your major problem being: how trustworthy is your approach to computing tetrachoric correlations?</p>
+
+<p>But the tetrachoric coefficients are already incorrect in the presence of measurement error. LISREL won&rsquo;t save you. This problem exists for other kinds of discrete data, count, ordinal, &hellip;</p>
+
+<h3 id="lisrel-likely-fails-for-sems-with-observed-covariates-e-g-mimic-model">LISREL likely fails for SEMs with observed covariates (e.g. MIMIC model)</h3>
+
+<p>Another case is the multiple indicator multiple causes (MIMIC) model where folks often have covariates or &ldquo;causes&rdquo;. Unlike measurement error in indicators, measurement error in covariates will lead to biased estimates. And given that the whole system of variables is computed together, measurement error in covariates can easily propagate across the system affecting all other aspects of the model. This likely happens in practice.</p>
+
+<p>But again, because of focus on LISREL, this is not focused on much or it is assumed away. The goal is to get an acceptable covariance matrix then do LISREL.</p>
+
+<h3 id="in-closing">In closing, &hellip;</h3>
+
+<p>I have no closing thoughts. My goal here is to suggest that even for things standard SEMs are supposedly good at, they struggle. And as a methods person, I spend time reading the broader regression literature to do my SEM better.</p>
+
+<p>I also have a high degree of skepticism towards SEM applications. I am not convinced that the ability to test a system of equations in the way SEM software afford is a good thing. I believe they provide unwarranted confidence about complex patterns in data especially when model-data fit is deemed acceptable.</p>
+
+<p>A regression though much less ambitious on the surface is often small enough to do different kinds of elaborate checks that can themselves become unwieldy.</p>
+
+<p>However, if you stay humble in your beliefs about patterns in data, SEM cultural practices can be a very interesting exploratory tool. Also, if you&rsquo;re serious about handling measurement error in your research, SEM is not enough.</p>
+
+<hr />
+
+<p>I think I should note a difficulty in discussing this topic. I believe SEM $=$ regression, so what&rsquo;s the point of this post? But then there are folks who believe SEM $=$ LISREL. I think in this day and age, that view can be a distraction and sometimes even detrimental &hellip;</p>
+
+</main>
+
+<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+
