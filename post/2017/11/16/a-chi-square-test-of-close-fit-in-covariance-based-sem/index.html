@@ -89,7 +89,7 @@
 
 <p>When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size. This is because, almost always, our models are approximations of the data. If our model-implied covariance matrix actually matched the sample covariance matrix within sampling variability, the $\chi^2$ test would not be statistically significant regardless of sample size.</p>
 
-<p>Because of the sensitivity of the $\chi^2$ test to large sample sizes, practitioners often rely on other fit indices like the <code>RMSEA</code>, <code>CFI</code>, and <code>TLI</code> - all of which are based on the $\chi^2$. For the RMSEA, MacCallum, Browne and Sugawara (1996)<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> specified values of .05 and .08 as indicating close and mediocre<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> fit respectively. And in lavaan, you automatically get a test of close fit for the RMSEA with confidence intervals and a p-value. This test actually uses the $\chi^2$ distribution, and there is no reason why one cannot perform a $\chi^2$ test of close or mediocre fit depending on one&rsquo;s standards.<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup></p>
+<p>Because of the sensitivity of the $\chi^2$ test to large sample sizes, practitioners often rely on other fit indices like the <code>RMSEA</code>, <code>CFI</code>, and <code>TLI</code> - all of which are based on the $\chi^2$. For the RMSEA, MacCallum, Browne and Sugawara (1996)<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> specified values of .05 and .08 as indicating close and mediocre<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> fit respectively. And in lavaan, you automatically get a test of close fit for the RMSEA with confidence intervals and a p-value. This test actually uses the $\chi^2$ distribution, and there is no reason why one cannot perform a $\chi^2$ test of close or mediocre fit depending on one&rsquo;s standards.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></p>
 
 <p><strong>The sections that follow may include details that not everyone would like to read about, you can skip to the <a href="#lavaan">bottom of the page for annotated lavaan code</a> for how to compute a $\chi^2$ test of close or mediocre fit.</strong></p>
 
@@ -123,7 +123,7 @@
 
 <p>$RMSEA^2 \times df(N-1) = .08^2 \times df(N-1) = .0064 \times df(N-1)$</p>
 
-<p>Note that lavaan may do things a little differently.<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup></p>
+<p>Note that lavaan may do things a little differently.<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></p>
 
 <p>Hence, given a model degrees of freedom, and sample size, we can calculate the non-centrality parameter $(\lambda)$. And given $\lambda$, a $\chi^2$ value and the degrees of freedom for the model, we can calculate the p-value for a test of close or mediocre fit.</p>
 
@@ -197,7 +197,7 @@ Root Mean Square Error of Approximation:
 [1] 0.2740353
 </code></pre>
 
-<p>The p-value for a test of close fit is .27, close to the value reported by lavaan. The reason they are not closer is that lavaan does not subtract 1 from the sample size when calculating the non-centrality parameter under its default settings for ML. See below for details.<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup></p>
+<p>The p-value for a test of close fit is .27, close to the value reported by lavaan. The reason they are not closer is that lavaan does not subtract 1 from the sample size when calculating the non-centrality parameter under its default settings for ML. See below for details.<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></p>
 
 <p>And if we lower our standards to conduct a chi-square test of mediocre fit: .0064 multiplied by model degrees of freedom by sample size - 1</p>
 

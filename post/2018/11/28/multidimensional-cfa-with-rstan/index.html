@@ -207,7 +207,7 @@ $$</p>
 y_{pi} = \alpha_i\theta_{pf} + \beta_i + \epsilon_i
 $$</p>
 
-<p>$\mathbf{\theta}_{pf}$ is still multivariate normal, but with variance $\mathbf{1},\ \mathbf{\theta}_{pf}\sim\mathcal{N}_f(\mathbf{0,1})$. The most interesting inclusion is that we multiply the latent scores by an item coefficient, $\alpha_i$.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">1</a></sup> Note that $\alpha$ consistently represents the unstandardized loadings in this demonstration. Here, instead of being constant or varying by factor, it varies by item.</p>
+<p>$\mathbf{\theta}_{pf}$ is still multivariate normal, but with variance $\mathbf{1},\ \mathbf{\theta}_{pf}\sim\mathcal{N}_f(\mathbf{0,1})$. The most interesting inclusion is that we multiply the latent scores by an item coefficient, $\alpha_i$.<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">1</a></sup> Note that $\alpha$ consistently represents the unstandardized loadings in this demonstration. Here, instead of being constant or varying by factor, it varies by item.</p>
 
 <p>Bayesian software can fit a complicated model like this. We&rsquo;d have to specify priors for the different components of this equation. Page 144 of the Stan manual provides some priors for the 2PL item-response theory model that we can apply here as a starting point:</p>
 
@@ -218,7 +218,7 @@ $$</p>
 <li>the latent scores are multivariate normal, $\mathbf{\theta}_{pf}\sim\mathcal{N}_f(\mathbf{0,1})$</li>
 </ul>
 
-<p>The one point requiring additional comments is the multivariate normal prior for $\mathbf{\theta}_{pf}$. For a positive-definite correlation matrix, $\mathbf{R}$, we can apply the Cholesky decomposition: $\mathbf{R} = \mathbf{L}\mathbf{L}^*$. In Stan, it is computationally more convenient to apply a prior on $\mathbf{L}$ and generate the multivariate normal latent scores using $\mathbf{L}$. The recommended choice of prior for $\mathbf{L}$ is the LKJ-prior.<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">2</a></sup></p>
+<p>The one point requiring additional comments is the multivariate normal prior for $\mathbf{\theta}_{pf}$. For a positive-definite correlation matrix, $\mathbf{R}$, we can apply the Cholesky decomposition: $\mathbf{R} = \mathbf{L}\mathbf{L}^*$. In Stan, it is computationally more convenient to apply a prior on $\mathbf{L}$ and generate the multivariate normal latent scores using $\mathbf{L}$. The recommended choice of prior for $\mathbf{L}$ is the LKJ-prior.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">2</a></sup></p>
 
 <p>In Stan syntax, the required data are:</p>
 

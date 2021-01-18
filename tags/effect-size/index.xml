@@ -6,10 +6,19 @@
     <description>Recent content in Effect-size on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Nov 2019 11:43:14 -0500</lastBuildDate>
+    <lastBuildDate>Fri, 06 Dec 2019 01:43:14 -0500</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/tags/effect-size/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Large scale RCTs in education suggest small effects; this is not surprising</title>
+      <link>https://www.jamesuanhoro.com/post/2019/12/06/large-scale-rcts-in-education-suggest-small-effects-this-is-not-surprising/</link>
+      <pubDate>Fri, 06 Dec 2019 01:43:14 -0500</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/post/2019/12/06/large-scale-rcts-in-education-suggest-small-effects-this-is-not-surprising/</guid>
+      <description>A recent article in the Educational Researcher by Lortie-Forgues and Inglis (hereafter LFI)1 concluded that large-scale educational RCTs for academic achievement are &amp;ldquo;often uninformative&amp;rdquo;, and found this to be cause for concern. LFI&amp;rsquo;s work is transparent and easy to follow. They gathered study results from two funding sources (one in the UK, another in the US) over the course of 11 years. All the studies were large scale RCTs. They had 271 outcomes from the 141 studies.</description>
+    </item>
     
     <item>
       <title>Problems with using odds ratios as effect sizes in binary logistic regression and alternative approaches</title>

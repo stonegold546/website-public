@@ -89,7 +89,7 @@
 
 <p>Econometricians have developed a whole variety of heteroskedasticity-consistent standard errors, so they can continue to apply OLS (which continues to be unbiased), while adjusting for non-constant error variance. <a href="https://en.wikipedia.org/wiki/Heteroscedasticity-consistent_standard_errors">The Wikipedia page on these corrections</a> lists the many names these alternative standard errors go by.</p>
 
-<p>Some time last semester, I was playing around with the <code>mle()</code> function in the <code>stats4</code> package and also found the more versatile but slower <code>mle2()</code> in the <code>bbmle</code> package. We provide the likelihood function, and both functions will find the parameter estimates that maximize the likelihood. See footnote for additional details.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup></p>
+<p>Some time last semester, I was playing around with the <code>mle()</code> function in the <code>stats4</code> package and also found the more versatile but slower <code>mle2()</code> in the <code>bbmle</code> package. We provide the likelihood function, and both functions will find the parameter estimates that maximize the likelihood. See footnote for additional details.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></p>
 
 <p>Let&rsquo;s work through a quick example:</p>
 
@@ -323,7 +323,7 @@ par(mfrow = c(1, 1))
 
 <hr />
 
-<p>The final syntax below breaks the process above down one level. It is the same syntax for the faster <code>mle()</code> function in the <code>stats4</code> package. First, you specify a function for the negative log-likelihood (see <sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> below), then pass this function to MLE. Doing things this way allows for more transparency.</p>
+<p>The final syntax below breaks the process above down one level. It is the same syntax for the faster <code>mle()</code> function in the <code>stats4</code> package. First, you specify a function for the negative log-likelihood (see <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> below), then pass this function to MLE. Doing things this way allows for more transparency.</p>
 
 <pre><code class="language-ruby">ll &lt;- function(b_int, b_treat, s_int, s_treat) {
   with(dat, -sum(dnorm(

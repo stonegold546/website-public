@@ -93,15 +93,15 @@
 <li>The median slope is your regression slope</li>
 </ul>
 
-<p>Calculating the slope this way happens to be quite robust. And when the errors are normally distributed and you have no outliers, the slope is very similar to OLS.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup></p>
+<p>Calculating the slope this way happens to be quite robust. And when the errors are normally distributed and you have no outliers, the slope is very similar to OLS.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></p>
 
-<p>There are several methods to obtain the intercept. It is reasonable to know what your software is doing if you care for the intercept in your regression. Theil-Sen regression is available in two R packages I know of: <code>WRS</code><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup> and <a href="https://cran.r-project.org/web/packages/mblm/index.html">mblm</a>.</p>
+<p>There are several methods to obtain the intercept. It is reasonable to know what your software is doing if you care for the intercept in your regression. Theil-Sen regression is available in two R packages I know of: <code>WRS</code><sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> and <a href="https://cran.r-project.org/web/packages/mblm/index.html">mblm</a>.</p>
 
-<p><code>mblm</code> includes a modification to Theil&rsquo;s original method that has a higher breakdown point (more robust).<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> This modification is the default method.</p>
+<p><code>mblm</code> includes a modification to Theil&rsquo;s original method that has a higher breakdown point (more robust).<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup> This modification is the default method.</p>
 
 <p><code>WRS</code> contains two functions for Theil-Sen regression: Theil&rsquo;s original method in the <code>tsreg</code> function, and a modification for small samples when there are tied values in the outcome in the <code>tshdreg</code> function.</p>
 
-<p>Re my comment at the top regarding Theil-Sen for simple linear regression when there are concerns about outliers and heteroskedasticity, see Dietz<sup class="footnote-ref" id="fnref:4"><a rel="footnote" href="#fn:4">4</a></sup> and Wilcox<sup class="footnote-ref" id="fnref:5"><a rel="footnote" href="#fn:5">5</a></sup> below.</p>
+<p>Re my comment at the top regarding Theil-Sen for simple linear regression when there are concerns about outliers and heteroskedasticity, see Dietz<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup> and Wilcox<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">5</a></sup> below.</p>
 
 <p>I conducted a <a href="/misc/scripts/ts_sim.R">toy simulation</a> to see how Theil-Sen competes with OLS under heteroskedasticity; It is the more efficient estimator.</p>
 

@@ -87,7 +87,7 @@
 
 <p>Going back to intro stats, you hear things like: &ldquo;don&rsquo;t dichotomize your predictors, you&rsquo;ll throw away information/variance/power &hellip;&rdquo;. Of course the same applies to outcomes, and most people would rather a regular linear regression than logistic regression. However, in the scenario above, we often justify dichotomizing the outcome for substantive reasons.</p>
 
-<p>I came across a 2004 <em>Stats in Medicine</em> paper by Moser and Coombs<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> with the title, &ldquo;Odds ratios for a continuous outcome variable without dichotomizing&rdquo; almost a year ago now. I only read it closely more recently. The authors reiterate the point that you throw away information when you dichotomize the outcome. And they show that you don&rsquo;t really need to dichotomize the outcome to obtain the odds ratios. The nice thing about the paper is that until they get into the equations that span several lines, the paper is easy to follow. Here&rsquo;s the summary:</p>
+<p>I came across a 2004 <em>Stats in Medicine</em> paper by Moser and Coombs<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> with the title, &ldquo;Odds ratios for a continuous outcome variable without dichotomizing&rdquo; almost a year ago now. I only read it closely more recently. The authors reiterate the point that you throw away information when you dichotomize the outcome. And they show that you don&rsquo;t really need to dichotomize the outcome to obtain the odds ratios. The nice thing about the paper is that until they get into the equations that span several lines, the paper is easy to follow. Here&rsquo;s the summary:</p>
 
 <!-- When you model the binary outcome, your model is essentially an attempt to recreate the model on the original continuous scale. If using logistic regression, you're assuming logistic error for the original continuous outcome, if probit regression, you're assuming normal error for the continuous outcome. If that is the case, why not directly model the linear outcome? Their argument goes something like this: -->
 
@@ -103,7 +103,7 @@
 <li>We can summarize the above as: $$y_b = 1 \quad \mathrm{if}\quad \alpha + X\beta + \epsilon &gt; t \quad \mathrm{otherwise}\quad y_b = 0$$.</li>
 <li>If we adjust the threshold, say drop it by 1 point, it does not change $X\beta$, it only affects the intercept: $$y_b = 1\quad \mathrm{if}\quad \alpha - 1 + X\beta + \epsilon &gt; t - 1$$</li>
 <li>The point here it that the only coefficient affected by changing the threshold is the intercept, $\alpha$; the $\beta$ are not affected by adjusting the threshold. So the relationships we do care about are not affected by the threshold $-$ more on this later.</li>
-<li>Finally, in logistic regression, we do not estimate $\epsilon$, we assume it is standard logistic. That affects things such that if we want to use the linear regression on $y_c$ to obtain the results from logistic regression, we need to make some adjustments.<sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup></li>
+<li>Finally, in logistic regression, we do not estimate $\epsilon$, we assume it is standard logistic. That affects things such that if we want to use the linear regression on $y_c$ to obtain the results from logistic regression, we need to make some adjustments.<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup></li>
 </ol>
 
 <p>So here&rsquo;s what they recommend:</p>
@@ -207,7 +207,7 @@ trans(lm(yc ~ x, dat))[&quot;x&quot;]
 
 <p>Substantively, should we trust the findings when the data are dichotomized at extreme thresholds? Or should we just go with the transformed linear regression coefficient?</p>
 
-<p>It is also possible that the relationship between the predictors and the outcome is different at different quantiles of the outcome $-$ a situation quantile regression explores. One can use a quantile regression approach to see if this exists in the original continuous outcome.<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup></p>
+<p>It is also possible that the relationship between the predictors and the outcome is different at different quantiles of the outcome $-$ a situation quantile regression explores. One can use a quantile regression approach to see if this exists in the original continuous outcome.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></p>
 <div class="footnotes">
 
 <hr />
