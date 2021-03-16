@@ -84,51 +84,42 @@
 <p>This is my first (first author) journal article. We started writing it in Summer 2018, with first submission by November 2018. So my thinking has changed somewhat since then.
 There is a non-pay-walled version below, but the version of record is available at the Journal of Experimental Education, <a href="http://www.tandfonline.com/10.1080/00220973.2019.1693328">http://www.tandfonline.com/10.1080/00220973.2019.1693328</a>.
 The best part of the review process was communicating with the editor, Professor Brian French - he was very kind.</p>
-
 <p>Here&rsquo;s the <a href="/pdf/bin_eff_paper_revise_3.pdf">PDF</a> and <a href="https://github.com/jamesuanhoro/reproducing_articles/tree/master/2019_jxe_odds_ratio">GitHub repository</a> with simulation and figure reproduction code in R (very little comments).</p>
-
-<p><embed src="/pdf/bin_eff_paper_revise_3.pdf" width="800px" height="700px" /></p>
-
-<p>Something I dislike in the paper is the hypothetical two-by-two contingency table repeated from Peng, Lee and Ingersoll (PLI, 2001, a well-cited review of logistic regression).<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> Their hypothetical example had some inner city school children recommended to remedial reading. However, given that the example is hypothetical/invented, why invent inner city school children in need of saving?</p>
-
-<p>Perhaps, PLI were analyzing a related real-life dataset when they wrote this. But what excuse do I have for choosing this example?<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> None. I make these comments so methodologists can do better with our choice of examples, real or hypothetical. Given that the example datasets we use are sometimes ancillary to our work, we can be more thoughtful.</p>
-
+<p><!-- raw HTML omitted --></p>
+<p>Something I dislike in the paper is the hypothetical two-by-two contingency table repeated from Peng, Lee and Ingersoll (PLI, 2001, a well-cited review of logistic regression).<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Their hypothetical example had some inner city school children recommended to remedial reading. However, given that the example is hypothetical/invented, why invent inner city school children in need of saving?</p>
+<p>Perhaps, PLI were analyzing a related real-life dataset when they wrote this. But what excuse do I have for choosing this example?<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> None. I make these comments so methodologists can do better with our choice of examples, real or hypothetical. Given that the example datasets we use are sometimes ancillary to our work, we can be more thoughtful.</p>
 <p>The summary of the paper is:</p>
-
 <ul>
 <li>Odds ratios are non-collapsible, i.e. odds ratios will change depending on covariates in the model, even when there is no confounding.</li>
 <li>You can use linear regression to calculate a risk difference, and Poisson regression to calculate a risk ratio instead. These are collapsible.</li>
 <li>However, OLS and Poisson regression will return downwardly biased estimates in commonplace data analysis scenarios.</li>
-<li>You can modify estimation in simple ways that anyone can implement to obtain much less biased estimates. We applied Horrace and Oaxaca&rsquo;s <em>sequential approach</em><sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup> to both linear and Poisson regression.</li>
+<li>You can modify estimation in simple ways that anyone can implement to obtain much less biased estimates. We applied Horrace and Oaxaca&rsquo;s <em>sequential approach</em><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> to both linear and Poisson regression.</li>
 </ul>
-
 <p>If we were to write this paper again, I would:</p>
-
 <ul>
 <li>select a different example for the two-by-two contingency table;</li>
 <li>evaluate the recommended estimators on efficiency. There is a point at which unbiased estimators are so inefficient that they&rsquo;re junk; and</li>
 <li>evaluate a Bayesian estimation approach for the sequential OLS/Poisson, where we censor the posterior of the predicted outcome at about 0 and about 1, before passing the predicted outcome to the likelihood.</li>
 </ul>
-
 <p>Minor interesting points:</p>
-
 <ul>
 <li>One thing in the paper that I&rsquo;ve not seen in the literature is the simple derivation for a log-probability model in Appendix A.</li>
 <li>The correlated predictors in both simulations were generated using the copula method. And the correlation was adjusted for attenuation given that the binary was dichotomized.</li>
 </ul>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">Peng, C.-Y. J., Lee, K. L., &amp; Ingersoll, G. M. (2002). An introduction to logistic regression analysis and reporting. The Journal of Educational Research, 96(1), 3–14. <a href="https://doi.org/10.1080/00220670209598786">https://doi.org/10.1080/00220670209598786</a>
- <a class="footnote-return" href="#fnref:1">↩</a></li>
-<li id="fn:2">I, not my co-authors, chose this example.
- <a class="footnote-return" href="#fnref:2">↩</a></li>
-<li id="fn:3">Horrace, W. C., &amp; Oaxaca, R. L. (2003, January 1). New Wine in Old Bottles: A Sequential Estimation Technique for the Lpm. Retrieved from <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102</a>
- <a class="footnote-return" href="#fnref:3">↩</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Peng, C.-Y. J., Lee, K. L., &amp; Ingersoll, G. M. (2002). An introduction to logistic regression analysis and reporting. The Journal of Educational Research, 96(1), 3–14. <a href="https://doi.org/10.1080/00220670209598786">https://doi.org/10.1080/00220670209598786</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>I, not my co-authors, chose this example. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Horrace, W. C., &amp; Oaxaca, R. L. (2003, January 1). New Wine in Old Bottles: A Sequential Estimation Technique for the Lpm. Retrieved from <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </main>
 

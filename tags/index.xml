@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on James Uanhoro</title>
@@ -6,22 +6,13 @@
     <description>Recent content in Tags on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.jamesuanhoro.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Bayesian</title>
-      <link>https://www.jamesuanhoro.com/tags/bayesian/</link>
-      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/bayesian/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Binary</title>
+      <title>binary</title>
       <link>https://www.jamesuanhoro.com/tags/binary/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
@@ -30,56 +21,47 @@
     </item>
     
     <item>
-      <title>Causality</title>
-      <link>https://www.jamesuanhoro.com/tags/causality/</link>
-      <pubDate>Fri, 11 Aug 2017 00:00:00 +0000</pubDate>
+      <title>measurement-error</title>
+      <link>https://www.jamesuanhoro.com/tags/measurement-error/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/causality/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/measurement-error/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Confirmatory-factor-analysis</title>
-      <link>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</link>
-      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      <title>regression</title>
+      <link>https://www.jamesuanhoro.com/tags/regression/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/regression/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Effect-size</title>
+      <title>structural-equation-modeling</title>
+      <link>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tetrachoric</title>
+      <link>https://www.jamesuanhoro.com/tags/tetrachoric/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/tetrachoric/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>effect-size</title>
       <link>https://www.jamesuanhoro.com/tags/effect-size/</link>
       <pubDate>Mon, 25 Nov 2019 11:43:14 -0500</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/effect-size/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Factor-analysis</title>
-      <link>https://www.jamesuanhoro.com/tags/factor-analysis/</link>
-      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/factor-analysis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Factor-score</title>
-      <link>https://www.jamesuanhoro.com/tags/factor-score/</link>
-      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/factor-score/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Fit-indices</title>
-      <link>https://www.jamesuanhoro.com/tags/fit-indices/</link>
-      <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/fit-indices/</guid>
       <description></description>
     </item>
     
@@ -93,92 +75,11 @@
     </item>
     
     <item>
-      <title>Heteroskedasticity</title>
-      <link>https://www.jamesuanhoro.com/tags/heteroskedasticity/</link>
-      <pubDate>Sat, 20 Oct 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/heteroskedasticity/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Item-response-theory</title>
-      <link>https://www.jamesuanhoro.com/tags/item-response-theory/</link>
-      <pubDate>Tue, 02 Jan 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/item-response-theory/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Logistic-regression</title>
+      <title>logistic-regression</title>
       <link>https://www.jamesuanhoro.com/tags/logistic-regression/</link>
       <pubDate>Mon, 25 Nov 2019 11:43:14 -0500</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/logistic-regression/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Maximum-likelihood</title>
-      <link>https://www.jamesuanhoro.com/tags/maximum-likelihood/</link>
-      <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/maximum-likelihood/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Measurement-error</title>
-      <link>https://www.jamesuanhoro.com/tags/measurement-error/</link>
-      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/measurement-error/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Missing-data</title>
-      <link>https://www.jamesuanhoro.com/tags/missing-data/</link>
-      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/missing-data/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Misspecification</title>
-      <link>https://www.jamesuanhoro.com/tags/misspecification/</link>
-      <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/misspecification/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Model-validation</title>
-      <link>https://www.jamesuanhoro.com/tags/model-validation/</link>
-      <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/model-validation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Multilevel-regression</title>
-      <link>https://www.jamesuanhoro.com/tags/multilevel-regression/</link>
-      <pubDate>Wed, 28 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/multilevel-regression/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Multivariate-GLM</title>
-      <link>https://www.jamesuanhoro.com/tags/multivariate-glm/</link>
-      <pubDate>Mon, 12 Feb 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/multivariate-glm/</guid>
       <description></description>
     </item>
     
@@ -192,7 +93,133 @@
     </item>
     
     <item>
-      <title>Ordinal-regression</title>
+      <title>bayesian</title>
+      <link>https://www.jamesuanhoro.com/tags/bayesian/</link>
+      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/bayesian/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>practical-significance</title>
+      <link>https://www.jamesuanhoro.com/tags/practical-significance/</link>
+      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/practical-significance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>confirmatory-factor-analysis</title>
+      <link>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</link>
+      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>factor-analysis</title>
+      <link>https://www.jamesuanhoro.com/tags/factor-analysis/</link>
+      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/factor-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>factor-score</title>
+      <link>https://www.jamesuanhoro.com/tags/factor-score/</link>
+      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/factor-score/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>small-samples</title>
+      <link>https://www.jamesuanhoro.com/tags/small-samples/</link>
+      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/small-samples/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sum-score</title>
+      <link>https://www.jamesuanhoro.com/tags/sum-score/</link>
+      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/sum-score/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>multilevel-regression</title>
+      <link>https://www.jamesuanhoro.com/tags/multilevel-regression/</link>
+      <pubDate>Wed, 28 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/multilevel-regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>heteroskedasticity</title>
+      <link>https://www.jamesuanhoro.com/tags/heteroskedasticity/</link>
+      <pubDate>Sat, 20 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/heteroskedasticity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>simulation</title>
+      <link>https://www.jamesuanhoro.com/tags/simulation/</link>
+      <pubDate>Sun, 07 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/simulation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>robust-regression</title>
+      <link>https://www.jamesuanhoro.com/tags/robust-regression/</link>
+      <pubDate>Sat, 06 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/robust-regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>maximum-likelihood</title>
+      <link>https://www.jamesuanhoro.com/tags/maximum-likelihood/</link>
+      <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/maximum-likelihood/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>model-validation</title>
+      <link>https://www.jamesuanhoro.com/tags/model-validation/</link>
+      <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/model-validation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>multivariate-GLM</title>
+      <link>https://www.jamesuanhoro.com/tags/multivariate-glm/</link>
+      <pubDate>Mon, 12 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/multivariate-glm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ordinal-regression</title>
       <link>https://www.jamesuanhoro.com/tags/ordinal-regression/</link>
       <pubDate>Mon, 12 Feb 2018 00:00:00 +0000</pubDate>
       
@@ -201,20 +228,11 @@
     </item>
     
     <item>
-      <title>Outliers</title>
-      <link>https://www.jamesuanhoro.com/tags/outliers/</link>
-      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
+      <title>item-response-theory</title>
+      <link>https://www.jamesuanhoro.com/tags/item-response-theory/</link>
+      <pubDate>Tue, 02 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/outliers/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Practical-significance</title>
-      <link>https://www.jamesuanhoro.com/tags/practical-significance/</link>
-      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/practical-significance/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/item-response-theory/</guid>
       <description></description>
     </item>
     
@@ -228,65 +246,47 @@
     </item>
     
     <item>
-      <title>Regression</title>
-      <link>https://www.jamesuanhoro.com/tags/regression/</link>
-      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      <title>fit-indices</title>
+      <link>https://www.jamesuanhoro.com/tags/fit-indices/</link>
+      <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/regression/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/fit-indices/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Robust-regression</title>
-      <link>https://www.jamesuanhoro.com/tags/robust-regression/</link>
-      <pubDate>Sat, 06 Oct 2018 00:00:00 +0000</pubDate>
+      <title>misspecification</title>
+      <link>https://www.jamesuanhoro.com/tags/misspecification/</link>
+      <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/robust-regression/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/misspecification/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Simulation</title>
-      <link>https://www.jamesuanhoro.com/tags/simulation/</link>
-      <pubDate>Sun, 07 Oct 2018 00:00:00 +0000</pubDate>
+      <title>missing-data</title>
+      <link>https://www.jamesuanhoro.com/tags/missing-data/</link>
+      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/simulation/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/missing-data/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Small-samples</title>
-      <link>https://www.jamesuanhoro.com/tags/small-samples/</link>
-      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
+      <title>outliers</title>
+      <link>https://www.jamesuanhoro.com/tags/outliers/</link>
+      <pubDate>Thu, 21 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/small-samples/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/outliers/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Structural-equation-modeling</title>
-      <link>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</link>
-      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      <title>causality</title>
+      <link>https://www.jamesuanhoro.com/tags/causality/</link>
+      <pubDate>Fri, 11 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Sum-score</title>
-      <link>https://www.jamesuanhoro.com/tags/sum-score/</link>
-      <pubDate>Fri, 02 Aug 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/sum-score/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tetrachoric</title>
-      <link>https://www.jamesuanhoro.com/tags/tetrachoric/</link>
-      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/tetrachoric/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/causality/</guid>
       <description></description>
     </item>
     

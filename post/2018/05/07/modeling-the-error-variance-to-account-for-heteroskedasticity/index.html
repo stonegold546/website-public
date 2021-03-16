@@ -81,316 +81,230 @@
 
 
 <main>
-
-
 <p>One of the assumptions that comes with applying OLS estimation for regression models in the social sciences is homoskedasticity, I prefer <em>constant error variance</em> (it also goes by <em>spherical disturbances</em>). It implies that there is no systematic pattern to the error variance, meaning the model is equally poor at all levels of prediction.</p>
-
 <p>This assumption is important for OLS to be the best linear unbiased predictor (BLUE). Heteroskedasticity, the complement of homoskedasticity, does not bias OLS, however, it causes it to be inefficient, losing the &ldquo;best&rdquo; property in the BLUE. If you do not care for p-values unlike most in the social sciences, then heteroskedasticity may not be an issue.</p>
-
 <p>Econometricians have developed a whole variety of heteroskedasticity-consistent standard errors, so they can continue to apply OLS (which continues to be unbiased), while adjusting for non-constant error variance. <a href="https://en.wikipedia.org/wiki/Heteroscedasticity-consistent_standard_errors">The Wikipedia page on these corrections</a> lists the many names these alternative standard errors go by.</p>
-
-<p>Some time last semester, I was playing around with the <code>mle()</code> function in the <code>stats4</code> package and also found the more versatile but slower <code>mle2()</code> in the <code>bbmle</code> package. We provide the likelihood function, and both functions will find the parameter estimates that maximize the likelihood. See footnote for additional details.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></p>
-
+<p>Some time last semester, I was playing around with the <code>mle()</code> function in the <code>stats4</code> package and also found the more versatile but slower <code>mle2()</code> in the <code>bbmle</code> package. We provide the likelihood function, and both functions will find the parameter estimates that maximize the likelihood. See footnote for additional details.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <p>Let&rsquo;s work through a quick example:</p>
-
-<pre><code class="language-ruby">library(bbmle) # For the mle2 function
-set.seed(180511)
-</code></pre>
-
-<p>First, I draw 500 observations from a normal distribution with mean 3 and standard deviation 1.5, and save it into a dataset:</p>
-
-<pre><code class="language-ruby">dat &lt;- data.frame(y = rnorm(n = 500, mean = 3, sd = 1.5))
-</code></pre>
-
-<p>The mean and standard deviation of the sample are:</p>
-
-<pre><code class="language-ruby">mean(dat$y)
-[1] 2.999048
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(bbmle) <span style="color:#75715e"># For the mle2 function</span>
+set<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">180511</span>)
+</code></pre></div><p>First, I draw 500 observations from a normal distribution with mean 3 and standard deviation 1.5, and save it into a dataset:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">dat <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(y <span style="color:#f92672">=</span> rnorm(n <span style="color:#f92672">=</span> <span style="color:#ae81ff">500</span>, mean <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>, sd <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>))
+</code></pre></div><p>The mean and standard deviation of the sample are:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">mean(dat$y)
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">999048</span>
 
 sd(dat$y)
-[1] 1.462059
-</code></pre>
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">462059</span>
+</code></pre></div><p>I can also ask the question this way, what parameters of the normal distribution, mean and standard deviation, maximize the likelihood of this observed variable? The quick way to answer the question would be:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">m<span style="color:#f92672">.</span>sd <span style="color:#f92672">&lt;-</span> mle2(y <span style="color:#f92672">~</span> dnorm(mean <span style="color:#f92672">=</span> a, sd <span style="color:#f92672">=</span> exp(b)), data <span style="color:#f92672">=</span> dat,
+             start <span style="color:#f92672">=</span> list(a <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), b <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>)))
+</code></pre></div><p>In the syntax above, I inform R that the mean of the variable <em>y</em> is a constant, <em>a</em>, and <em>y</em>&rsquo;s standard deviation is a constant, <em>b</em>. The standard deviation is exponentiated ensuring it is never a negative number. We provide <em>starting values</em>, these are suggestions to the program so it can begin estimation prior to converging to a value that maximizes the likelihood. A random number would suffice for starting values.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">m<span style="color:#f92672">.</span>sd
 
-<p>I can also ask the question this way, what parameters of the normal distribution, mean and standard deviation, maximize the likelihood of this observed variable? The quick way to answer the question would be:</p>
+<span style="color:#e6db74">Call</span>:
+mle2(minuslogl <span style="color:#f92672">=</span> y <span style="color:#f92672">~</span> dnorm(mean <span style="color:#f92672">=</span> a, sd <span style="color:#f92672">=</span> exp(b)), start <span style="color:#f92672">=</span> list(a <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>),
+    b <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>)), data <span style="color:#f92672">=</span> dat)
 
-<pre><code class="language-ruby">m.sd &lt;- mle2(y ~ dnorm(mean = a, sd = exp(b)), data = dat,
-             start = list(a = rnorm(1), b = rnorm(1)))
-</code></pre>
-
-<p>In the syntax above, I inform R that the mean of the variable <em>y</em> is a constant, <em>a</em>, and <em>y</em>&rsquo;s standard deviation is a constant, <em>b</em>. The standard deviation is exponentiated ensuring it is never a negative number. We provide <em>starting values</em>, these are suggestions to the program so it can begin estimation prior to converging to a value that maximizes the likelihood. A random number would suffice for starting values.</p>
-
-<pre><code class="language-ruby">m.sd
-
-Call:
-mle2(minuslogl = y ~ dnorm(mean = a, sd = exp(b)), start = list(a = rnorm(1),
-    b = rnorm(1)), data = dat)
-
-Coefficients:
+<span style="color:#e6db74">Coefficients</span>:
         a         b
-2.9990478 0.3788449
+<span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9990478</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3788449</span>
 
-Log-likelihood: -898.89
-</code></pre>
-
-<p>The coefficient, <em>a</em>, looks very much like the mean of the data. You would have to exponentiate coefficient <em>b</em>, to obtain the standard deviation:</p>
-
-<pre><code class="language-ruby">exp(coef(m.sd)[2])
+<span style="color:#66d9ef">Log</span><span style="color:#f92672">-</span><span style="color:#e6db74">likelihood</span>: <span style="color:#f92672">-</span><span style="color:#ae81ff">898</span><span style="color:#f92672">.</span><span style="color:#ae81ff">89</span>
+</code></pre></div><p>The coefficient, <em>a</em>, looks very much like the mean of the data. You would have to exponentiate coefficient <em>b</em>, to obtain the standard deviation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">exp(coef(m<span style="color:#f92672">.</span>sd)<span style="color:#f92672">[</span><span style="color:#ae81ff">2</span><span style="color:#f92672">]</span>)
        b
-1.460596
-</code></pre>
-
-<p>This is similar to the standard deviation we got above. Another interesting fact demonstrated with the syntax above is <code>lm()</code> functions like <code>coef()</code> and <code>summary()</code> are available for use on <code>mle2()</code> objects.</p>
-
+<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">460596</span>
+</code></pre></div><p>This is similar to the standard deviation we got above. Another interesting fact demonstrated with the syntax above is <code>lm()</code> functions like <code>coef()</code> and <code>summary()</code> are available for use on <code>mle2()</code> objects.</p>
 <p>The maximum-likelihood estimation we have performed above is similar to an intercept-only regression model estimated with OLS:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">coef(lm(y <span style="color:#f92672">~</span> <span style="color:#ae81ff">1</span>, dat))
+(<span style="color:#66d9ef">Intercept</span>)
+   <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">999048</span>
 
-<pre><code class="language-ruby">coef(lm(y ~ 1, dat))
-(Intercept)
-   2.999048
-
-sigma(lm(y ~ 1, dat))
-[1] 1.462059
-</code></pre>
-
-<p>The intercept is the mean of the data, and the residual standard deviation is the standard deviation.</p>
-
+sigma(lm(y <span style="color:#f92672">~</span> <span style="color:#ae81ff">1</span>, dat))
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">462059</span>
+</code></pre></div><p>The intercept is the mean of the data, and the residual standard deviation is the standard deviation.</p>
 <h2 id="heteroskedastic-regression-models">Heteroskedastic regression models</h2>
-
 <p>Consider the following study. We have assignment two groups, a treatment group of 30 and a control group of 100 individuals matched to the treatment group on covariates that are determinants of the outcome. So we are interested in the treatment effect and let us assume a simple mean difference would suffice. It happens that the treatment in addition to being effective has a homogenizing effect, say the subjects were essentially brainwashed into doing better on the outcome. The following dataset should match the scenario above:</p>
-
-<pre><code class="language-ruby">dat &lt;- data.frame(
-  treat = c(rep(0, 100), rep(1, 30)),
-  y = c(rnorm(100), rnorm(30, 0.3, .25)))
-</code></pre>
-
-<p>There are 100 participants with 0 for treatment status (control group), they have a mean of 0 and a standard deviation of 1. There are 30 participants with 1 for treatment status (treatment group), they have a mean of 0.3 and a standard deviation of 0.25.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">dat <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(
+  treat <span style="color:#f92672">=</span> c(rep(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>), rep(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">30</span>)),
+  y <span style="color:#f92672">=</span> c(rnorm(<span style="color:#ae81ff">100</span>), rnorm(<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">25</span>)))
+</code></pre></div><p>There are 100 participants with 0 for treatment status (control group), they have a mean of 0 and a standard deviation of 1. There are 30 participants with 1 for treatment status (treatment group), they have a mean of 0.3 and a standard deviation of 0.25.</p>
 <p>This scenario clearly violates the homoskedasticity assumption, nonetheless, we proceed with OLS estimation of the treatment effect:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">summary(m<span style="color:#f92672">.</span>ols <span style="color:#f92672">&lt;-</span> lm(y <span style="color:#f92672">~</span> treat, dat))
 
-<pre><code class="language-ruby">summary(m.ols &lt;- lm(y ~ treat, dat))
+<span style="color:#e6db74">Call</span>:
+lm(formula <span style="color:#f92672">=</span> y <span style="color:#f92672">~</span> treat, data <span style="color:#f92672">=</span> dat)
 
-Call:
-lm(formula = y ~ treat, data = dat)
+<span style="color:#e6db74">Residuals</span>:
+    <span style="color:#66d9ef">Min</span>      <span style="color:#ae81ff">1</span>Q  <span style="color:#66d9ef">Median</span>      <span style="color:#ae81ff">3</span>Q     <span style="color:#66d9ef">Max</span>
+<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8734</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5055</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">02</span><span style="color:#ae81ff">87</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4231</span>  <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4097</span>
 
-Residuals:
-    Min      1Q  Median      3Q     Max
--2.8734 -0.5055 -0.0287  0.4231  3.4097
+<span style="color:#e6db74">Coefficients</span>:
+            <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span> t value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>t<span style="color:#f92672">|</span>)
+(<span style="color:#66d9ef">Intercept</span>)  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">033</span><span style="color:#ae81ff">86</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09298</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">364</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">716</span>
+treat        <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">21733</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">19355</span>   <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">123</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">264</span>
 
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)  0.03386    0.09298   0.364    0.716
-treat        0.21733    0.19355   1.123    0.264
-
-Residual standard error: 0.9298 on 128 degrees of freedom
-Multiple R-squared:  0.009754,	Adjusted R-squared:  0.002018
-F-statistic: 1.261 on 1 and 128 DF,  p-value: 0.2636
-</code></pre>
-
-<p>The treatment effect was .22 and not statistically significant, $p = .26$ at an $\alpha$-level of .05. But we know the variances are not homoskedastic because we created the data and this simple diagnostic plot of residuals against fitted values confirms this:</p>
-
-<pre><code class="language-ruby">plot(m.ols, 1)
-</code></pre>
-
-<p><img src="/img/posts/mle_het/Rplot.png" alt="mle0" /></p>
-
+<span style="color:#66d9ef">Residual</span> standard <span style="color:#e6db74">error</span>: <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9298</span> on <span style="color:#ae81ff">128</span> degrees of freedom
+<span style="color:#66d9ef">Multiple</span> R<span style="color:#f92672">-</span><span style="color:#e6db74">squared</span>:  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span><span style="color:#ae81ff">9754</span>,	<span style="color:#66d9ef">Adjusted</span> R<span style="color:#f92672">-</span><span style="color:#e6db74">squared</span>:  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00201</span><span style="color:#ae81ff">8</span>
+F<span style="color:#f92672">-</span><span style="color:#e6db74">statistic</span>: <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">261</span> on <span style="color:#ae81ff">1</span> <span style="color:#f92672">and</span> <span style="color:#ae81ff">128</span> <span style="color:#66d9ef">DF</span>,  p<span style="color:#f92672">-</span><span style="color:#e6db74">value</span>: <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2636</span>
+</code></pre></div><p>The treatment effect was .22 and not statistically significant, $p = .26$ at an $\alpha$-level of .05. But we know the variances are not homoskedastic because we created the data and this simple diagnostic plot of residuals against fitted values confirms this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">plot(m<span style="color:#f92672">.</span>ols, <span style="color:#ae81ff">1</span>)
+</code></pre></div><p><img src="/img/posts/mle_het/Rplot.png" alt="mle0"></p>
 <p>We can address this using the <code>mle2()</code> function. First, I document the syntax to recreate the OLS model:</p>
-
-<pre><code class="language-ruby">m.mle &lt;- mle2(
-  y ~ dnorm(mean = b_int + b_treat * treat, sd = exp(s1)), data = dat,
-  start = list(b_int = rnorm(1), b_treat = rnorm(1), s1 = rnorm(1)))
-</code></pre>
-
-<p>In this function, I create a model for the mean of the outcome that is a function of an intercept, <code>b_int</code>, and a coefficient for the treat predictor, <code>b_treat</code>. The standard deviation is again an exponentiated constant. This model would be equivalent to the linear model.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">m<span style="color:#f92672">.</span>mle <span style="color:#f92672">&lt;-</span> mle2(
+  y <span style="color:#f92672">~</span> dnorm(mean <span style="color:#f92672">=</span> b_int <span style="color:#f92672">+</span> b_treat <span style="color:#f92672">*</span> treat, sd <span style="color:#f92672">=</span> exp(s1)), data <span style="color:#f92672">=</span> dat,
+  start <span style="color:#f92672">=</span> list(b_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), b_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), s1 <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>)))
+</code></pre></div><p>In this function, I create a model for the mean of the outcome that is a function of an intercept, <code>b_int</code>, and a coefficient for the treat predictor, <code>b_treat</code>. The standard deviation is again an exponentiated constant. This model would be equivalent to the linear model.</p>
 <p>However, we know the variances are not constant, but different for the two groups. We can instead specify the standard deviation as a function of the groups:</p>
-
-<pre><code class="language-ruby">mle2(y ~ dnorm(mean = b_int + b_treat * treat,
-               sd = exp(s_int + s_treat * treat)), data = dat,
-     start = list(b_int = rnorm(1), b_treat = rnorm(1),
-                  s_int = rnorm(1), s_treat = rnorm(1)))
-</code></pre>
-
-<p>Here, we have specified a model for the standard deviation as a function of an intercept, <code>s_int</code>, representing the control group, and a deviation from this intercept, <code>s_treat</code>.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">mle2(y <span style="color:#f92672">~</span> dnorm(mean <span style="color:#f92672">=</span> b_int <span style="color:#f92672">+</span> b_treat <span style="color:#f92672">*</span> treat,
+               sd <span style="color:#f92672">=</span> exp(s_int <span style="color:#f92672">+</span> s_treat <span style="color:#f92672">*</span> treat)), data <span style="color:#f92672">=</span> dat,
+     start <span style="color:#f92672">=</span> list(b_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), b_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>),
+                  s_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), s_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>)))
+</code></pre></div><p>Here, we have specified a model for the standard deviation as a function of an intercept, <code>s_int</code>, representing the control group, and a deviation from this intercept, <code>s_treat</code>.</p>
 <p>We can do one better. We can use the coefficients from the OLS model as the starting values for <code>b_int</code> and <code>b_treat</code>. So I finally run the model:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">summary(m<span style="color:#f92672">.</span>het <span style="color:#f92672">&lt;-</span> mle2(
+  y <span style="color:#f92672">~</span> dnorm(mean <span style="color:#f92672">=</span> b_int <span style="color:#f92672">+</span> b_treat <span style="color:#f92672">*</span> treat,
+            sd <span style="color:#f92672">=</span> exp(s_int <span style="color:#f92672">+</span> s_treat <span style="color:#f92672">*</span> treat)), data <span style="color:#f92672">=</span> dat,
+  start <span style="color:#f92672">=</span> list(b_int <span style="color:#f92672">=</span> coef(m<span style="color:#f92672">.</span>ols)<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>, b_treat <span style="color:#f92672">=</span> coef(m<span style="color:#f92672">.</span>ols)<span style="color:#f92672">[</span><span style="color:#ae81ff">2</span><span style="color:#f92672">]</span>,
+               s_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), s_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>))))
 
-<pre><code class="language-ruby">summary(m.het &lt;- mle2(
-  y ~ dnorm(mean = b_int + b_treat * treat,
-            sd = exp(s_int + s_treat * treat)), data = dat,
-  start = list(b_int = coef(m.ols)[1], b_treat = coef(m.ols)[2],
-               s_int = rnorm(1), s_treat = rnorm(1))))
+<span style="color:#66d9ef">Maximum</span> likelihood estimation
 
-Maximum likelihood estimation
+<span style="color:#e6db74">Call</span>:
+mle2(minuslogl <span style="color:#f92672">=</span> y <span style="color:#f92672">~</span> dnorm(mean <span style="color:#f92672">=</span> b_int <span style="color:#f92672">+</span> b_treat <span style="color:#f92672">*</span> treat, sd <span style="color:#f92672">=</span> exp(s_int <span style="color:#f92672">+</span>
+    s_treat <span style="color:#f92672">*</span> treat)), start <span style="color:#f92672">=</span> list(b_int <span style="color:#f92672">=</span> coef(m<span style="color:#f92672">.</span>ols)<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>, b_treat <span style="color:#f92672">=</span> coef(m<span style="color:#f92672">.</span>ols)<span style="color:#f92672">[</span><span style="color:#ae81ff">2</span><span style="color:#f92672">]</span>,
+    s_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), s_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>)), data <span style="color:#f92672">=</span> dat)
 
-Call:
-mle2(minuslogl = y ~ dnorm(mean = b_int + b_treat * treat, sd = exp(s_int +
-    s_treat * treat)), start = list(b_int = coef(m.ols)[1], b_treat = coef(m.ols)[2],
-    s_int = rnorm(1), s_treat = rnorm(1)), data = dat)
+<span style="color:#e6db74">Coefficients</span>:
+         <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>  z value   <span style="color:#66d9ef">Pr</span>(z)    
+b_int    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">033</span><span style="color:#ae81ff">862</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">104470</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3241</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">74584</span>    
+b_treat  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">217334</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">112249</span>   <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9362</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">052</span><span style="color:#ae81ff">85</span> <span style="color:#f92672">.</span>  
+s_int    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">043731</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">070711</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6184</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">53628</span>    
+s_treat <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">535894</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">147196</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">10</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4344</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">16</span> <span style="color:#f92672">***</span>
+<span style="color:#f92672">---</span>
+<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
 
-Coefficients:
-         Estimate Std. Error  z value   Pr(z)    
-b_int    0.033862   0.104470   0.3241 0.74584    
-b_treat  0.217334   0.112249   1.9362 0.05285 .  
-s_int    0.043731   0.070711   0.6184 0.53628    
-s_treat -1.535894   0.147196 -10.4344 &lt; 2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
--2 log L: 288.1408
-</code></pre>
-
-<p>The treatment effect is about the same, but the p-value is now .053. Much smaller than the .26 from the analysis assuming homoskedastic errors. The precision of the <code>b_treat</code> variable is much greater as the standard error here, .11, is smaller than .19.</p>
-
+<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span> log <span style="color:#e6db74">L</span>: <span style="color:#ae81ff">288</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1408</span>
+</code></pre></div><p>The treatment effect is about the same, but the p-value is now .053. Much smaller than the .26 from the analysis assuming homoskedastic errors. The precision of the <code>b_treat</code> variable is much greater as the standard error here, .11, is smaller than .19.</p>
 <p>The model for the standard deviation suggests a standard deviation of:</p>
-
-<pre><code class="language-ruby">exp(coef(m.het)[3])
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">exp(coef(m<span style="color:#f92672">.</span>het)<span style="color:#f92672">[</span><span style="color:#ae81ff">3</span><span style="color:#f92672">]</span>)
 
    s_int
-1.044701
-</code></pre>
-
-<p>1.045 for the control group and:</p>
-
-<pre><code class="language-ruby">exp(coef(m.het)[3] + coef(m.het)[4])
+<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">044701</span>
+</code></pre></div><p>1.045 for the control group and:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">exp(coef(m<span style="color:#f92672">.</span>het)<span style="color:#f92672">[</span><span style="color:#ae81ff">3</span><span style="color:#f92672">]</span> <span style="color:#f92672">+</span> coef(m<span style="color:#f92672">.</span>het)<span style="color:#f92672">[</span><span style="color:#ae81ff">4</span><span style="color:#f92672">]</span>)
 
     s_int
-0.2248858
-</code></pre>
-
-<p>.22 for the treatment group. These values are close to what we know we simulated. We can confirm the sample statistics as:</p>
-
-<pre><code class="language-ruby">aggregate(y ~ treat, dat, sd)
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2248858</span>
+</code></pre></div><p>.22 for the treatment group. These values are close to what we know we simulated. We can confirm the sample statistics as:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">aggregate(y <span style="color:#f92672">~</span> treat, dat, sd)
 
   treat         y
-1     0 1.0499657
-2     1 0.2287307
-</code></pre>
+<span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">99657</span>
+<span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2287307</span>
+</code></pre></div><p>It is also easy to conduct a model comparison of the model without heteroskedasticity and permitting heteroskedasticity:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">anova(m<span style="color:#f92672">.</span>mle, m<span style="color:#f92672">.</span>het)
 
-<p>It is also easy to conduct a model comparison of the model without heteroskedasticity and permitting heteroskedasticity:</p>
-
-<pre><code class="language-ruby">anova(m.mle, m.het)
-
-Likelihood Ratio Tests
-Model 1: m.mle, y~dnorm(mean=b_int+b_treat*treat,sd=exp(s1))
-Model 2: m.het, y~dnorm(mean=b_int+b_treat*treat,sd=exp(s_int+s_treat*treat))
-  Tot Df Deviance  Chisq Df Pr(&gt;Chisq)    
-1      3   347.98                         
-2      4   288.14 59.841  1  1.028e-14 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-</code></pre>
-
-<p>The likelihood ratio test suggests we have improved our model, $\chi^2(1)=59.81,p&lt;.001$.</p>
-
+<span style="color:#66d9ef">Likelihood</span> <span style="color:#66d9ef">Ratio</span> <span style="color:#66d9ef">Tests</span>
+<span style="color:#66d9ef">Model</span> <span style="color:#ae81ff">1</span>: m<span style="color:#f92672">.</span>mle, y<span style="color:#f92672">~</span>dnorm(mean<span style="color:#f92672">=</span>b_int<span style="color:#f92672">+</span>b_treat<span style="color:#f92672">*</span>treat,sd<span style="color:#f92672">=</span>exp(s1))
+<span style="color:#66d9ef">Model</span> <span style="color:#ae81ff">2</span>: m<span style="color:#f92672">.</span>het, y<span style="color:#f92672">~</span>dnorm(mean<span style="color:#f92672">=</span>b_int<span style="color:#f92672">+</span>b_treat<span style="color:#f92672">*</span>treat,sd<span style="color:#f92672">=</span>exp(s_int<span style="color:#f92672">+</span>s_treat<span style="color:#f92672">*</span>treat))
+  <span style="color:#66d9ef">Tot</span> <span style="color:#66d9ef">Df</span> <span style="color:#66d9ef">Deviance</span>  <span style="color:#66d9ef">Chisq</span> <span style="color:#66d9ef">Df</span> <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;</span><span style="color:#66d9ef">Chisq</span>)    
+<span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">3</span>   <span style="color:#ae81ff">347</span><span style="color:#f92672">.</span><span style="color:#ae81ff">98</span>                         
+<span style="color:#ae81ff">2</span>      <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">288</span><span style="color:#f92672">.</span><span style="color:#ae81ff">14</span> <span style="color:#ae81ff">59</span><span style="color:#f92672">.</span><span style="color:#ae81ff">841</span>  <span style="color:#ae81ff">1</span>  <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">02</span><span style="color:#ae81ff">8</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">14</span> <span style="color:#f92672">***</span>
+<span style="color:#f92672">---</span>
+<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
+</code></pre></div><p>The likelihood ratio test suggests we have improved our model, $\chi^2(1)=59.81,p&lt;.001$.</p>
 <p>So we can confirm that modeling the variance improves precision in this single example. It is easy to code a simulation comparing heteroskedastic MLE to OLS estimation when there is a null effect of zero and we have heteroskedasticity.</p>
-
 <p>I make one change to the code from above by giving the treatment group a mean of zero, such that there is no mean difference between both groups. The treatment did not improve the outcome, but it homogenized people. I replicate the process 500 times saving the treatment effect from OLS and its p-value, and the treatment effect from heteroskedastic MLE, and its p-value.</p>
-
-<pre><code class="language-r">res &lt;- replicate(500, {
-  dat &lt;- data.frame(
-    y = c(rnorm(100), rnorm(30, 0, .25)), treat = c(rep(0, 100), rep(1, 30)))
-  m.ols &lt;- lm(y ~ treat, dat)
-  m.het &lt;- mle2(
-    y ~ dnorm(mean = b_int + b_treat * treat,
-              sd = exp(s_int + s_treat * treat)), data = dat,
-    start = list(b_int = coef(m.ols)[1], b_treat = coef(m.ols)[2],
-                 s_int = rnorm(1), s_treat = rnorm(1)))
-  list(b.ols = unname(coef(m.ols))[2],
-       b.het = unname(coef(m.het))[2],
-       p.ols = coef(summary(m.ols))[2, 4],
-       p.het = coef(summary(m.het))[2, 4])
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">res <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">replicate</span>(<span style="color:#ae81ff">500</span>, {
+  dat <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">data.frame</span>(
+    y <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#a6e22e">rnorm</span>(<span style="color:#ae81ff">100</span>), <span style="color:#a6e22e">rnorm</span>(<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">.25</span>)), treat <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#a6e22e">rep</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>), <span style="color:#a6e22e">rep</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">30</span>)))
+  m.ols <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">lm</span>(y <span style="color:#f92672">~</span> treat, dat)
+  m.het <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">mle2</span>(
+    y <span style="color:#f92672">~</span> <span style="color:#a6e22e">dnorm</span>(mean <span style="color:#f92672">=</span> b_int <span style="color:#f92672">+</span> b_treat <span style="color:#f92672">*</span> treat,
+              sd <span style="color:#f92672">=</span> <span style="color:#a6e22e">exp</span>(s_int <span style="color:#f92672">+</span> s_treat <span style="color:#f92672">*</span> treat)), data <span style="color:#f92672">=</span> dat,
+    start <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(b_int <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(m.ols)[1], b_treat <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(m.ols)[2],
+                 s_int <span style="color:#f92672">=</span> <span style="color:#a6e22e">rnorm</span>(<span style="color:#ae81ff">1</span>), s_treat <span style="color:#f92672">=</span> <span style="color:#a6e22e">rnorm</span>(<span style="color:#ae81ff">1</span>)))
+  <span style="color:#a6e22e">list</span>(b.ols <span style="color:#f92672">=</span> <span style="color:#a6e22e">unname</span>(<span style="color:#a6e22e">coef</span>(m.ols))[2],
+       b.het <span style="color:#f92672">=</span> <span style="color:#a6e22e">unname</span>(<span style="color:#a6e22e">coef</span>(m.het))[2],
+       p.ols <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">summary</span>(m.ols))[2, <span style="color:#ae81ff">4</span>],
+       p.het <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">summary</span>(m.het))[2, <span style="color:#ae81ff">4</span>])
 })
-res &lt;- apply(t(res), 2, unlist)
-</code></pre>
-
-<p>Then I plot the results:</p>
-
-<pre><code class="language-ruby">par(mfrow = rep(2, 2))
-for (i in 1:ncol(res)) {
-  hist(res[, i], main = colnames(res)[i])
+res <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">apply</span>(<span style="color:#a6e22e">t</span>(res), <span style="color:#ae81ff">2</span>, unlist)
+</code></pre></div><p>Then I plot the results:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">par(mfrow <span style="color:#f92672">=</span> rep(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>))
+<span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">:ncol</span>(res)) {
+  hist(res<span style="color:#f92672">[</span>, i<span style="color:#f92672">]</span>, main <span style="color:#f92672">=</span> colnames(res)<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>)
 }
-par(mfrow = c(1, 1))
-</code></pre>
-
-<p><img src="/img/posts/mle_het/Rplot01.png" alt="mle1" /></p>
-
+par(mfrow <span style="color:#f92672">=</span> c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>))
+</code></pre></div><p><img src="/img/posts/mle_het/Rplot01.png" alt="mle1"></p>
 <p>The treatment effects in the OLS and heteroskedastic MLE are similar. However, the p-values of the heteroskedastic MLE model are more well-behaved when the null is true. When the null is true, one would expect the p-values to be uniformly distributed. The p-values from the OLS iterations are stacked on the high end.</p>
-
 <p>I repeat the process, this time, giving the treatment group a mean of .15, so the null of zero effect is false. And I get these plots:</p>
-
-<p><img src="/img/posts/mle_het/Rplot02.png" alt="mle2" /></p>
-
+<p><img src="/img/posts/mle_het/Rplot02.png" alt="mle2"></p>
 <p>The treatment effects again have the same distribution. However, the p-values for the heteroskedastic MLE are much smaller, the heteroskedastic MLE has more statistical power to detect the treatment effect, compared to OLS.</p>
-
-<hr />
-
-<p>The final syntax below breaks the process above down one level. It is the same syntax for the faster <code>mle()</code> function in the <code>stats4</code> package. First, you specify a function for the negative log-likelihood (see <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> below), then pass this function to MLE. Doing things this way allows for more transparency.</p>
-
-<pre><code class="language-ruby">ll &lt;- function(b_int, b_treat, s_int, s_treat) {
-  with(dat, -sum(dnorm(
-    y, mean = b_int + b_treat * treat,
-    sd = exp(s_int + s_treat * treat), log = TRUE)))
+<hr>
+<p>The final syntax below breaks the process above down one level. It is the same syntax for the faster <code>mle()</code> function in the <code>stats4</code> package. First, you specify a function for the negative log-likelihood (see <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> below), then pass this function to MLE. Doing things this way allows for more transparency.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">ll <span style="color:#f92672">&lt;-</span> function(b_int, b_treat, s_int, s_treat) {
+  with(dat, <span style="color:#f92672">-</span>sum(dnorm(
+    y, mean <span style="color:#f92672">=</span> b_int <span style="color:#f92672">+</span> b_treat <span style="color:#f92672">*</span> treat,
+    sd <span style="color:#f92672">=</span> exp(s_int <span style="color:#f92672">+</span> s_treat <span style="color:#f92672">*</span> treat), log <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)))
 }
-summary(mle2(ll, start = list(
-  b_int = rnorm(1), b_treat = rnorm(1),
-  s_int = rnorm(1), s_treat = rnorm(1))))
+summary(mle2(ll, start <span style="color:#f92672">=</span> list(
+  b_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), b_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>),
+  s_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), s_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>))))
 
-Maximum likelihood estimation
+<span style="color:#66d9ef">Maximum</span> likelihood estimation
 
-Call:
-mle2(minuslogl = ll, start = list(b_int = rnorm(1), b_treat = rnorm(1),
-    s_int = rnorm(1), s_treat = rnorm(1)))
+<span style="color:#e6db74">Call</span>:
+mle2(minuslogl <span style="color:#f92672">=</span> ll, start <span style="color:#f92672">=</span> list(b_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), b_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>),
+    s_int <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>), s_treat <span style="color:#f92672">=</span> rnorm(<span style="color:#ae81ff">1</span>)))
 
-Coefficients:
-         Estimate Std. Error  z value   Pr(z)    
-b_int    0.033862   0.104470   0.3241 0.74584    
-b_treat  0.217334   0.112249   1.9362 0.05285 .  
-s_int    0.043733   0.070711   0.6185 0.53626    
-s_treat -1.535893   0.147196 -10.4343 &lt; 2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<span style="color:#e6db74">Coefficients</span>:
+         <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>  z value   <span style="color:#66d9ef">Pr</span>(z)    
+b_int    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">033</span><span style="color:#ae81ff">862</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">104470</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3241</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">74584</span>    
+b_treat  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">217334</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">112249</span>   <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9362</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">052</span><span style="color:#ae81ff">85</span> <span style="color:#f92672">.</span>  
+s_int    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">043733</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">070711</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6185</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">53626</span>    
+s_treat <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">535893</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">147196</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">10</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4343</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">16</span> <span style="color:#f92672">***</span>
+<span style="color:#f92672">---</span>
+<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
 
--2 log L: 288.1408
-</code></pre>
+<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span> log <span style="color:#e6db74">L</span>: <span style="color:#ae81ff">288</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1408</span>
+</code></pre></div><p>Alternatively, if one is interested in a solution that offers a bit more encapsulation, then one can use the <code>glmmTMB</code> package, and include a formula for the dispersion.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(glmmTMB)
+summary(glmmTMB(y <span style="color:#f92672">~</span> treat, dat, dispformula <span style="color:#f92672">=</span> <span style="color:#f92672">~</span> treat))
 
-<p>Alternatively, if one is interested in a solution that offers a bit more encapsulation, then one can use the <code>glmmTMB</code> package, and include a formula for the dispersion.</p>
+<span style="color:#e6db74">Family</span>: gaussian  ( identity )
+<span style="color:#e6db74">Formula</span>:          y <span style="color:#f92672">~</span> treat
+<span style="color:#e6db74">Dispersion</span>:         <span style="color:#f92672">~</span>treat
+<span style="color:#e6db74">Data</span>: dat
 
-<pre><code class="language-ruby">library(glmmTMB)
-summary(glmmTMB(y ~ treat, dat, dispformula = ~ treat))
-
-Family: gaussian  ( identity )
-Formula:          y ~ treat
-Dispersion:         ~treat
-Data: dat
-
-    AIC      BIC   logLik deviance df.resid
-  296.1    307.6   -144.1    288.1      126
+    <span style="color:#66d9ef">AIC</span>      <span style="color:#66d9ef">BIC</span>   logLik deviance df<span style="color:#f92672">.</span>resid
+  <span style="color:#ae81ff">296</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">307</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">144</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">288</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">126</span>
 
 
-Conditional model:
-           Estimate Std. Error z value Pr(&gt;|z|)  
-(Intercept)  0.03386    0.10447   0.324   0.7458  
-treat        0.21733    0.11225   1.936   0.0528 .
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<span style="color:#66d9ef">Conditional</span> <span style="color:#e6db74">model</span>:
+           <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span> z value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)  
+(<span style="color:#66d9ef">Intercept</span>)  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">033</span><span style="color:#ae81ff">86</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10447</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">324</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">7458</span>  
+treat        <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">21733</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">11225</span>   <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">936</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">052</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">.</span>
+<span style="color:#f92672">---</span>
+<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
 
-Dispersion model:
-           Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)  0.08746    0.14142   0.618    0.536    
-treat       -3.07179    0.29439 -10.434   &lt;2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-</code></pre>
-
-<p>In this situation, the dispersion is on the scale of the log variance, so one would have to square root the exponentiated group log variances to retrieve the group standard deviations above.</p>
-<div class="footnotes">
-
-<hr />
-
+<span style="color:#66d9ef">Dispersion</span> <span style="color:#e6db74">model</span>:
+           <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span> z value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)    
+(<span style="color:#66d9ef">Intercept</span>)  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08746</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">14142</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">618</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">536</span>    
+treat       <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0717</span><span style="color:#ae81ff">9</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">29439</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">10</span><span style="color:#f92672">.</span><span style="color:#ae81ff">434</span>   <span style="color:#f92672">&lt;</span><span style="color:#ae81ff">2</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">16</span> <span style="color:#f92672">***</span>
+<span style="color:#f92672">---</span>
+<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
+</code></pre></div><p>In this situation, the dispersion is on the scale of the log variance, so one would have to square root the exponentiated group log variances to retrieve the group standard deviations above.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">In parametric models, we typically assume a distribution is responsible for the observed data, and a lot of the time, we assume the normal distribution. Distributions are defined by their parameters, which are the mean and standard deviation for the normal. The question then is: what values of parameters (mean and standard deviation) maximize the likelihood of the data? In regression models, we are usually asking this question of parameters that predict the mean. If we assume observations are independent, then this likelihood is the product of the individual likelihoods. However, if we work with the log-likelihood, we simplify the problem (for man and machine) to the sum of the logged values instead of product. Next, instead of searching for parameters that maximize the log-likelihood ($ll$), we search for parameters that minimize the negative log-likelihood ($-1 \times ll$) - the same thing in reverse. I believe working with the $-ll$ is largely because it is more conventional for optimization methods to search for minima than maxima. If you attempt to code this by hand using <code>optim()</code>, you can go either way.
- <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>In parametric models, we typically assume a distribution is responsible for the observed data, and a lot of the time, we assume the normal distribution. Distributions are defined by their parameters, which are the mean and standard deviation for the normal. The question then is: what values of parameters (mean and standard deviation) maximize the likelihood of the data? In regression models, we are usually asking this question of parameters that predict the mean. If we assume observations are independent, then this likelihood is the product of the individual likelihoods. However, if we work with the log-likelihood, we simplify the problem (for man and machine) to the sum of the logged values instead of product. Next, instead of searching for parameters that maximize the log-likelihood ($ll$), we search for parameters that minimize the negative log-likelihood ($-1 \times ll$) - the same thing in reverse. I believe working with the $-ll$ is largely because it is more conventional for optimization methods to search for minima than maxima. If you attempt to code this by hand using <code>optim()</code>, you can go either way. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </main>
 

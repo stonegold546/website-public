@@ -81,84 +81,65 @@
 
 
 <main>
-
-
 <blockquote>
 <p><strong>TLDR: We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.</strong></p>
 </blockquote>
-
-<p>I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&rsquo;s <em>Data analysis using regression and multilevel/hierarchical models</em>.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> So I started reading it and it&rsquo;s a good book.</p>
-
+<p>I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&rsquo;s <em>Data analysis using regression and multilevel/hierarchical models</em>.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> So I started reading it and it&rsquo;s a good book.</p>
 <p>A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p. 34). To see what they mean, let us consider an example.</p>
-
 <h2 id="predicting-student-performance">Predicting student performance</h2>
-
 <p>I&rsquo;ll use a <a href="/misc/datasets/hsb_comb_full.csv">subset of the High School &amp; Beyond dataset</a>.</p>
-
-<pre><code class="language-ruby">hsb &lt;- read.csv(&quot;datasets/hsb_comb_full.csv&quot;)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">hsb <span style="color:#f92672">&lt;-</span> read<span style="color:#f92672">.</span>csv(<span style="color:#e6db74">&#34;datasets/hsb_comb_full.csv&#34;</span>)
 names(hsb)
-[1] &quot;schoolid&quot; &quot;minority&quot; &quot;female&quot;   &quot;ses&quot;      &quot;mathach&quot;  &quot;size&quot;     &quot;sector&quot;   
-[8] &quot;pracad&quot;   &quot;disclim&quot;  &quot;himinty&quot;  &quot;MEANSES&quot;  &quot;N_BREAK&quot;  &quot;sesdev&quot;   &quot;myschool&quot;
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;schoolid&#34;</span> <span style="color:#e6db74">&#34;minority&#34;</span> <span style="color:#e6db74">&#34;female&#34;</span>   <span style="color:#e6db74">&#34;ses&#34;</span>      <span style="color:#e6db74">&#34;mathach&#34;</span>  <span style="color:#e6db74">&#34;size&#34;</span>     <span style="color:#e6db74">&#34;sector&#34;</span>   
+<span style="color:#f92672">[</span><span style="color:#ae81ff">8</span><span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;pracad&#34;</span>   <span style="color:#e6db74">&#34;disclim&#34;</span>  <span style="color:#e6db74">&#34;himinty&#34;</span>  <span style="color:#e6db74">&#34;MEANSES&#34;</span>  <span style="color:#e6db74">&#34;N_BREAK&#34;</span>  <span style="color:#e6db74">&#34;sesdev&#34;</span>   <span style="color:#e6db74">&#34;myschool&#34;</span>
 
-# Let's go with the first school, and the first 5 student-level variables
-hsb &lt;- hsb[hsb$schoolid == hsb$schoolid[1], 1:5]
+<span style="color:#75715e"># Let&#39;s go with the first school, and the first 5 student-level variables</span>
+hsb <span style="color:#f92672">&lt;-</span> hsb<span style="color:#f92672">[</span>hsb$schoolid <span style="color:#f92672">==</span> hsb$schoolid<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">5</span><span style="color:#f92672">]</span>
 summary(hsb)
 schoolid       minority           female            ses             mathach      
-Min.   :1224   Min.   :0.00000   Min.   :0.0000   Min.   :-1.6580   Min.   :-2.832  
-1st Qu.:1224   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:-0.8830   1st Qu.: 3.450  
-Median :1224   Median :0.00000   Median :1.0000   Median :-0.4680   Median : 8.296  
-Mean   :1224   Mean   :0.08511   Mean   :0.5957   Mean   :-0.4344   Mean   : 9.715  
-3rd Qu.:1224   3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:-0.0330   3rd Qu.:16.370  
-Max.   :1224   Max.   :1.00000   Max.   :1.0000   Max.   : 0.9720   Max.   :23.584  
+<span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">1224</span>   <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>   <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   <span style="color:#e6db74">:-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6580</span>   <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   <span style="color:#e6db74">:-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">832</span>  
+<span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">1224</span>   <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>   <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span><span style="color:#e6db74">:-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8830</span>   <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>: <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">450</span>  
+<span style="color:#66d9ef">Median</span> :<span style="color:#ae81ff">1224</span>   <span style="color:#66d9ef">Median</span> :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>   <span style="color:#66d9ef">Median</span> :<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#66d9ef">Median</span> <span style="color:#e6db74">:-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4680</span>   <span style="color:#66d9ef">Median</span> : <span style="color:#ae81ff">8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">296</span>  
+<span style="color:#66d9ef">Mean</span>   :<span style="color:#ae81ff">1224</span>   <span style="color:#66d9ef">Mean</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08511</span>   <span style="color:#66d9ef">Mean</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5957</span>   <span style="color:#66d9ef">Mean</span>   <span style="color:#e6db74">:-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4344</span>   <span style="color:#66d9ef">Mean</span>   : <span style="color:#ae81ff">9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">715</span>  
+<span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">1224</span>   <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>   <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span><span style="color:#e6db74">:-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0330</span>   <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">16</span><span style="color:#f92672">.</span><span style="color:#ae81ff">370</span>  
+<span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">1224</span>   <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>   <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   : <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9720</span>   <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">23</span><span style="color:#f92672">.</span><span style="color:#ae81ff">584</span>  
 
-# Mathach, ses and female seem to have some variability
-# Let's predict math achievement using female (dummy), ses (continuous)
-lm(mathach ~ female + ses, hsb)
+<span style="color:#75715e"># Mathach, ses and female seem to have some variability</span>
+<span style="color:#75715e"># Let&#39;s predict math achievement using female (dummy), ses (continuous)</span>
+lm(mathach <span style="color:#f92672">~</span> female <span style="color:#f92672">+</span> ses, hsb)
 
-Call:
-lm(formula = mathach ~ female + ses, data = hsb)
+<span style="color:#e6db74">Call</span>:
+lm(formula <span style="color:#f92672">=</span> mathach <span style="color:#f92672">~</span> female <span style="color:#f92672">+</span> ses, data <span style="color:#f92672">=</span> hsb)
 
-Coefficients:
-(Intercept)       female          ses  
-     12.092       -2.062        2.643  
-</code></pre>
-
-<p>Now the typical approach to interpreting the coefficient for <code>female</code> is:</p>
-
+<span style="color:#e6db74">Coefficients</span>:
+(<span style="color:#66d9ef">Intercept</span>)       female          ses  
+     <span style="color:#ae81ff">12</span><span style="color:#f92672">.</span><span style="color:#ae81ff">092</span>       <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">062</span>        <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">643</span>  
+</code></pre></div><p>Now the typical approach to interpreting the coefficient for <code>female</code> is:</p>
 <blockquote>
 <p>Holding SES constant, there is on average, a 2.06-point difference in math achievement between males and females, with males performing better.</p>
 </blockquote>
-
 <p>There is nothing wrong with this approach, however to clarify the language, we could say:</p>
-
 <blockquote>
 <p>For students with the same SES, we expect a 2.06-point difference in math achievement between males and females, with males performing better.</p>
 </blockquote>
-
 <p>The problem arises with the interpretation of <code>ses</code>, it typically goes:</p>
-
 <blockquote>
 <p>Holding gender constant, a point improvement in SES relates with a 2.64 increase in math achievement.</p>
 </blockquote>
-
 <p>We typically claim this is a correlational statement, devoid of causal claims. However, it has causal overtones. It insinuates that within an individual, if we could raise their SES by 1 point, we can expect an increase in math achievement by 2.64 points.</p>
-
 <p>Gelman and Hill advice phrasing its interpretation like this:</p>
-
 <blockquote>
 <p>For students of the same gender, we expect a 2.64-point difference in math achievement between students who have a point difference in SES.</p>
 </blockquote>
-
 <p>This is what they call a <em>predictive interpretation</em> of regression coefficients. It is devoid of causality, and communicates that we are making predictions for or describing the difference between different individuals.</p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press.
- <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </main>
 
