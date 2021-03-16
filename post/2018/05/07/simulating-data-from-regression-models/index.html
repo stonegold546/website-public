@@ -81,130 +81,183 @@
 
 
 <main>
-<p>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it is extendable to the family of generalized linear models (logistic, Poisson, gamma, &hellip;) and other regression models, say <em>t</em>-regression. It&rsquo;s something Gelman and Hill cover in their regression text.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</p>
+
+
+<p>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it is extendable to the family of generalized linear models (logistic, Poisson, gamma, &hellip;) and other regression models, say <em>t</em>-regression. It&rsquo;s something Gelman and Hill cover in their regression text.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</p>
+
 <p>Your standard regression model assumes there are true/fixed parameters relating the predictors to the outcome. However, when we perform regression, we only estimate these parameters. Hence, regression software returns standard errors which represent coefficient uncertainty. All other things being equal, smaller sample sizes lead us to greater coefficient uncertainty meaning larger standard errors. The default method for simulating data from a model ignores this uncertainty. Is this a big problem? Maybe not so much. But it would be nice if this source of model uncertainty was not ignored.</p>
+
 <p>I&rsquo;ll demonstrate what I mean using an example.</p>
+
 <h2 id="demonstration">Demonstration</h2>
+
 <p>I&rsquo;ll use Poisson regression to demonstrate this. I simulate two predictors, one continuous, <em>xc</em>, and one binary, <em>xb</em>. And use a small sample size of 50.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(<span style="color:#66d9ef">MASS</span>) <span style="color:#75715e"># For multivariate normal distribution, handy later on</span>
-n <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">50</span>
-set<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">18050518</span>)
-dat <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(xc <span style="color:#f92672">=</span> rnorm(n), xb <span style="color:#f92672">=</span> rbinom(n, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>))
-</code></pre></div><p>Coefficient will be .5 for <em>xc</em> and 1 for <em>xb</em>. I exponentiate the prediction and use the <code>rpois()</code> function to generate a Poisson distributed outcome.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Exponentiate prediction and pass to rpois()</span>
-dat <span style="color:#f92672">&lt;-</span> within(dat, y <span style="color:#f92672">&lt;-</span> rpois(n, exp(<span style="color:#f92672">.</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> xc <span style="color:#f92672">+</span> xb)))
+
+<pre><code class="language-ruby">library(MASS) # For multivariate normal distribution, handy later on
+n &lt;- 50
+set.seed(18050518)
+dat &lt;- data.frame(xc = rnorm(n), xb = rbinom(n, 1, .5))
+</code></pre>
+
+<p>Coefficient will be .5 for <em>xc</em> and 1 for <em>xb</em>. I exponentiate the prediction and use the <code>rpois()</code> function to generate a Poisson distributed outcome.</p>
+
+<pre><code class="language-ruby"># Exponentiate prediction and pass to rpois()
+dat &lt;- within(dat, y &lt;- rpois(n, exp(.5 * xc + xb)))
 summary(dat)
 
        xc                  xb             y       
- <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   <span style="color:#e6db74">:-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">903259</span>   <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>   <span style="color:#66d9ef">Min</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>  
- <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span><span style="color:#e6db74">:-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">648742</span>   <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>   <span style="color:#ae81ff">1</span>st <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>  
- <span style="color:#66d9ef">Median</span> <span style="color:#e6db74">:-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">011</span><span style="color:#ae81ff">887</span>   <span style="color:#66d9ef">Median</span> :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>   <span style="color:#66d9ef">Median</span> :<span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>  
- <span style="color:#66d9ef">Mean</span>   : <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00610</span><span style="color:#ae81ff">9</span>   <span style="color:#66d9ef">Mean</span>   :<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">38</span>   <span style="color:#66d9ef">Mean</span>   :<span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">02</span>  
- <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>: <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">808587</span>   <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>   <span style="color:#ae81ff">3</span>rd <span style="color:#66d9ef">Qu</span><span style="color:#f92672">.</span>:<span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>  
- <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   : <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">513353</span>   <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>   <span style="color:#66d9ef">Max</span><span style="color:#f92672">.</span>   :<span style="color:#ae81ff">7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00</span>  
-</code></pre></div><p>Next is to run the model.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">summary(fit<span style="color:#f92672">.</span>p <span style="color:#f92672">&lt;-</span> glm(y <span style="color:#f92672">~</span> xc <span style="color:#f92672">+</span> xb, poisson, dat))
+ Min.   :-2.903259   Min.   :0.00   Min.   :0.00  
+ 1st Qu.:-0.648742   1st Qu.:0.00   1st Qu.:1.00  
+ Median :-0.011887   Median :0.00   Median :2.00  
+ Mean   : 0.006109   Mean   :0.38   Mean   :2.02  
+ 3rd Qu.: 0.808587   3rd Qu.:1.00   3rd Qu.:3.00  
+ Max.   : 2.513353   Max.   :1.00   Max.   :7.00  
+</code></pre>
 
-<span style="color:#e6db74">Call</span>:
-glm(formula <span style="color:#f92672">=</span> y <span style="color:#f92672">~</span> xc <span style="color:#f92672">+</span> xb, family <span style="color:#f92672">=</span> poisson, data <span style="color:#f92672">=</span> dat)
+<p>Next is to run the model.</p>
 
-<span style="color:#66d9ef">Deviance</span> <span style="color:#e6db74">Residuals</span>:
-    <span style="color:#66d9ef">Min</span>       <span style="color:#ae81ff">1</span>Q   <span style="color:#66d9ef">Median</span>       <span style="color:#ae81ff">3</span>Q      <span style="color:#66d9ef">Max</span>  
-<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9065</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9850</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1355</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5616</span>   <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4264</span>  
+<pre><code class="language-ruby">summary(fit.p &lt;- glm(y ~ xc + xb, poisson, dat))
 
-<span style="color:#e6db74">Coefficients</span>:
-            <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span> z value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)    
-(<span style="color:#66d9ef">Intercept</span>)  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">20839</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">15826</span>   <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">317</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">188</span>    
-xc           <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">46166</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09284</span>   <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">973</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">.</span><span style="color:#ae81ff">61</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">07</span> <span style="color:#f92672">***</span>
-xb           <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">80954</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">20045</span>   <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">03</span><span style="color:#ae81ff">9</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">38</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">05</span> <span style="color:#f92672">***</span>
-<span style="color:#f92672">---</span>
-<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
+Call:
+glm(formula = y ~ xc + xb, family = poisson, data = dat)
 
-(<span style="color:#66d9ef">Dispersion</span> parameter <span style="color:#66d9ef">for</span> poisson family taken to be <span style="color:#ae81ff">1</span>)
+Deviance Residuals:
+    Min       1Q   Median       3Q      Max  
+-1.9065  -0.9850  -0.1355   0.5616   2.4264  
 
-    <span style="color:#66d9ef">Null</span> <span style="color:#e6db74">deviance</span>: <span style="color:#ae81ff">91</span><span style="color:#f92672">.</span><span style="color:#ae81ff">087</span>  on <span style="color:#ae81ff">49</span>  degrees of freedom
-<span style="color:#66d9ef">Residual</span> <span style="color:#e6db74">deviance</span>: <span style="color:#ae81ff">52</span><span style="color:#f92672">.</span><span style="color:#ae81ff">552</span>  on <span style="color:#ae81ff">47</span>  degrees of freedom
-<span style="color:#e6db74">AIC</span>: <span style="color:#ae81ff">161</span><span style="color:#f92672">.</span><span style="color:#ae81ff">84</span>
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.20839    0.15826   1.317    0.188    
+xc           0.46166    0.09284   4.973 6.61e-07 ***
+xb           0.80954    0.20045   4.039 5.38e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-<span style="color:#66d9ef">Number</span> of <span style="color:#66d9ef">Fisher</span> <span style="color:#66d9ef">Scoring</span> <span style="color:#e6db74">iterations</span>: <span style="color:#ae81ff">5</span>
-</code></pre></div><p>The estimated coefficients were not too distant from the population model, .21 for the intercept instead of 0, .46 instead of .5, and 0.81 instead of 1.</p>
-<p>Next to simulate data from the model, I&rsquo;d like 10,000 simulated datasets because why not? To capture the uncertainty in the regression coefficients, I assume the coefficients arise from a multivariate normal distribution with the estimated coefficients acting as means and the variance-covariance matrix of the regression coefficients as the variance-covariance matrix for the multivariate normal distribution.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">coefs <span style="color:#f92672">&lt;-</span> mvrnorm(n <span style="color:#f92672">=</span> <span style="color:#ae81ff">10000</span>, mu <span style="color:#f92672">=</span> coefficients(fit<span style="color:#f92672">.</span>p), <span style="color:#66d9ef">Sigma</span> <span style="color:#f92672">=</span> vcov(fit<span style="color:#f92672">.</span>p))
-</code></pre></div><p>Out of curiosity, I check how well the simulated coefficients match the original coefficients. First the means:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">coefficients(fit<span style="color:#f92672">.</span>p)
+(Dispersion parameter for poisson family taken to be 1)
 
-(<span style="color:#66d9ef">Intercept</span>)          xc          xb
-  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2083933</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4616605</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8095403</span>
+    Null deviance: 91.087  on 49  degrees of freedom
+Residual deviance: 52.552  on 47  degrees of freedom
+AIC: 161.84
 
-colMeans(coefs) <span style="color:#75715e"># means of simulated coefficients</span>
+Number of Fisher Scoring iterations: 5
+</code></pre>
 
-(<span style="color:#66d9ef">Intercept</span>)          xc          xb
-  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2088947</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4624729</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8094507</span>
-</code></pre></div><p>Pretty good, and next the standard errors:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">sqrt(diag(vcov(fit<span style="color:#f92672">.</span>p)))
+<p>The estimated coefficients were not too distant from the population model, .21 for the intercept instead of 0, .46 instead of .5, and 0.81 instead of 1.</p>
 
-(<span style="color:#66d9ef">Intercept</span>)          xc          xb
- <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">15825667</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09284108</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">20044809</span>
+<p>Next to simulate data from the model, I&rsquo;d like 10,000 simulated datasets because why not? To capture the uncertainty in the regression coefficients, I assume the coefficients arise from a multivariate normal distribution with the estimated coefficients acting as means and the variance-covariance matrix of the regression coefficients as the variance-covariance matrix for the multivariate normal distribution.<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup></p>
 
-apply(coefs, <span style="color:#ae81ff">2</span>, sd) <span style="color:#75715e"># standard deviation of simulated coefficients</span>
+<pre><code class="language-ruby">coefs &lt;- mvrnorm(n = 10000, mu = coefficients(fit.p), Sigma = vcov(fit.p))
+</code></pre>
 
-(<span style="color:#66d9ef">Intercept</span>)          xc          xb
- <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">16002806</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09219235</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">20034148</span>
-</code></pre></div><p>Also pretty good.</p>
+<p>Out of curiosity, I check how well the simulated coefficients match the original coefficients. First the means:</p>
+
+<pre><code class="language-ruby">coefficients(fit.p)
+
+(Intercept)          xc          xb
+  0.2083933   0.4616605   0.8095403
+
+colMeans(coefs) # means of simulated coefficients
+
+(Intercept)          xc          xb
+  0.2088947   0.4624729   0.8094507
+</code></pre>
+
+<p>Pretty good, and next the standard errors:</p>
+
+<pre><code class="language-ruby">sqrt(diag(vcov(fit.p)))
+
+(Intercept)          xc          xb
+ 0.15825667  0.09284108  0.20044809
+
+apply(coefs, 2, sd) # standard deviation of simulated coefficients
+
+(Intercept)          xc          xb
+ 0.16002806  0.09219235  0.20034148
+</code></pre>
+
+<p>Also pretty good.</p>
+
 <p>Next step is to simulate data from the model. We do this by multiplying each row of the simulated coefficients by the original predictors. Then we pass the predictions to <code>rpois()</code> so it generates a Poisson distributed response:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># One row per case, one column per simulated set of coefficients</span>
-sim<span style="color:#f92672">.</span>dat <span style="color:#f92672">&lt;-</span> matrix(nrow <span style="color:#f92672">=</span> n, ncol <span style="color:#f92672">=</span> nrow(coefs))
-fit<span style="color:#f92672">.</span>p<span style="color:#f92672">.</span>mat <span style="color:#f92672">&lt;-</span> model<span style="color:#f92672">.</span>matrix(fit<span style="color:#f92672">.</span>p) <span style="color:#75715e"># Obtain model matrix</span>
-<span style="color:#75715e"># Cross product of model matrix by coefficients, exponentiate result,</span>
-<span style="color:#75715e"># then use to simulate Poisson-distributed outcome</span>
-<span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">:nrow</span>(coefs)) {
-  sim<span style="color:#f92672">.</span>dat<span style="color:#f92672">[</span>, i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;-</span> rpois(n, exp(fit<span style="color:#f92672">.</span>p<span style="color:#f92672">.</span>mat <span style="color:#f92672">%*</span><span style="color:#e6db74">% coefs[i, </span> <span style="color:#f92672">]</span>))
+
+<pre><code class="language-ruby"># One row per case, one column per simulated set of coefficients
+sim.dat &lt;- matrix(nrow = n, ncol = nrow(coefs))
+fit.p.mat &lt;- model.matrix(fit.p) # Obtain model matrix
+# Cross product of model matrix by coefficients, exponentiate result,
+# then use to simulate Poisson-distributed outcome
+for (i in 1:nrow(coefs)) {
+  sim.dat[, i] &lt;- rpois(n, exp(fit.p.mat %*% coefs[i, ]))
 }
-rm(i, fit<span style="color:#f92672">.</span>p<span style="color:#f92672">.</span>mat) <span style="color:#75715e"># Clean house</span>
-</code></pre></div><p>Now one is done with simulation, compare the simulated datasets to the original dataset on at least the mean and variance of the outcome:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">c(mean(dat$y), var(dat$y)) <span style="color:#75715e"># Mean and variance of original outcome</span>
+rm(i, fit.p.mat) # Clean house
+</code></pre>
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">020000</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">366939</span>
+<p>Now one is done with simulation, compare the simulated datasets to the original dataset on at least the mean and variance of the outcome:</p>
 
-c(mean(colMeans(sim<span style="color:#f92672">.</span>dat)), mean(apply(sim<span style="color:#f92672">.</span>dat, <span style="color:#ae81ff">2</span>, var))) <span style="color:#75715e"># average of mean and var of 10,000 simulated outcomes</span>
+<pre><code class="language-ruby">c(mean(dat$y), var(dat$y)) # Mean and variance of original outcome
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">050724</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">167751</span>
-</code></pre></div><p>The average mean of the simulated outcomes was a little higher than that of the original data, the average variance was much higher. On average, one can expect the variance to be more off target than the mean. The variance will also be positively skewed with some extremely high values, at the same time, it is bounded at zero, so the median might be a better reflection of the center of the data:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">median(apply(sim<span style="color:#f92672">.</span>dat, <span style="color:#ae81ff">2</span>, var))
+[1] 2.020000 3.366939
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">907143</span>
-</code></pre></div><p>The median variance is much closer to the variance of the original outcome.</p>
+c(mean(colMeans(sim.dat)), mean(apply(sim.dat, 2, var))) # average of mean and var of 10,000 simulated outcomes
+
+[1] 2.050724 4.167751
+</code></pre>
+
+<p>The average mean of the simulated outcomes was a little higher than that of the original data, the average variance was much higher. On average, one can expect the variance to be more off target than the mean. The variance will also be positively skewed with some extremely high values, at the same time, it is bounded at zero, so the median might be a better reflection of the center of the data:</p>
+
+<pre><code class="language-ruby">median(apply(sim.dat, 2, var))
+
+[1] 3.907143
+</code></pre>
+
+<p>The median variance is much closer to the variance of the original outcome.</p>
+
 <p>Here&rsquo;s the distribution of the simulated means and variances:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">par(mfrow <span style="color:#f92672">=</span> c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>))
-hist(colMeans(sim<span style="color:#f92672">.</span>dat), main <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Means&#34;</span>)
-hist(apply(sim<span style="color:#f92672">.</span>dat, <span style="color:#ae81ff">2</span>, var), main <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Variances&#34;</span>)
-par(mfrow <span style="color:#f92672">=</span> c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>))
-</code></pre></div><p><img src="/img/posts/simulate_from_model/Rplot.png" alt="sims"></p>
-<p>The above is how I would simulate data from a model and conduct basic checks. It could also be useful to plot histograms of a few of the 10,000 simulated datasets and compare those to a histogram of the original outcome. One could also test the mean difference on the outcome between xb = 1 and xb = 0 in the original data and in the simulated datasets. If the data were over-dispersed, variance comparisons as done above or looking at a few histograms would reveal the inadequacy of a Poisson model if capturing the variance was important. Whatever features the investigator considers important can be examined and compared in this manner.</p>
-<hr>
-<p>Back to base R, it has a <code>simulate()</code> function for doing the same thing:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">sim<span style="color:#f92672">.</span>default <span style="color:#f92672">&lt;-</span> simulate(fit<span style="color:#f92672">.</span>p, <span style="color:#ae81ff">10000</span>)
-</code></pre></div><p>This code is equivalent to:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">sim<span style="color:#f92672">.</span>default <span style="color:#f92672">&lt;-</span> replicate(<span style="color:#ae81ff">10000</span>, rpois(n, fitted(fit<span style="color:#f92672">.</span>p)))
-</code></pre></div><p><code>fitted(fit.p)</code> is the prediction on the response scale, or the exponentiated <em>linear predictor</em> since this is Poisson regression. Hence, we&rsquo;d be using the single set of predicted values from the model to repeatedly create the simulated outcomes.</p>
-<p>What does it suggest about recovery of data features:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">c(mean(colMeans(sim<span style="color:#f92672">.</span>default)), mean(apply(sim<span style="color:#f92672">.</span>default, <span style="color:#ae81ff">2</span>, var)),
-  median(apply(sim<span style="color:#f92672">.</span>default, <span style="color:#ae81ff">2</span>, var)))
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">020036</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">931580</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">810612</span>
-</code></pre></div><p>The mean and variance are closer to the mean and variance of the original outcome than when one ignores coefficient uncertainty. This approach will always result in a lower variance than when one considers the uncertainty in regression coefficients. It is much faster and requires zero programming to implement, but I am not comfortable ignoring uncertainty in regression coefficients, making the model seem more adequate than it is.</p>
+<pre><code class="language-ruby">par(mfrow = c(1, 2))
+hist(colMeans(sim.dat), main = &quot;Means&quot;)
+hist(apply(sim.dat, 2, var), main = &quot;Variances&quot;)
+par(mfrow = c(1, 1))
+</code></pre>
+
+<p><img src="/img/posts/simulate_from_model/Rplot.png" alt="sims" /></p>
+
+<p>The above is how I would simulate data from a model and conduct basic checks. It could also be useful to plot histograms of a few of the 10,000 simulated datasets and compare those to a histogram of the original outcome. One could also test the mean difference on the outcome between xb = 1 and xb = 0 in the original data and in the simulated datasets. If the data were over-dispersed, variance comparisons as done above or looking at a few histograms would reveal the inadequacy of a Poisson model if capturing the variance was important. Whatever features the investigator considers important can be examined and compared in this manner.</p>
+
+<hr />
+
+<p>Back to base R, it has a <code>simulate()</code> function for doing the same thing:</p>
+
+<pre><code class="language-ruby">sim.default &lt;- simulate(fit.p, 10000)
+</code></pre>
+
+<p>This code is equivalent to:</p>
+
+<pre><code class="language-ruby">sim.default &lt;- replicate(10000, rpois(n, fitted(fit.p)))
+</code></pre>
+
+<p><code>fitted(fit.p)</code> is the prediction on the response scale, or the exponentiated <em>linear predictor</em> since this is Poisson regression. Hence, we&rsquo;d be using the single set of predicted values from the model to repeatedly create the simulated outcomes.</p>
+
+<p>What does it suggest about recovery of data features:</p>
+
+<pre><code class="language-ruby">c(mean(colMeans(sim.default)), mean(apply(sim.default, 2, var)),
+  median(apply(sim.default, 2, var)))
+
+[1] 2.020036 3.931580 3.810612
+</code></pre>
+
+<p>The mean and variance are closer to the mean and variance of the original outcome than when one ignores coefficient uncertainty. This approach will always result in a lower variance than when one considers the uncertainty in regression coefficients. It is much faster and requires zero programming to implement, but I am not comfortable ignoring uncertainty in regression coefficients, making the model seem more adequate than it is.</p>
+
 <p>Another problem is most packages that utilize <code>lm()</code> and <code>glm()</code> and simulate data from the model would probably not implement their own <code>simulate()</code> function. For example, <code>DHARMa</code>, a great package for simulation-based residual diagnostics, also relies on the <code>simulate()</code> function when evaluating GLMs.</p>
-<section class="footnotes" role="doc-endnotes">
-<hr>
+<div class="footnotes">
+
+<hr />
+
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:2" role="doc-endnote">
-<p>Gelman and Hill perform a procedure that is a little more complicated and has its basis in Bayesian inference. It is implemented in the <code>sim()</code> function in the <code>arm</code> package. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
+<li id="fn:1">Gelman, A., &amp; Hill, J. (2007). <em>Data analysis using regression and multilevel/hierarchical models</em>. Cambridge University Press.
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2">Gelman and Hill perform a procedure that is a little more complicated and has its basis in Bayesian inference. It is implemented in the <code>sim()</code> function in the <code>arm</code> package.
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
 </ol>
-</section>
+</div>
 
 </main>
 

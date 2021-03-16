@@ -84,51 +84,59 @@
 <blockquote>
 <p><strong>TLDR: In small samples, the <code>wild bootstrap</code> implemented in the R <code>hcci</code> package is a good bet when heteroskedasticity is a concern.</strong></p>
 </blockquote>
+
 <p>Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic. Supplemental R material I created included how to use the <code>sandwich</code> package to obtain heteroskedasticity-consistent standard errors (HCSEs). And after applying HC3 (or any of the HCs from 1 to 5), a regression coefficient was no longer statistically significant at $\alpha=.05$</p>
-<p>I mentioned to the class that some folks would recommend applying HCSEs by default. After class, I tried to learn about the difference between the different HCs. The following papers were helpful: Zeileis (2004),<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Long &amp; Ervin (2000),<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> Cribari-Neto, Souza &amp; Vasconcellos (2007),<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> and Hausman &amp; Palmer (2012)<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. The <a href="https://cran.r-project.org/web/packages/sandwich/index.html">documentation for the sandwich package</a> was a big help. The Hausman &amp; Palmer (H&amp;P) paper is probably best if you&rsquo;re only going to read one of the papers, and it can also serve as a short handy reference for dealing with heteroskedasticity at small sample sizes.</p>
+
+<p>I mentioned to the class that some folks would recommend applying HCSEs by default. After class, I tried to learn about the difference between the different HCs. The following papers were helpful: Zeileis (2004),<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> Long &amp; Ervin (2000),<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> Cribari-Neto, Souza &amp; Vasconcellos (2007),<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup> and Hausman &amp; Palmer (2012)<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup>. The <a href="https://cran.r-project.org/web/packages/sandwich/index.html">documentation for the sandwich package</a> was a big help. The Hausman &amp; Palmer (H&amp;P) paper is probably best if you&rsquo;re only going to read one of the papers, and it can also serve as a short handy reference for dealing with heteroskedasticity at small sample sizes.</p>
+
 <p>I learned that <strong>HCSEs can be problematic (H&amp;P Table 1)</strong>. Additionally, the <strong>Wild Bootstrap does a good job of maintaining the nominal error rate in small samples (<em>n=40</em>) under homoskedasticity, moderate heteroskedasticity and severe heteroskedasticity (H&amp;P Table 1). It is also statistically powerful (H&amp;P Fig. 1 &amp; 2)</strong>. The good thing is the <a href="https://cran.r-project.org/web/packages/hcci/index.html">hcci package</a> contains a function called <code>Pboot()</code> which performs the wild bootstrap to correct for heteroskedasticity.</p>
+
 <p>As far as I see, the function has one limitation: when you perform your regression, you cannot use the optional dataframe argument in <code>lm()</code>. Here&rsquo;s an example with <a href="/misc/datasets/atlschools.csv">this dataset</a>:</p>
-<pre><code class="language-{ruby}" data-lang="{ruby}">library(hcci)
+
+<pre><code class="language-ruby">library(hcci)
 atlschools &lt;- read.csv(&quot;./atlschools.csv&quot;)
-</code></pre><p>You can not pass the dataframe to the Pboot function so the next few lines are required prior to calling <code>lm()</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">ppc <span style="color:#f92672">&lt;-</span> atlschools$PPC <span style="color:#75715e"># per-pupil costs</span>
-ptr_c <span style="color:#f92672">&lt;-</span> scale(atlschools$PTR, scale <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>) <span style="color:#75715e"># pupil/teacher ratio</span>
-mts_c_10 <span style="color:#f92672">&lt;-</span> scale(atlschools$MTS, scale <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span> <span style="color:#75715e"># monthly teacher salary</span>
+</code></pre>
 
-coef(summary(fit<span style="color:#f92672">.</span><span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;-</span> lm(ppc <span style="color:#f92672">~</span> ptr_c <span style="color:#f92672">+</span> mts_c_10)))
-             <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>   t value     <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>t<span style="color:#f92672">|</span>)
-(<span style="color:#66d9ef">Intercept</span>) <span style="color:#ae81ff">67</span><span style="color:#f92672">.</span><span style="color:#ae81ff">884318</span>  <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1526357</span> <span style="color:#ae81ff">58</span><span style="color:#f92672">.</span><span style="color:#ae81ff">894861</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">017231</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">41</span>
-ptr_c       <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">798285</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3685282</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">593138</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">427617</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">09</span>
-mts_c_10     <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">477010</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8167532</span>  <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">032752</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">190607</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">03</span>
+<p>You can not pass the dataframe to the Pboot function so the next few lines are required prior to calling <code>lm()</code>.</p>
 
-<span style="color:#66d9ef">Pboot</span>(model <span style="color:#f92672">=</span> fit<span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>, J <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>, K <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>)
+<pre><code class="language-ruby">ppc &lt;- atlschools$PPC # per-pupil costs
+ptr_c &lt;- scale(atlschools$PTR, scale = FALSE) # pupil/teacher ratio
+mts_c_10 &lt;- scale(atlschools$MTS, scale = FALSE) / 10 # monthly teacher salary
+
+coef(summary(fit.0 &lt;- lm(ppc ~ ptr_c + mts_c_10)))
+             Estimate Std. Error   t value     Pr(&gt;|t|)
+(Intercept) 67.884318  1.1526357 58.894861 3.017231e-41
+ptr_c       -2.798285  0.3685282 -7.593138 2.427617e-09
+mts_c_10     2.477010  0.8167532  3.032752 4.190607e-03
+
+Pboot(model = fit.0, J = 1000, K = 100)
 
 $beta
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">67</span><span style="color:#f92672">.</span><span style="color:#ae81ff">884318</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">798285</span>  <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">477010</span>
+[1] 67.884318 -2.798285  2.477010
 
 $ci_lower_simple
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">65</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5454924</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">7301276</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0653</span><span style="color:#ae81ff">991</span>
+[1] 65.5454924 -3.7301276 -0.0653991
 
 $ci_upper_simple
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">70</span><span style="color:#f92672">.</span><span style="color:#ae81ff">221038</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">904783</span>  <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">969260</span>
-</code></pre></div><p>The CI of monthly teacher salary includes 0, evidence to suggest we cannot distinguish its slope from 0. The inference at $\alpha=.05$ is different from OLS.</p>
-<section class="footnotes" role="doc-endnotes">
-<hr>
+[1] 70.221038 -1.904783  4.969260
+</code></pre>
+
+<p>The CI of monthly teacher salary includes 0, evidence to suggest we cannot distinguish its slope from 0. The inference at $\alpha=.05$ is different from OLS.</p>
+<div class="footnotes">
+
+<hr />
+
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Zeileis, A. (2004). Econometric Computing with HC and HAC Covariance Matrix Estimators. <em>Journal of Statistical Software, 11</em>(10). <a href="https://doi.org/10.18637/jss.v011.i10">https://doi.org/10.18637/jss.v011.i10</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:2" role="doc-endnote">
-<p>Long, J. S., &amp; Ervin, L. H. (2000). Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model. <em>The American Statistician, 54</em>(3), 217–224. <a href="https://doi.org/10.1080/00031305.2000.10474549">https://doi.org/10.1080/00031305.2000.10474549</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:3" role="doc-endnote">
-<p>Cribari-Neto, F., Souza, T. C., &amp; Vasconcellos, K. L. P. (2007). Inference Under Heteroskedasticity and Leveraged Data. <em>Communications in Statistics - Theory and Methods, 36</em>(10), 1877–1888. <a href="https://doi.org/10.1080/03610920601126589">https://doi.org/10.1080/03610920601126589</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:4" role="doc-endnote">
-<p>Hausman, J., &amp; Palmer, C. (2012). Heteroskedasticity-robust inference in finite samples. <em>Economics Letters, 116</em>(2), 232–235. <a href="https://doi.org/10.1016/j.econlet.2012.02.007">https://doi.org/10.1016/j.econlet.2012.02.007</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
+<li id="fn:1">Zeileis, A. (2004). Econometric Computing with HC and HAC Covariance Matrix Estimators. <em>Journal of Statistical Software, 11</em>(10). <a href="https://doi.org/10.18637/jss.v011.i10">https://doi.org/10.18637/jss.v011.i10</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2">Long, J. S., &amp; Ervin, L. H. (2000). Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model. <em>The American Statistician, 54</em>(3), 217–224. <a href="https://doi.org/10.1080/00031305.2000.10474549">https://doi.org/10.1080/00031305.2000.10474549</a>
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
+<li id="fn:3">Cribari-Neto, F., Souza, T. C., &amp; Vasconcellos, K. L. P. (2007). Inference Under Heteroskedasticity and Leveraged Data. <em>Communications in Statistics - Theory and Methods, 36</em>(10), 1877–1888. <a href="https://doi.org/10.1080/03610920601126589">https://doi.org/10.1080/03610920601126589</a>
+ <a class="footnote-return" href="#fnref:3">↩</a></li>
+<li id="fn:4">Hausman, J., &amp; Palmer, C. (2012). Heteroskedasticity-robust inference in finite samples. <em>Economics Letters, 116</em>(2), 232–235. <a href="https://doi.org/10.1016/j.econlet.2012.02.007">https://doi.org/10.1016/j.econlet.2012.02.007</a>
+ <a class="footnote-return" href="#fnref:4">↩</a></li>
 </ol>
-</section>
+</div>
 
 </main>
 

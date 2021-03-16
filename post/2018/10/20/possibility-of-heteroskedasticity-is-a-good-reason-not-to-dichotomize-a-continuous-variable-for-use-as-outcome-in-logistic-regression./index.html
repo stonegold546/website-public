@@ -82,14 +82,19 @@
 
 <main>
 <p>Continuing on whether it&rsquo;s a good idea to dichotomize continuous variables prior to analysis for substantive reasons, I think I settle on the side of bad idea. The major reason is potential heteroskedasticity of the error term in the linear regression model for the original continuous variable.</p>
+
 <p>This is an interesting issue, but one that I do not want to devote time to write about. So I decided to write a brief methods note. The goal is that the document is easy to read, simple and at least causes any reader to rethink dichotomization if they do it normally. However, none of it is new.</p>
-<p><!-- raw HTML omitted --></p>
+
+<p><embed src="/pdf/dicho_het_log/dicho_het_log.pdf" width="800px" height="700px" /></p>
+
 <p>Links:</p>
+
 <ul>
 <li><a href="/pdf/dicho_het_log/dicho_het_log.pdf">PDF</a></li>
 <li><a href="/pdf/dicho_het_log/dicho_het_log.Rmd">Rmarkdown document which contains source here</a> (with <a href="/pdf/dicho_het_log/r-references.bib">references</a>).</li>
 <li>I used <a href="https://github.com/crsh/papaja">papaja</a> to compile the document.</li>
 </ul>
+
 <p>N.B.: I don&rsquo;t mention it in the methodological note, but the reason methods like generalized additive models and kernel regularized least squares with logistic loss might work is heteroskedasticity in the continuous variable manifests as a different mean function than the inverse logit function. So methods that relax the linearity assumptions of regression (linear/logistic) can do a good job estimating the true relations in the data.</p>
 
 </main>

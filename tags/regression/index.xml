@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>regression on James Uanhoro</title>
@@ -18,7 +18,7 @@
       
       <guid>https://www.jamesuanhoro.com/post/2021/01/18/traditional-sem-overly-focuses-on-lisrel-equations-to-the-detriment-of-dealing-with-measurement-error/</guid>
       <description>So I don&amp;rsquo;t listen to the Quantitude podcast. It&amp;rsquo;s really difficult for me to get into it when my playlist includes podcasts with episodes titles like: Interstellar Jihad. However, I saw several tweets inspired by the SEM vs. regression episode. And I have too many thoughts, opinions, feelings to stay quiet. I lay them out here.
-   SEM is regression A case of cultural differences The actual difference is LISREL But too much LISREL, not enough measurement error LISREL works well for normal-data normal-model no manifest covariates models Covariance matrix -&amp;gt; LISREL likely fails with discrete indicators LISREL likely fails for SEMs with observed covariates (e.</description>
+ SEM is regression So this is pretty much established and known by methodologists.</description>
     </item>
     
     <item>
@@ -58,8 +58,7 @@ A standard situation in education or medicine is we have a continuous measure, b
       <pubDate>Sat, 06 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/post/2018/10/06/two-group-mean-and-variance-comparisons/</guid>
-      <description>Someone asked an interesting question on Cross Validated recently about comparing the means and variances of two groups. They had a substantive interest in exploring variance and mean differences between two groups. They were thinking about Shapiro-Wilk test to test the data for normality, Levene&amp;rsquo;s test or F-test for variance comparisons depending on the results of Shapiro-Wilk, and Mann-Whitney or Welch&amp;rsquo;s test for means comparisons depending on the Shapiro-Wilk.
-I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</description>
+      <description>Someone asked an interesting question on Cross Validated recently about comparing the means and variances of two groups. They had a substantive interest in exploring variance and mean differences between two groups. They were thinking about Shapiro-Wilk test to test the data for normality, Levene&amp;rsquo;s test or F-test for variance comparisons depending on the results of Shapiro-Wilk, and Mann-Whitney or Welch&amp;rsquo;s test for means comparisons depending on the Shapiro-Wilk.</description>
     </item>
     
     <item>
@@ -68,7 +67,7 @@ I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</de
       <pubDate>Mon, 07 May 2018 00:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</guid>
-      <description>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it is extendable to the family of generalized linear models (logistic, Poisson, gamma, &amp;hellip;) and other regression models, say t-regression. It&amp;rsquo;s something Gelman and Hill cover in their regression text.1 Sadly, the default method of simulating data from regression models in R misses what one might consider an important source of model uncertainty - variance in estimated regression coefficients.</description>
+      <description>My preferred approach to validating regression models is to simulate data from them, and see if the simulated data capture relevant features of the original data. A basic feature of interest would be the mean. I like this approach because it is extendable to the family of generalized linear models (logistic, Poisson, gamma, &amp;hellip;) and other regression models, say t-regression. It&amp;rsquo;s something Gelman and Hill cover in their regression text.</description>
     </item>
     
     <item>

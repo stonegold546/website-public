@@ -82,105 +82,145 @@
 
 <main>
 <p><strong>See <a href="/post/2018/10/20/possibility-of-heteroskedasticity-is-a-good-reason-not-to-dichotomize-a-continuous-variable-for-use-as-outcome-in-logistic-regression./">here</a> for an update, I recommend not dichotomizing, but it pays to read this first.</strong></p>
+
 <p>A standard situation in education or medicine is we have a continuous measure, but then we have cut-points on those continuous measures that are clinically/practically significant. An example is BMI where I hear 30 matters. You may have an achievement test with 70 as the pass score. When this happens, researchers may sometimes be interested in modeling BMI over 30 or pass/fail as the outcome of interest. The substantive question often falls under the lines of modeling the probability of someone exceeding/falling short of this clinically significant threshold. So we dichotomize the continuous measure and analyze the new binary response using something like logistic regression.</p>
+
 <p>Going back to intro stats, you hear things like: &ldquo;don&rsquo;t dichotomize your predictors, you&rsquo;ll throw away information/variance/power &hellip;&rdquo;. Of course the same applies to outcomes, and most people would rather a regular linear regression than logistic regression. However, in the scenario above, we often justify dichotomizing the outcome for substantive reasons.</p>
-<p>I came across a 2004 <em>Stats in Medicine</em> paper by Moser and Coombs<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> with the title, &ldquo;Odds ratios for a continuous outcome variable without dichotomizing&rdquo; almost a year ago now. I only read it closely more recently. The authors reiterate the point that you throw away information when you dichotomize the outcome. And they show that you don&rsquo;t really need to dichotomize the outcome to obtain the odds ratios. The nice thing about the paper is that until they get into the equations that span several lines, the paper is easy to follow. Here&rsquo;s the summary:</p>
-<!-- raw HTML omitted -->
+
+<p>I came across a 2004 <em>Stats in Medicine</em> paper by Moser and Coombs<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> with the title, &ldquo;Odds ratios for a continuous outcome variable without dichotomizing&rdquo; almost a year ago now. I only read it closely more recently. The authors reiterate the point that you throw away information when you dichotomize the outcome. And they show that you don&rsquo;t really need to dichotomize the outcome to obtain the odds ratios. The nice thing about the paper is that until they get into the equations that span several lines, the paper is easy to follow. Here&rsquo;s the summary:</p>
+
+<!-- When you model the binary outcome, your model is essentially an attempt to recreate the model on the original continuous scale. If using logistic regression, you're assuming logistic error for the original continuous outcome, if probit regression, you're assuming normal error for the continuous outcome. If that is the case, why not directly model the linear outcome? Their argument goes something like this: -->
+
 <ol>
 <li>You believe that $\alpha + X\beta + \epsilon = y_c$, where $y_c$ is a continuous outcome i.e. some variables, $X$, multiplied by their coefficients, $\beta$, plus the intercept, $\alpha$, and some error, $\epsilon$, result in your continuous outcome, $y_c$.</li>
 <li>You believe that some threshold $(t)$ is clinically significant, so you cut $y_c$ at $t$ such that all values of $y_c$ exceeding $t$ are now 1 and all others are 0; we&rsquo;ll call this new variable $y_b$.</li>
 <li>You then perform logistic regression on $y_b$, which really is just an attempt to retrieve the original model, $\alpha + X\beta + \epsilon = y_c$. Why not directly model $y_c$?</li>
 </ol>
+
 <p>A few points are worth making about this:</p>
+
 <ol>
 <li>We can summarize the above as: $$y_b = 1 \quad \mathrm{if}\quad \alpha + X\beta + \epsilon &gt; t \quad \mathrm{otherwise}\quad y_b = 0$$.</li>
 <li>If we adjust the threshold, say drop it by 1 point, it does not change $X\beta$, it only affects the intercept: $$y_b = 1\quad \mathrm{if}\quad \alpha - 1 + X\beta + \epsilon &gt; t - 1$$</li>
 <li>The point here it that the only coefficient affected by changing the threshold is the intercept, $\alpha$; the $\beta$ are not affected by adjusting the threshold. So the relationships we do care about are not affected by the threshold $-$ more on this later.</li>
-<li>Finally, in logistic regression, we do not estimate $\epsilon$, we assume it is standard logistic. That affects things such that if we want to use the linear regression on $y_c$ to obtain the results from logistic regression, we need to make some adjustments.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></li>
+<li>Finally, in logistic regression, we do not estimate $\epsilon$, we assume it is standard logistic. That affects things such that if we want to use the linear regression on $y_c$ to obtain the results from logistic regression, we need to make some adjustments.<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup></li>
 </ol>
+
 <p>So here&rsquo;s what they recommend:</p>
+
 <ul>
 <li>Estimate the linear model on the continuous outcome, $y_c$</li>
 <li>Your coefficients are $\beta$, then transform them: $$\frac{\pi}{\sigma\times\sqrt{3}}\beta\quad\text{where }\sigma = \text{ residual standard deviation of regression}$$</li>
 <li>These are your log odds, you can exponentiate them to obtain odds ratios.</li>
 <li>We do not care for the intercept from this linear regression because it will be affected by the threshold, and we are using an approach that is blind to the threshold.</li>
 </ul>
+
 <p>So how does this approach work in practice? Anyone who has tried dichotomizing a continuous variable at different thresholds prior to analysis using logistic regression will know that the estimated coefficients do change and they can change a lot! Is this consistent with the claim that the result should not be dependent on the thresholds? We can check using simulation. First, I walk through the data generation process:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">set.seed</span>(<span style="color:#ae81ff">12345</span>) <span style="color:#75715e"># Set seed for reproducible results</span>
 
-<span style="color:#75715e"># Our single x variable is binary with 50% 0s and 50% 1s</span>
-<span style="color:#75715e"># so like random assignment to treatment and control</span>
-<span style="color:#75715e"># Our sample size is 300</span>
-dat <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">data.frame</span>(x <span style="color:#f92672">=</span> <span style="color:#a6e22e">rbinom</span>(<span style="color:#ae81ff">300</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">.5</span>))
-<span style="color:#75715e"># Outcome ys = intercept of -0.5, the coefficient of x is 1 and there is logistic error</span>
-dat<span style="color:#f92672">$</span>yc <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">-.5</span> <span style="color:#f92672">+</span> dat<span style="color:#f92672">$</span>x <span style="color:#f92672">+</span> <span style="color:#a6e22e">rlogis</span>(<span style="color:#a6e22e">nrow</span>(dat))
-</code></pre></div><p><code>yc</code> looks something like:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">hist</span>(dat<span style="color:#f92672">$</span>yc, main <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>)
-</code></pre></div><p><img src="/img/posts/linear_or/histy.png" alt="histy"></p>
+<pre><code class="language-r">set.seed(12345) # Set seed for reproducible results
+
+# Our single x variable is binary with 50% 0s and 50% 1s
+# so like random assignment to treatment and control
+# Our sample size is 300
+dat &lt;- data.frame(x = rbinom(300, 1, .5))
+# Outcome ys = intercept of -0.5, the coefficient of x is 1 and there is logistic error
+dat$yc &lt;- -.5 + dat$x + rlogis(nrow(dat))
+</code></pre>
+
+<p><code>yc</code> looks something like:</p>
+
+<pre><code class="language-r">hist(dat$yc, main = &quot;&quot;)
+</code></pre>
+
+<p><img src="/img/posts/linear_or/histy.png" alt="histy" /></p>
+
 <p>We can then dichotomize the <code>yc</code> outcome at various points to see whether that affects the estimated coefficient of <code>x</code> when we use logistic regression:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">-2</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>] <span style="color:#75715e"># Cut it at extreme -2</span>
-        x
-<span style="color:#ae81ff">0.9619012</span>
 
-<span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>] <span style="color:#75715e"># Cut it at midpoint 0</span>
+<pre><code class="language-r">coef(glm((yc &gt; -2) ~ x, binomial, dat))[&quot;x&quot;] # Cut it at extreme -2
+        x
+0.9619012
+
+coef(glm((yc &gt; 0) ~ x, binomial, dat))[&quot;x&quot;] # Cut it at midpoint 0
        x
-<span style="color:#ae81ff">1.002632</span>
+1.002632
 
-<span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>] <span style="color:#75715e"># Cut it at extreme 2</span>
+coef(glm((yc &gt; 2) ~ x, binomial, dat))[&quot;x&quot;] # Cut it at extreme 2
         x
-<span style="color:#ae81ff">0.8382662</span>
-</code></pre></div><p>So the numbers are a little different. What if we applied the linear regression to <code>yc</code> directly?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># First, we create an equation to extract the coefficients and</span>
-<span style="color:#75715e"># transform them using the transform to logit formula above.</span>
-trans <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function </span>(fit, scale <span style="color:#f92672">=</span> <span style="color:#66d9ef">pi</span> <span style="color:#f92672">/</span> <span style="color:#a6e22e">sqrt</span>(<span style="color:#ae81ff">3</span>)) {
-  scale <span style="color:#f92672">*</span> <span style="color:#a6e22e">coef</span>(fit) <span style="color:#f92672">/</span> <span style="color:#a6e22e">sigma</span>(fit)
+0.8382662
+</code></pre>
+
+<p>So the numbers are a little different. What if we applied the linear regression to <code>yc</code> directly?</p>
+
+<pre><code class="language-r"># First, we create an equation to extract the coefficients and
+# transform them using the transform to logit formula above.
+trans &lt;- function (fit, scale = pi / sqrt(3)) {
+  scale * coef(fit) / sigma(fit)
 }
-<span style="color:#a6e22e">trans</span>(<span style="color:#a6e22e">lm</span>(yc <span style="color:#f92672">~</span> x, dat))[<span style="color:#e6db74">&#34;x&#34;</span>]
+trans(lm(yc ~ x, dat))[&quot;x&quot;]
        x
-<span style="color:#ae81ff">1.157362</span>
-</code></pre></div><p>All these numbers are not too different from each other. If we exponentiate them to obtain odds ratio, they&rsquo;d be more different. Now we can repeat this process several times to compare the patterns in the results. I&rsquo;ll repeat it 2500 times:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">colMeans</span>(res <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">t</span>(<span style="color:#a6e22e">replicate</span>(<span style="color:#ae81ff">2500</span>, {
-  dat <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">data.frame</span>(x <span style="color:#f92672">=</span> <span style="color:#a6e22e">rbinom</span>(<span style="color:#ae81ff">300</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">.5</span>))
-  dat<span style="color:#f92672">$</span>yc <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">-.5</span> <span style="color:#f92672">+</span> dat<span style="color:#f92672">$</span>x <span style="color:#f92672">+</span> <span style="color:#a6e22e">rlogis</span>(<span style="color:#a6e22e">nrow</span>(dat))
+1.157362
+</code></pre>
 
-  <span style="color:#75715e"># v for very; l/m/h for low/middle/high; and t for threshold; ols for regular regression</span>
-  <span style="color:#a6e22e">c</span>(vlt <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">-2</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>],
-    lt <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">-1</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>],
-    mt <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>],
-    ht <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>],
-    vht <span style="color:#f92672">=</span> <span style="color:#a6e22e">coef</span>(<span style="color:#a6e22e">glm</span>((yc <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">~</span> x, binomial, dat))[<span style="color:#e6db74">&#34;x&#34;</span>],
-    ols <span style="color:#f92672">=</span> <span style="color:#a6e22e">trans</span>(<span style="color:#a6e22e">lm</span>(yc <span style="color:#f92672">~</span> x, dat))[<span style="color:#e6db74">&#34;x&#34;</span>])
+<p>All these numbers are not too different from each other. If we exponentiate them to obtain odds ratio, they&rsquo;d be more different. Now we can repeat this process several times to compare the patterns in the results. I&rsquo;ll repeat it 2500 times:</p>
+
+<pre><code class="language-r">colMeans(res &lt;- t(replicate(2500, {
+  dat &lt;- data.frame(x = rbinom(300, 1, .5))
+  dat$yc &lt;- -.5 + dat$x + rlogis(nrow(dat))
+
+  # v for very; l/m/h for low/middle/high; and t for threshold; ols for regular regression
+  c(vlt = coef(glm((yc &gt; -2) ~ x, binomial, dat))[&quot;x&quot;],
+    lt = coef(glm((yc &gt; -1) ~ x, binomial, dat))[&quot;x&quot;],
+    mt = coef(glm((yc &gt; 0) ~ x, binomial, dat))[&quot;x&quot;],
+    ht = coef(glm((yc &gt; 1) ~ x, binomial, dat))[&quot;x&quot;],
+    vht = coef(glm((yc &gt; 2) ~ x, binomial, dat))[&quot;x&quot;],
+    ols = trans(lm(yc ~ x, dat))[&quot;x&quot;])
 })))
     vlt.x      lt.x      mt.x      ht.x     vht.x     ols.x
-<span style="color:#ae81ff">1.0252116</span> <span style="color:#ae81ff">1.0020822</span> <span style="color:#ae81ff">1.0049156</span> <span style="color:#ae81ff">1.0101613</span> <span style="color:#ae81ff">1.0267511</span> <span style="color:#ae81ff">0.9983772</span>
-</code></pre></div><p>These numbers are the average regression coefficients for the different methods.</p>
+1.0252116 1.0020822 1.0049156 1.0101613 1.0267511 0.9983772
+</code></pre>
+
+<p>These numbers are the average regression coefficients for the different methods.</p>
+
 <p>v stands for very, l/m/h stand for low/middle/high and t stands for threshold, ols is the regression result. So for example, vlt.x is the average x coefficient from the very low threshold model.</p>
+
 <p>These estimated coefficients average to about 1 for all methods, which is what we programmed, good! How variable is each method?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">boxplot</span>(res)
-</code></pre></div><p><img src="/img/posts/linear_or/boxres.png" alt="boxres"></p>
+
+<pre><code class="language-r">boxplot(res)
+</code></pre>
+
+<p><img src="/img/posts/linear_or/boxres.png" alt="boxres" /></p>
+
 <p>We see that although the averages are about the same, when the threshold is extreme, the estimated coefficients are more variable. The least variable coefficients are the transformed linear regression coefficients, so when we use the linear regression approach, the result is somewhat stable. The more extreme the thresholds are, the more variable coefficients we&rsquo;ll get. This is interesting because we often dichotomize data for logistic regression at the extremes.</p>
+
 <p>How about the pattern of estimated coefficients between the different methods?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">GGally<span style="color:#f92672">::</span><span style="color:#a6e22e">ggpairs</span>(<span style="color:#a6e22e">as.data.frame</span>(res))
-</code></pre></div><p><img src="/img/posts/linear_or/cor_s.png" alt="paires"></p>
+
+<pre><code class="language-r">GGally::ggpairs(as.data.frame(res))
+</code></pre>
+
+<p><img src="/img/posts/linear_or/cor_s.png" alt="paires" /></p>
+
 <p>We see that although all the methods claim <code>x</code> has a coefficient of 1 with <code>y</code> on average, the estimated coefficient when the threshold is very low is very weakly correlated with the estimated coefficient when the threshold is very high (.13). These are differences simply reflect the threshold and can be misleading in actual data analysis. One may believe widely different estimates at different thresholds represent different population parameters (true coefficients) when they do not. The method with which each method is most highly correlated is the linear regression method. The linear regression method is most strongly correlated with the middle threshold results. It is also the most stable and does not appear to be biased.</p>
-<hr>
+
+<hr />
+
 <p>Based on these results, one may believe that we should always model the continuous variable then transform our coefficients using Moser and Coombs&rsquo; formula if we want the log odds and/or odds ratio. Moser and Coombs reached that conclusion.</p>
+
 <p>Substantively, should we trust the findings when the data are dichotomized at extreme thresholds? Or should we just go with the transformed linear regression coefficient?</p>
-<p>It is also possible that the relationship between the predictors and the outcome is different at different quantiles of the outcome $-$ a situation quantile regression explores. One can use a quantile regression approach to see if this exists in the original continuous outcome.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
-<section class="footnotes" role="doc-endnotes">
-<hr>
+
+<p>It is also possible that the relationship between the predictors and the outcome is different at different quantiles of the outcome $-$ a situation quantile regression explores. One can use a quantile regression approach to see if this exists in the original continuous outcome.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></p>
+<div class="footnotes">
+
+<hr />
+
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Moser, B. K., &amp; Coombs, L. P. (2004). Odds ratios for a continuous outcome variable without dichotomizing. <em>Statistics in Medicine, 23</em>(12), 1843–1860. <a href="https://doi.org/10.1002/sim.1776">https://doi.org/10.1002/sim.1776</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:2" role="doc-endnote">
-<p>Additionally, linear regression assumes normal error, not logistic but it turns out that does not matter much in practice. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:3" role="doc-endnote">
-<p>I modified the simulation above to include quantile regression at 25th and 75th percentiles; both had very little bias. The low quantile result had a strong correlation with the low threshold result, the high quantile result had a strong correlation with the high threshold result. The low and high quantile results were weakly correlated. This is all despite the fact that according to the regression specification, the coefficient of variable <code>x</code> was always the same. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
+<li id="fn:1">Moser, B. K., &amp; Coombs, L. P. (2004). Odds ratios for a continuous outcome variable without dichotomizing. <em>Statistics in Medicine, 23</em>(12), 1843–1860. <a href="https://doi.org/10.1002/sim.1776">https://doi.org/10.1002/sim.1776</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2">Additionally, linear regression assumes normal error, not logistic but it turns out that does not matter much in practice.
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
+<li id="fn:3">I modified the simulation above to include quantile regression at 25th and 75th percentiles; both had very little bias. The low quantile result had a strong correlation with the low threshold result, the high quantile result had a strong correlation with the high threshold result. The low and high quantile results were weakly correlated. This is all despite the fact that according to the regression specification, the coefficient of variable <code>x</code> was always the same.
+ <a class="footnote-return" href="#fnref:3">↩</a></li>
 </ol>
-</section>
+</div>
 
 </main>
 

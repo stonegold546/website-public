@@ -81,112 +81,161 @@
 
 
 <main>
+
+
 <blockquote>
 <p><strong>TLDR: If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.</strong></p>
 </blockquote>
+
 <p>When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size. This is because, almost always, our models are approximations of the data. If our model-implied covariance matrix actually matched the sample covariance matrix within sampling variability, the $\chi^2$ test would not be statistically significant regardless of sample size.</p>
-<p>Because of the sensitivity of the $\chi^2$ test to large sample sizes, practitioners often rely on other fit indices like the <code>RMSEA</code>, <code>CFI</code>, and <code>TLI</code> - all of which are based on the $\chi^2$. For the RMSEA, MacCallum, Browne and Sugawara (1996)<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> specified values of .05 and .08 as indicating close and mediocre<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> fit respectively. And in lavaan, you automatically get a test of close fit for the RMSEA with confidence intervals and a p-value. This test actually uses the $\chi^2$ distribution, and there is no reason why one cannot perform a $\chi^2$ test of close or mediocre fit depending on one&rsquo;s standards.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+
+<p>Because of the sensitivity of the $\chi^2$ test to large sample sizes, practitioners often rely on other fit indices like the <code>RMSEA</code>, <code>CFI</code>, and <code>TLI</code> - all of which are based on the $\chi^2$. For the RMSEA, MacCallum, Browne and Sugawara (1996)<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> specified values of .05 and .08 as indicating close and mediocre<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> fit respectively. And in lavaan, you automatically get a test of close fit for the RMSEA with confidence intervals and a p-value. This test actually uses the $\chi^2$ distribution, and there is no reason why one cannot perform a $\chi^2$ test of close or mediocre fit depending on one&rsquo;s standards.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></p>
+
 <p><strong>The sections that follow may include details that not everyone would like to read about, you can skip to the <a href="#lavaan">bottom of the page for annotated lavaan code</a> for how to compute a $\chi^2$ test of close or mediocre fit.</strong></p>
+
 <p>So the formula for the RMSEA is:</p>
+
 <p>$\sqrt{\frac{\chi^2-df}{df(N-1)}}$</p>
+
 <p>where $\chi^2$ is the $\chi^2$ test statistic of your model, $df$ is your model degrees of freedom, and $N$ is sample size.</p>
+
 <p>If your model fit the data perfectly, the numerator, $\chi^2-df$, is zero; this is the hypothesis the standard $\chi^2$-test tests. And to test this hypothesis, it uses the $\chi^2$-distribution. If we want to perform a test of close fit on the RMSEA, we do not assume a nil null distribution for the $\chi^2$. Instead, we use the non-central $\chi^2$ distribution with a non-centrality parameter that corresponds to an RMSEA of .05. The idea is we accept some level of misspecification, and we use a distribution that corresponds to this level of misspecification. Lavaan reports the result of this test as one of the fit statistics.</p>
+
 <p>For those who are not familiar with non-central distributions, they are the general family of distributions to which the distributions we are familiar with belong. For example, the $t$-test assumes a nil (zero) null effect so we use the non-central $t$-distribution, with an expected value (and non-centrality parameter) of zero. This distribution is what we call the $t$-distribution. If we want to create confidence intervals without assuming a nil effect, we can actually use a $t$-distribution while specifying its non-centrality parameter $(\lambda)$. It is the distribution when the null of zero is false. The <a href="https://en.wikipedia.org/wiki/Noncentral_t-distribution">Wikipedia introduction to this topic for the $t$-distribution</a> is decent.</p>
+
 <p>So how does this help us? The non-centrality parameter $(\lambda)$ for the RMSEA test in lavaan is actually the $\chi^2-df$ value that corresponds to an RMSEA of .05. In math:</p>
+
 <p>$RMSEA = \sqrt{\frac{\chi^2-df}{df(N-1)}}$</p>
+
 <p>$RMSEA^2 = \frac{\chi^2-df}{df(N-1)}$</p>
+
 <p>$RMSEA^2 \times df(N-1) = \chi^2-df$</p>
+
 <p>Since $\chi^2-df$ is $\lambda$, then:</p>
+
 <p>$\lambda = RMSEA^2 \times df(N-1)$</p>
+
 <p>So for a test of close fit, $\lambda$ is:</p>
+
 <p>$RMSEA^2 \times df(N-1) = .05^2 \times df(N-1) = .0025 \times df(N-1)$</p>
+
 <p>And for a test of mediocre fit, $\lambda$ is:</p>
+
 <p>$RMSEA^2 \times df(N-1) = .08^2 \times df(N-1) = .0064 \times df(N-1)$</p>
-<p>Note that lavaan may do things a little differently.<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+
+<p>Note that lavaan may do things a little differently.<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></p>
+
 <p>Hence, given a model degrees of freedom, and sample size, we can calculate the non-centrality parameter $(\lambda)$. And given $\lambda$, a $\chi^2$ value and the degrees of freedom for the model, we can calculate the p-value for a test of close or mediocre fit.</p>
+
 <p>The R syntax for this is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">pchisq(<span style="color:#66d9ef">Chi</span><span style="color:#f92672">-</span>sq<span style="color:#f92672">-</span>value, degrees<span style="color:#f92672">-</span>of<span style="color:#f92672">-</span>freedom, non<span style="color:#f92672">-</span>centrality<span style="color:#f92672">-</span>parameter, <span style="color:#66d9ef">FALSE</span>)
-</code></pre></div><!-- raw HTML omitted -->
+
+<pre><code class="language-ruby">pchisq(Chi-sq-value, degrees-of-freedom, non-centrality-parameter, FALSE)
+</code></pre>
+
+<p><div id="lavaan"></p>
+
 <h2 id="demonstration">Demonstration</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(lavaan)
-data(<span style="color:#e6db74">&#34;HolzingerSwineford1939&#34;</span>)
-<span style="color:#75715e"># model syntax for a bifactor model with the HolzingerSwineford1939 dataset</span>
-<span style="color:#75715e"># eliminating visual factor resolves Heywood case</span>
-writeLines(syntax <span style="color:#f92672">&lt;-</span> paste(
-  paste(<span style="color:#e6db74">&#34;g =~&#34;</span>, paste0(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">9</span>, collapse <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; + &#34;</span>)),
-  <span style="color:#75715e"># paste(&#34;visual =~&#34;, paste0(&#34;x&#34;, 1:3, collapse = &#34; + &#34;)),</span>
-  paste(<span style="color:#e6db74">&#34;textual =~&#34;</span>, paste0(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#ae81ff">4</span>:<span style="color:#ae81ff">6</span>, collapse <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; + &#34;</span>)),
-  paste(<span style="color:#e6db74">&#34;speed =~&#34;</span>, paste0(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#ae81ff">7</span>:<span style="color:#ae81ff">9</span>, collapse <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34; + &#34;</span>)),
-  sep <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+
+<pre><code class="language-ruby">library(lavaan)
+data(&quot;HolzingerSwineford1939&quot;)
+# model syntax for a bifactor model with the HolzingerSwineford1939 dataset
+# eliminating visual factor resolves Heywood case
+writeLines(syntax &lt;- paste(
+  paste(&quot;g =~&quot;, paste0(&quot;x&quot;, 1:9, collapse = &quot; + &quot;)),
+  # paste(&quot;visual =~&quot;, paste0(&quot;x&quot;, 1:3, collapse = &quot; + &quot;)),
+  paste(&quot;textual =~&quot;, paste0(&quot;x&quot;, 4:6, collapse = &quot; + &quot;)),
+  paste(&quot;speed =~&quot;, paste0(&quot;x&quot;, 7:9, collapse = &quot; + &quot;)),
+  sep = &quot;\n&quot;
 ))
 
-g <span style="color:#f92672">=~</span> x1 <span style="color:#f92672">+</span> x2 <span style="color:#f92672">+</span> x3 <span style="color:#f92672">+</span> x4 <span style="color:#f92672">+</span> x5 <span style="color:#f92672">+</span> x6 <span style="color:#f92672">+</span> x7 <span style="color:#f92672">+</span> x8 <span style="color:#f92672">+</span> x9
-textual <span style="color:#f92672">=~</span> x4 <span style="color:#f92672">+</span> x5 <span style="color:#f92672">+</span> x6
-speed <span style="color:#f92672">=~</span> x7 <span style="color:#f92672">+</span> x8 <span style="color:#f92672">+</span> x9
-</code></pre></div><p>Run model &amp; report fit measures. Reporting only fit statistics relevant to this demonstration:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">summary(hs<span style="color:#f92672">.</span>fit <span style="color:#f92672">&lt;-</span> cfa(syntax, <span style="color:#66d9ef">HolzingerSwineford1939</span>, std<span style="color:#f92672">.</span>lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>,
-                      orthogonal <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>), fit<span style="color:#f92672">.</span>measures <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
+g =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+textual =~ x4 + x5 + x6
+speed =~ x7 + x8 + x9
+</code></pre>
 
-lavaan (<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span><span style="color:#f92672">-</span><span style="color:#ae81ff">23</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1097</span>) converged normally after  <span style="color:#ae81ff">25</span> iterations
+<p>Run model &amp; report fit measures. Reporting only fit statistics relevant to this demonstration:</p>
 
-  <span style="color:#66d9ef">Number</span> of observations                           <span style="color:#ae81ff">301</span>
+<pre><code class="language-ruby">summary(hs.fit &lt;- cfa(syntax, HolzingerSwineford1939, std.lv = TRUE,
+                      orthogonal = TRUE), fit.measures = TRUE)
 
-  <span style="color:#66d9ef">Estimator</span>                                         <span style="color:#66d9ef">ML</span>
-  <span style="color:#66d9ef">Minimum</span> <span style="color:#66d9ef">Function</span> <span style="color:#66d9ef">Test</span> <span style="color:#66d9ef">Statistic</span>               <span style="color:#ae81ff">42</span><span style="color:#f92672">.</span><span style="color:#ae81ff">291</span>
-  <span style="color:#66d9ef">Degrees</span> of freedom                                <span style="color:#ae81ff">21</span>
-  P<span style="color:#f92672">-</span>value (<span style="color:#66d9ef">Chi</span><span style="color:#f92672">-</span>square)                           <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">004</span>
+lavaan (0.5-23.1097) converged normally after  25 iterations
 
-<span style="color:#66d9ef">Root</span> <span style="color:#66d9ef">Mean</span> <span style="color:#66d9ef">Square</span> <span style="color:#66d9ef">Error</span> of <span style="color:#e6db74">Approximation</span>:
+  Number of observations                           301
 
-  <span style="color:#66d9ef">RMSEA</span>                                          <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span><span style="color:#ae81ff">8</span>
-  <span style="color:#ae81ff">90</span> <span style="color:#66d9ef">Percent</span> <span style="color:#66d9ef">Confidence</span> <span style="color:#66d9ef">Interval</span>          <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">032</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">083</span>
-  P<span style="color:#f92672">-</span>value <span style="color:#66d9ef">RMSEA</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span>                          <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">276</span>
-</code></pre></div><p>Chi-square is statistically significant, this test of perfect fit suggests the misfit between our model-implied cov matrix and sample cov matrix is greater than expected due to sampling variability.</p>
+  Estimator                                         ML
+  Minimum Function Test Statistic               42.291
+  Degrees of freedom                                21
+  P-value (Chi-square)                           0.004
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.058
+  90 Percent Confidence Interval          0.032  0.083
+  P-value RMSEA &lt;= 0.05                          0.276
+</code></pre>
+
+<p>Chi-square is statistically significant, this test of perfect fit suggests the misfit between our model-implied cov matrix and sample cov matrix is greater than expected due to sampling variability.</p>
+
 <p>The default Chi-square test:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">pchisq(q <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span><span style="color:#f92672">.</span><span style="color:#ae81ff">291</span>, df <span style="color:#f92672">=</span> <span style="color:#ae81ff">21</span>, ncp <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, lower<span style="color:#f92672">.</span>tail <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">003</span><span style="color:#ae81ff">867178</span>
-</code></pre></div><p>Use formula above to calculate non-centrality parameter for test of close fit: .0025 multiplied by model degrees of freedom by sample size - 1</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">(ncp<span style="color:#f92672">.</span>close <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">0025</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">21</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">301</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>))
+<pre><code class="language-ruby">pchisq(q = 42.291, df = 21, ncp = 0, lower.tail = FALSE)
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">15</span><span style="color:#f92672">.</span><span style="color:#ae81ff">75</span>
-</code></pre></div><p>Calculate Chi-square test of close fit:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">pchisq(q <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span><span style="color:#f92672">.</span><span style="color:#ae81ff">291</span>, df <span style="color:#f92672">=</span> <span style="color:#ae81ff">21</span>, ncp <span style="color:#f92672">=</span> ncp<span style="color:#f92672">.</span>close, lower<span style="color:#f92672">.</span>tail <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
+[1] 0.003867178
+</code></pre>
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2740353</span>
-</code></pre></div><p>The p-value for a test of close fit is .27, close to the value reported by lavaan. The reason they are not closer is that lavaan does not subtract 1 from the sample size when calculating the non-centrality parameter under its default settings for ML. See below for details.<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<p>Use formula above to calculate non-centrality parameter for test of close fit: .0025 multiplied by model degrees of freedom by sample size - 1</p>
+
+<pre><code class="language-ruby">(ncp.close &lt;- .0025 * 21 * (301 - 1))
+
+[1] 15.75
+</code></pre>
+
+<p>Calculate Chi-square test of close fit:</p>
+
+<pre><code class="language-ruby">pchisq(q = 42.291, df = 21, ncp = ncp.close, lower.tail = FALSE)
+
+[1] 0.2740353
+</code></pre>
+
+<p>The p-value for a test of close fit is .27, close to the value reported by lavaan. The reason they are not closer is that lavaan does not subtract 1 from the sample size when calculating the non-centrality parameter under its default settings for ML. See below for details.<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></p>
+
 <p>And if we lower our standards to conduct a chi-square test of mediocre fit: .0064 multiplied by model degrees of freedom by sample size - 1</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">(ncp<span style="color:#f92672">.</span>med <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">0064</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">21</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">301</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>))
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">40</span><span style="color:#f92672">.</span><span style="color:#ae81ff">32</span>
+<pre><code class="language-ruby">(ncp.med &lt;- .0064 * 21 * (301 - 1))
 
-pchisq(q <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span><span style="color:#f92672">.</span><span style="color:#ae81ff">291</span>, df <span style="color:#f92672">=</span> <span style="color:#ae81ff">21</span>, ncp <span style="color:#f92672">=</span> ncp<span style="color:#f92672">.</span>med, lower<span style="color:#f92672">.</span>tail <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
+[1] 40.32
 
-<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9199686</span>
-</code></pre></div><p>If we assume mediocre misspecification in our model, the probability of observing our model-implied covariance matrix is 92%. Pretty good.</p>
-<hr>
+pchisq(q = 42.291, df = 21, ncp = ncp.med, lower.tail = FALSE)
+
+[1] 0.9199686
+</code></pre>
+
+<p>If we assume mediocre misspecification in our model, the probability of observing our model-implied covariance matrix is 92%. Pretty good.</p>
+
+<hr />
+
 <p>In closing, SEM practitioners typically report the $\chi^2$-test, but routinely expect the test to detect model misspecification, so often ignore it in practice. I hope the steps above show how one can conduct $\chi^2$-tests that assume some degree of model misspecification as the null hypothesis. I guess I hope that by doing this, we can make our $\chi^2$-tests somewhat relevant. The nice thing about the RMSEA and CI lavaan provides is that together, they may be more informative than a p-value from a $\chi^2$ test.</p>
-<hr>
+
+<hr />
+
 <blockquote>
 <p>P.S.: Another approach to latent variable modeling is PLS path modeling. It is a method for SEMs based on OLS regression. It stems from the work of Hermann Wold. Wold was Joreskog&rsquo;s (LISREL) advisor, Joreskog was Muthen&rsquo;s (Mplus) advisor. This is why my title uses <em>covariance-based SEM</em> instead of <em>latent variable models</em> or just <em>SEMs</em>.</p>
 </blockquote>
-<section class="footnotes" role="doc-endnotes">
-<hr>
+<div class="footnotes">
+
+<hr />
+
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>MacCallum, R. C., Browne, M. W., &amp; Sugawara, H. M. (1996). Power analysis and determination of sample size for covariance structure modeling. <em>Psychological Methods, 1</em>(2), 130–149. <a href="https://doi.org/10.1037/1082-989X.1.2.130">https://doi.org/10.1037/1082-989X.1.2.130</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:2" role="doc-endnote">
-<p>I always thought mediocre meant a bad thing, it only means unexceptional, ordinary. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:3" role="doc-endnote">
-<p>I got this unoriginal idea from discussing with one of my colleagues, Menglin Xu. We were chatting around 11 pm in the office and she mentioned the non-central $\chi^2$ distribution in SEMs. Given my interest in non-central distributions in relation to <a href="https://effect-size-calculator.herokuapp.com/">confidence intervals for effect sizes</a>, this idea came to mind. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-<li id="fn:4" role="doc-endnote">
-<p>I found out by digging around <a href="https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R">this page</a> and calculating in R. I continued exploring and noticed lavaan using $N$ only happens with ML estimation. If you try WLSMV estimation, lavaan uses $N-1$; and I got very confused on noticing this and emailed one of my factor analysis professors, Paul De Boeck. He replied in an email mentioning Wishart, bias correction and the lavaan manual. From the lavaan manual, lavaan&rsquo;s default for ML estimation is something it refers to as the <em>normal likelihood approach</em>. When it does this, it uses $N$. If you change it to the <em>wishart likelihood approach</em> by specifying <code>likelihood = &quot;wishart&quot;</code> within the <code>sem()</code>, <code>cfa()</code> or <code>lavaan()</code> functions, it then uses $N-1$. This is only relevant for ML estimation. For other estimation methods, it&rsquo;s $N-1$. I spent a few hours learning about the problem then trying to figure out what was going on, and I got an email reply within minutes of emailing my professor :). <a href="http://lavaan.ugent.be/tutorial/est.html">From the lavaan website on Wishart versus Normal</a>. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
+<li id="fn:1">MacCallum, R. C., Browne, M. W., &amp; Sugawara, H. M. (1996). Power analysis and determination of sample size for covariance structure modeling. <em>Psychological Methods, 1</em>(2), 130–149. <a href="https://doi.org/10.1037/1082-989X.1.2.130">https://doi.org/10.1037/1082-989X.1.2.130</a>
+ <a class="footnote-return" href="#fnref:1">↩</a></li>
+<li id="fn:2">I always thought mediocre meant a bad thing, it only means unexceptional, ordinary.
+ <a class="footnote-return" href="#fnref:2">↩</a></li>
+<li id="fn:3">I got this unoriginal idea from discussing with one of my colleagues, Menglin Xu. We were chatting around 11 pm in the office and she mentioned the non-central $\chi^2$ distribution in SEMs. Given my interest in non-central distributions in relation to <a href="https://effect-size-calculator.herokuapp.com/">confidence intervals for effect sizes</a>, this idea came to mind.
+ <a class="footnote-return" href="#fnref:3">↩</a></li>
+<li id="fn:4">I found out by digging around <a href="https://github.com/cran/lavaan/blob/d7bdae575dd78d5ac518e30f84ccfb57023819af/R/lav_fit_measures.R">this page</a> and calculating in R. I continued exploring and noticed lavaan using $N$ only happens with ML estimation. If you try WLSMV estimation, lavaan uses $N-1$; and I got very confused on noticing this and emailed one of my factor analysis professors, Paul De Boeck. He replied in an email mentioning Wishart, bias correction and the lavaan manual. From the lavaan manual, lavaan&rsquo;s default for ML estimation is something it refers to as the <em>normal likelihood approach</em>. When it does this, it uses $N$. If you change it to the <em>wishart likelihood approach</em> by specifying <code>likelihood = &quot;wishart&quot;</code> within the <code>sem()</code>, <code>cfa()</code> or <code>lavaan()</code> functions, it then uses $N-1$. This is only relevant for ML estimation. For other estimation methods, it&rsquo;s $N-1$. I spent a few hours learning about the problem then trying to figure out what was going on, and I got an email reply within minutes of emailing my professor :). <a href="http://lavaan.ugent.be/tutorial/est.html">From the lavaan website on Wishart versus Normal</a>.
+ <a class="footnote-return" href="#fnref:4">↩</a></li>
 </ol>
-</section>
+</div>
 
 </main>
 
