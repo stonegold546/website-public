@@ -81,326 +81,252 @@
 
 
 <main>
-
-
 <p>I have read that the most common model for analyzing ordinal data is the cumulative link logistic model, coupled with the proportional odds assumption. Essentially, you treat the outcome as if it were the categorical manifestation of a continuous latent variable. The predictor variables of this outcome influence it in one way only, so you get a single regression coefficient for each predictor. But the model has several intercepts representing the points at which the variable was cut to create the observed categorical manifestation.</p>
-
 <p>That each predictor variable influences the outcome in one way - as you have in commonplace regression models - is the proportional odds assumption or constraint. Alternatively, one can have each predictor variable influence the outcome differently at each cut-point. This would be relaxing the proportional odds constraint.</p>
-
-<p>In Agresti&rsquo;s Categorical Data Analysis,<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> he writes, &ldquo;McCullagh (1980) and Thompson and Baker (1981) treated cumulative link models as multivariate GLMs&rdquo; when discussing estimation for cumulative link models. To unpack this claim, I did some extra reading and it&rsquo;s relative easy to see how. Consider an ordinal variable that has 4 levels: 1, 2, 3, 4. This ordinal variable can be expressed as three binary variables. And there are a variety of ways to do this, I will use the cumulative link parameterization as an example.</p>
-
+<p>In Agresti&rsquo;s Categorical Data Analysis,<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> he writes, &ldquo;McCullagh (1980) and Thompson and Baker (1981) treated cumulative link models as multivariate GLMs&rdquo; when discussing estimation for cumulative link models. To unpack this claim, I did some extra reading and it&rsquo;s relative easy to see how. Consider an ordinal variable that has 4 levels: 1, 2, 3, 4. This ordinal variable can be expressed as three binary variables. And there are a variety of ways to do this, I will use the cumulative link parameterization as an example.</p>
 <p>Since there are 4 levels, there are three transitions (aka thresholds, cut-points): from 1 to 2, 2 to 3 and 3 to 4. Using the cumulative link parameterization, we generate a new variable per transition point as shown in the table below.</p>
-
 <p>$\begin{array}{c|ccc} &amp; 1 - 2 &amp; 2 - 3 &amp; 3 - 4\\ \hline 1 &amp; 0 &amp; 0 &amp; 0 \\ 2 &amp; 1 &amp; 0 &amp; 0 \\ 3 &amp; 1 &amp; 1 &amp; 0 \\ 4 &amp; 1 &amp; 1 &amp; 1\end{array}$</p>
-
 <p>A 1 is less than all the cut-points, so becomes three zeros; a 4 exceeds all the cut-points and becomes three ones. Given 4 levels, each respondent now has three responses, one per cut-point, hence the description of this ordinal model as a multivariate GLM. See the <a href="#acat">bottom of this page</a> for the adjacent categories parameterization.</p>
-
 <p>How does one model this using univariate GLM software? The UCLA idre page has this article on <a href="https://stats.idre.ucla.edu/r/faq/multivariate-random-coefficient-model/">multivariate random coefficient models</a>. It&rsquo;s relevant here because they use <code>nlme</code> (a univariate linear mixed models software) to model a multivariate outcome. The essential idea is in stacking the data, making it a kind of repeated measures, but finding a way to signal to the software that the outcomes are different, requiring different intercepts and slopes for the predictors.</p>
-
-<p>So what we do is we transform the data from wide to long, model it as a regular binomial, but we need to tell the model to estimate a different intercept for each level. If we want proportional odds, then we can estimate a single coefficient for each predictor. If not, we can do otherwise using interaction terms as we will see. The unique challenge is the outcomes are correlated, so we need a model that can model this correlation.<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> For this, I use general estimating equations (GEE) with an <code>unstructured</code> working correlation structure.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></p>
-
+<p>So what we do is we transform the data from wide to long, model it as a regular binomial, but we need to tell the model to estimate a different intercept for each level. If we want proportional odds, then we can estimate a single coefficient for each predictor. If not, we can do otherwise using interaction terms as we will see. The unique challenge is the outcomes are correlated, so we need a model that can model this correlation.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> For this, I use general estimating equations (GEE) with an <code>unstructured</code> working correlation structure.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
 <h2 id="demonstration">Demonstration</h2>
-
-<pre><code class="language-ruby">library(ordinal) # For ordinal regression to check our results
-library(geepack) # For GEE with binary data
-</code></pre>
-
-<p>I&rsquo;ll use the <code>soup</code> dataset from the ordinal package.</p>
-
-<pre><code class="language-ruby">soup &lt;- ordinal::soup
-soup$ID &lt;- 1:nrow(soup) # Create a person ID variable
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(ordinal) <span style="color:#75715e"># For ordinal regression to check our results</span>
+library(geepack) <span style="color:#75715e"># For GEE with binary data</span>
+</code></pre></div><p>I&rsquo;ll use the <code>soup</code> dataset from the ordinal package.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">soup <span style="color:#f92672">&lt;-</span> ordinal<span style="color:#f92672">::</span>soup
+soup$ID <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">:nrow</span>(soup) <span style="color:#75715e"># Create a person ID variable</span>
 str(soup)
 
-'data.frame':	1847 obs. of  13 variables:
- $ RESP    : Factor w/ 185 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
- $ PROD    : Factor w/ 2 levels &quot;Ref&quot;,&quot;Test&quot;: 1 2 1 2 1 2 2 2 2 1 ...
- $ PRODID  : Factor w/ 6 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 1 2 1 3 1 6 2 4 5 1 ...
- $ SURENESS: Ord.factor w/ 6 levels &quot;1&quot;&lt;&quot;2&quot;&lt;&quot;3&quot;&lt;&quot;4&quot;&lt;..: 6 5 5 6 5 5 2 5 5 2 ...
- $ DAY     : Factor w/ 2 levels &quot;1&quot;,&quot;2&quot;: 1 1 1 1 2 2 2 2 2 2 ...
- $ SOUPTYPE: Factor w/ 3 levels &quot;Self-made&quot;,&quot;Canned&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
- $ SOUPFREQ: Factor w/ 3 levels &quot;&gt;1/week&quot;,&quot;1-4/month&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
- $ COLD    : Factor w/ 2 levels &quot;No&quot;,&quot;Yes&quot;: 2 2 2 2 2 2 2 2 2 2 ...
- $ EASY    : Factor w/ 10 levels &quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,..: 7 7 7 7 7 7 7 7 7 7 ...
- $ GENDER  : Factor w/ 2 levels &quot;Male&quot;,&quot;Female&quot;: 2 2 2 2 2 2 2 2 2 2 ...
- $ AGEGROUP: Factor w/ 4 levels &quot;18-30&quot;,&quot;31-40&quot;,..: 4 4 4 4 4 4 4 4 4 4 ...
- $ LOCATION: Factor w/ 3 levels &quot;Region 1&quot;,&quot;Region 2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
- $ ID      : int  1 2 3 4 5 6 7 8 9 10 ...
-</code></pre>
+<span style="color:#e6db74">&#39;data.frame&#39;</span>:	<span style="color:#ae81ff">1847</span> obs<span style="color:#f92672">.</span> of  <span style="color:#ae81ff">13</span> <span style="color:#e6db74">variables</span>:
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">RESP</span>    : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">185</span> levels <span style="color:#e6db74">&#34;1&#34;</span>,<span style="color:#e6db74">&#34;2&#34;</span>,<span style="color:#e6db74">&#34;3&#34;</span>,<span style="color:#e6db74">&#34;4&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">PROD</span>    : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> levels <span style="color:#e6db74">&#34;Ref&#34;</span>,<span style="color:#e6db74">&#34;Test&#34;</span>: <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">PRODID</span>  : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">6</span> levels <span style="color:#e6db74">&#34;1&#34;</span>,<span style="color:#e6db74">&#34;2&#34;</span>,<span style="color:#e6db74">&#34;3&#34;</span>,<span style="color:#e6db74">&#34;4&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#e6db74">SURENESS</span>: <span style="color:#66d9ef">Ord</span><span style="color:#f92672">.</span>factor w<span style="color:#f92672">/</span> <span style="color:#ae81ff">6</span> levels <span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">&lt;</span><span style="color:#e6db74">&#34;2&#34;</span><span style="color:#f92672">&lt;</span><span style="color:#e6db74">&#34;3&#34;</span><span style="color:#f92672">&lt;</span><span style="color:#e6db74">&#34;4&#34;</span><span style="color:#f92672">&lt;..</span>: <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">DAY</span>     : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> levels <span style="color:#e6db74">&#34;1&#34;</span>,<span style="color:#e6db74">&#34;2&#34;</span>: <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#e6db74">SOUPTYPE</span>: <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span> levels <span style="color:#e6db74">&#34;Self-made&#34;</span>,<span style="color:#e6db74">&#34;Canned&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#e6db74">SOUPFREQ</span>: <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span> levels <span style="color:#e6db74">&#34;&gt;1/week&#34;</span>,<span style="color:#e6db74">&#34;1-4/month&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">COLD</span>    : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> levels <span style="color:#e6db74">&#34;No&#34;</span>,<span style="color:#e6db74">&#34;Yes&#34;</span>: <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">EASY</span>    : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span> levels <span style="color:#e6db74">&#34;1&#34;</span>,<span style="color:#e6db74">&#34;2&#34;</span>,<span style="color:#e6db74">&#34;3&#34;</span>,<span style="color:#e6db74">&#34;4&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">GENDER</span>  : <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> levels <span style="color:#e6db74">&#34;Male&#34;</span>,<span style="color:#e6db74">&#34;Female&#34;</span>: <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#e6db74">AGEGROUP</span>: <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span> levels <span style="color:#e6db74">&#34;18-30&#34;</span>,<span style="color:#e6db74">&#34;31-40&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#e6db74">LOCATION</span>: <span style="color:#66d9ef">Factor</span> w<span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span> levels <span style="color:#e6db74">&#34;Region 1&#34;</span>,<span style="color:#e6db74">&#34;Region 2&#34;</span>,<span style="color:#f92672">..</span>: <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">...</span>
+ <span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#66d9ef">ID</span>      : int  <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">...</span>
+</code></pre></div><p>I&rsquo;ll use the <code>SURENESS</code> variable. It has 6 levels. I&rsquo;ll model it with the <code>DAY</code> and <code>GENDER</code> variables.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Select variables to work with</span>
+soup <span style="color:#f92672">&lt;-</span> dplyr<span style="color:#f92672">::</span>select(soup, <span style="color:#66d9ef">ID</span>, <span style="color:#66d9ef">SURENESS</span>, <span style="color:#66d9ef">DAY</span>, <span style="color:#66d9ef">GENDER</span>)
+<span style="color:#75715e"># I like dummy variables with recognizable names</span>
+soup$girl <span style="color:#f92672">&lt;-</span> ifelse(soup$GENDER <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Female&#34;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>) <span style="color:#75715e"># Make male reference group</span>
+soup$day2 <span style="color:#f92672">&lt;-</span> ifelse(soup$DAY <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>) <span style="color:#75715e"># Make day 1 reference group</span>
+</code></pre></div><p>The next step is to transform the ordinal outcome into 5 outcomes representing each of the thresholds:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">soup$SURE2 <span style="color:#f92672">&lt;-</span> ifelse(as<span style="color:#f92672">.</span>numeric(as<span style="color:#f92672">.</span>character(soup$SURENESS)) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+soup$SURE3 <span style="color:#f92672">&lt;-</span> ifelse(as<span style="color:#f92672">.</span>numeric(as<span style="color:#f92672">.</span>character(soup$SURENESS)) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+soup$SURE4 <span style="color:#f92672">&lt;-</span> ifelse(as<span style="color:#f92672">.</span>numeric(as<span style="color:#f92672">.</span>character(soup$SURENESS)) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+soup$SURE5 <span style="color:#f92672">&lt;-</span> ifelse(as<span style="color:#f92672">.</span>numeric(as<span style="color:#f92672">.</span>character(soup$SURENESS)) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+soup$SURE6 <span style="color:#f92672">&lt;-</span> ifelse(as<span style="color:#f92672">.</span>numeric(as<span style="color:#f92672">.</span>character(soup$SURENESS)) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+</code></pre></div><p>With that done, we&rsquo;re ready for the wide to long transformation of these 5 new outcome variables.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">soup<span style="color:#f92672">.</span>long <span style="color:#f92672">&lt;-</span> tidyr<span style="color:#f92672">::</span>gather(soup, <span style="color:#66d9ef">SURE</span>, <span style="color:#66d9ef">VAL</span>, <span style="color:#e6db74">SURE2</span>:<span style="color:#66d9ef">SURE6</span>) <span style="color:#75715e"># New long data frame</span>
+soup<span style="color:#f92672">.</span>long <span style="color:#f92672">&lt;-</span> soup<span style="color:#f92672">.</span>long<span style="color:#f92672">[</span>order(soup<span style="color:#f92672">.</span>long$ID), <span style="color:#f92672">]</span> <span style="color:#75715e"># Order the data by person</span>
+head(soup<span style="color:#f92672">.</span>long$SURE) <span style="color:#75715e"># Currently looks like:</span>
 
-<p>I&rsquo;ll use the <code>SURENESS</code> variable. It has 6 levels. I&rsquo;ll model it with the <code>DAY</code> and <code>GENDER</code> variables.</p>
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;SURE2&#34;</span> <span style="color:#e6db74">&#34;SURE3&#34;</span> <span style="color:#e6db74">&#34;SURE4&#34;</span> <span style="color:#e6db74">&#34;SURE5&#34;</span> <span style="color:#e6db74">&#34;SURE6&#34;</span> <span style="color:#e6db74">&#34;SURE2&#34;</span>
 
-<pre><code class="language-ruby"># Select variables to work with
-soup &lt;- dplyr::select(soup, ID, SURENESS, DAY, GENDER)
-# I like dummy variables with recognizable names
-soup$girl &lt;- ifelse(soup$GENDER == &quot;Female&quot;, 1, 0) # Make male reference group
-soup$day2 &lt;- ifelse(soup$DAY == &quot;2&quot;, 1, 0) # Make day 1 reference group
-</code></pre>
+<span style="color:#75715e"># I only want 2, 3, 4, ... the final number</span>
+soup<span style="color:#f92672">.</span>long$SURE <span style="color:#f92672">&lt;-</span> as<span style="color:#f92672">.</span>numeric(substr(soup<span style="color:#f92672">.</span>long$SURE, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">5</span>))
+soup<span style="color:#f92672">.</span>long$SURE<span style="color:#f92672">.</span>f <span style="color:#f92672">&lt;-</span> factor(soup<span style="color:#f92672">.</span>long$SURE) <span style="color:#75715e"># Create a factor variable</span>
+head(soup<span style="color:#f92672">.</span>long) <span style="color:#75715e"># Let&#39;s look at the data</span>
 
-<p>The next step is to transform the ordinal outcome into 5 outcomes representing each of the thresholds:</p>
+     <span style="color:#66d9ef">ID</span> <span style="color:#66d9ef">SURENESS</span> <span style="color:#66d9ef">DAY</span> <span style="color:#66d9ef">GENDER</span> girl day2 <span style="color:#66d9ef">SURE</span> <span style="color:#66d9ef">VAL</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f
+<span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">2</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">2</span>
+<span style="color:#ae81ff">1848</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">3</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">3</span>
+<span style="color:#ae81ff">3695</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">4</span>
+<span style="color:#ae81ff">5542</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">5</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">5</span>
+<span style="color:#ae81ff">7389</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">6</span>
+<span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">2</span>        <span style="color:#ae81ff">5</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">2</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">2</span>
+</code></pre></div><p>Person 1 is a girl with day 1. Her response was a 6, hence, all her <code>VAL</code> scores are 1. She is like 4 was in the transformation table above. Let&rsquo;s look at someone who did not select the highest response category:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># First 5 rows in data with a four, since data ordered by person, returns an individual&#39;s record</span>
+soup<span style="color:#f92672">.</span>long<span style="color:#f92672">[</span>soup<span style="color:#f92672">.</span>long$SURENESS <span style="color:#f92672">==</span> <span style="color:#ae81ff">4</span>, <span style="color:#f92672">][</span><span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">5</span>, <span style="color:#f92672">]</span>
 
-<pre><code class="language-ruby">soup$SURE2 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 2, 1, 0)
-soup$SURE3 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 3, 1, 0)
-soup$SURE4 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 4, 1, 0)
-soup$SURE5 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 5, 1, 0)
-soup$SURE6 &lt;- ifelse(as.numeric(as.character(soup$SURENESS)) &gt;= 6, 1, 0)
-</code></pre>
-
-<p>With that done, we&rsquo;re ready for the wide to long transformation of these 5 new outcome variables.</p>
-
-<pre><code class="language-ruby">soup.long &lt;- tidyr::gather(soup, SURE, VAL, SURE2:SURE6) # New long data frame
-soup.long &lt;- soup.long[order(soup.long$ID), ] # Order the data by person
-head(soup.long$SURE) # Currently looks like:
-
-[1] &quot;SURE2&quot; &quot;SURE3&quot; &quot;SURE4&quot; &quot;SURE5&quot; &quot;SURE6&quot; &quot;SURE2&quot;
-
-# I only want 2, 3, 4, ... the final number
-soup.long$SURE &lt;- as.numeric(substr(soup.long$SURE, 5, 5))
-soup.long$SURE.f &lt;- factor(soup.long$SURE) # Create a factor variable
-head(soup.long) # Let's look at the data
-
-     ID SURENESS DAY GENDER girl day2 SURE VAL SURE.f
-1     1        6   1 Female    1    0    2   1      2
-1848  1        6   1 Female    1    0    3   1      3
-3695  1        6   1 Female    1    0    4   1      4
-5542  1        6   1 Female    1    0    5   1      5
-7389  1        6   1 Female    1    0    6   1      6
-2     2        5   1 Female    1    0    2   1      2
-</code></pre>
-
-<p>Person 1 is a girl with day 1. Her response was a 6, hence, all her <code>VAL</code> scores are 1. She is like 4 was in the transformation table above. Let&rsquo;s look at someone who did not select the highest response category:</p>
-
-<pre><code class="language-ruby"># First 5 rows in data with a four, since data ordered by person, returns an individual's record
-soup.long[soup.long$SURENESS == 4, ][1:5, ]
-
-     ID SURENESS DAY GENDER girl day2 SURE VAL SURE.f
-22   22        4   1 Female    1    0    2   1      2
-1869 22        4   1 Female    1    0    3   1      3
-3716 22        4   1 Female    1    0    4   1      4
-5563 22        4   1 Female    1    0    5   0      5
-7410 22        4   1 Female    1    0    6   0      6
-</code></pre>
-
-<p>This individual selected a <code>SURENESS</code> of 4. Her first three <code>VAL</code> scores are 1 because she cleared the first three thresholds. Her final two scores are 0 because 4 is less than the 4 - 5 threshold and 5 - 6 threshold.</p>
-
+     <span style="color:#66d9ef">ID</span> <span style="color:#66d9ef">SURENESS</span> <span style="color:#66d9ef">DAY</span> <span style="color:#66d9ef">GENDER</span> girl day2 <span style="color:#66d9ef">SURE</span> <span style="color:#66d9ef">VAL</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f
+<span style="color:#ae81ff">22</span>   <span style="color:#ae81ff">22</span>        <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">2</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">2</span>
+<span style="color:#ae81ff">1869</span> <span style="color:#ae81ff">22</span>        <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">3</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">3</span>
+<span style="color:#ae81ff">3716</span> <span style="color:#ae81ff">22</span>        <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">4</span>
+<span style="color:#ae81ff">5563</span> <span style="color:#ae81ff">22</span>        <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">5</span>   <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">5</span>
+<span style="color:#ae81ff">7410</span> <span style="color:#ae81ff">22</span>        <span style="color:#ae81ff">4</span>   <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Female</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">6</span>   <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">6</span>
+</code></pre></div><p>This individual selected a <code>SURENESS</code> of 4. Her first three <code>VAL</code> scores are 1 because she cleared the first three thresholds. Her final two scores are 0 because 4 is less than the 4 - 5 threshold and 5 - 6 threshold.</p>
 <p>The next step is to create dummy variables for the thresholds. These variables will be used to represent the intercept in our models.</p>
-
-<pre><code class="language-ruby"># Taking a short cut to create dummy variables.
-soup.long &lt;- cbind(soup.long, model.matrix(
-  ~ 0 + SURE.f, data = soup.long,
-  contrasts.arg = list(SURE.f = &quot;contr.treatment&quot;)) * -1)
-</code></pre>
-
-<p>Note that I multiplied the dummy variables by -1. In ordinal regression, doing this makes interpretation easier and is the default option in the <code>ordinal</code> package. In summary, it ensures that positive coefficients increase the odds of moving from a lower category, say 3, to a higher category, 4, or responding to a higher response category.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Taking a short cut to create dummy variables.</span>
+soup<span style="color:#f92672">.</span>long <span style="color:#f92672">&lt;-</span> cbind(soup<span style="color:#f92672">.</span>long, model<span style="color:#f92672">.</span>matrix(
+  <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f, data <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>long,
+  contrasts<span style="color:#f92672">.</span>arg <span style="color:#f92672">=</span> list(<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;contr.treatment&#34;</span>)) <span style="color:#f92672">*</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</code></pre></div><p>Note that I multiplied the dummy variables by -1. In ordinal regression, doing this makes interpretation easier and is the default option in the <code>ordinal</code> package. In summary, it ensures that positive coefficients increase the odds of moving from a lower category, say 3, to a higher category, 4, or responding to a higher response category.</p>
 <p>And now, we are ready to run the models. We use GEE, remove the intercept and place a dummy variable for each threshold, and the two coefficients for <code>day2</code> and <code>girl</code>. The correlation structure is <code>unstructured</code>.</p>
-
-<pre><code class="language-ruby">pom.bin &lt;- geeglm( # Prop odds model
-  VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + day2,
-  id = ID, data = soup.long, family = binomial, corstr = &quot;unstructured&quot;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">pom<span style="color:#f92672">.</span>bin <span style="color:#f92672">&lt;-</span> geeglm( <span style="color:#75715e"># Prop odds model</span>
+  <span style="color:#66d9ef">VAL</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">+</span> girl <span style="color:#f92672">+</span> day2,
+  id <span style="color:#f92672">=</span> <span style="color:#66d9ef">ID</span>, data <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>long, family <span style="color:#f92672">=</span> binomial, corstr <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;unstructured&#34;</span>
 )
-</code></pre>
+</code></pre></div><p>Next, I estimate the model using standard ordinal regression software:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">pom<span style="color:#f92672">.</span>ord <span style="color:#f92672">&lt;-</span> clm(<span style="color:#66d9ef">SURENESS</span> <span style="color:#f92672">~</span> girl <span style="color:#f92672">+</span> day2, data <span style="color:#f92672">=</span> soup)
+</code></pre></div><p>Let&rsquo;s compare coefficients and standard errors:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">round(cbind(coef(summary(pom<span style="color:#f92672">.</span>bin)), coef(summary(pom<span style="color:#f92672">.</span>ord)))<span style="color:#f92672">[</span>, c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>)<span style="color:#f92672">]</span>, <span style="color:#ae81ff">5</span>)
 
-<p>Next, I estimate the model using standard ordinal regression software:</p>
-
-<pre><code class="language-ruby">pom.ord &lt;- clm(SURENESS ~ girl + day2, data = soup)
-</code></pre>
-
-<p>Let&rsquo;s compare coefficients and standard errors:</p>
-
-<pre><code class="language-ruby">round(cbind(coef(summary(pom.bin)), coef(summary(pom.ord)))[, c(1, 5, 2, 6, 3, 7, 4, 8)], 5)
-
-        Estimate Estimate.1 Std.err Std. Error     Wald  z value Pr(&gt;|W|) Pr(&gt;|z|)
-SURE.f2 -2.13244   -2.13155 0.10454    0.10450 416.0946 -20.3971   0.0000   0.0000
-SURE.f3 -1.19345   -1.19259 0.09142    0.09232 170.4284 -12.9179   0.0000   0.0000
-SURE.f4 -0.89164   -0.89079 0.08979    0.09011  98.5995  -9.8857   0.0000   0.0000
-SURE.f5 -0.65782   -0.65697 0.08945    0.08898  54.0791  -7.3833   0.0000   0.0000
-SURE.f6 -0.04558   -0.04477 0.08801    0.08789   0.2682  -0.5093   0.6046   0.6105
-girl    -0.04932   -0.04917 0.09036    0.09074   0.2980  -0.5419   0.5851   0.5879
-day2    -0.26172   -0.26037 0.08584    0.08579   9.2954  -3.0351   0.0023   0.0024
-</code></pre>
-
-<p>Placing the results side by side, one can see that they are very close.</p>
-
+        <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Estimate</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span>err <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>     <span style="color:#66d9ef">Wald</span>  z value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>W<span style="color:#f92672">|</span>) <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">13244</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">13155</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10454</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10450</span> <span style="color:#ae81ff">416</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0946</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">20</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3971</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">19345</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">19259</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09142</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09232</span> <span style="color:#ae81ff">170</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4284</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">12</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9179</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">89164</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">89079</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08979</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09011</span>  <span style="color:#ae81ff">98</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5995</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8857</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">65782</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">65697</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08945</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08898</span>  <span style="color:#ae81ff">54</span><span style="color:#f92672">.</span><span style="color:#ae81ff">07</span><span style="color:#ae81ff">91</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3833</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0455</span><span style="color:#ae81ff">8</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04477</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08801</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08789</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2682</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5093</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6046</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">6105</span>
+girl    <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">932</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">917</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09036</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09074</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2980</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5419</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5851</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5879</span>
+day2    <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26172</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26037</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08584</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08579</span>   <span style="color:#ae81ff">9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2954</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0351</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0023</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0024</span>
+</code></pre></div><p>Placing the results side by side, one can see that they are very close.</p>
 <p>However, estimation using <code>glm()</code> which cannot model dependencies between the outcomes of a person yields different results. For demonstration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">round(coef(summary(glm(
+  <span style="color:#66d9ef">VAL</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">+</span> girl <span style="color:#f92672">+</span> day2,
+  data <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>long, family <span style="color:#f92672">=</span> binomial
+))), <span style="color:#ae81ff">5</span>)
 
-<pre><code class="language-ruby">round(coef(summary(glm(
-  VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + day2,
-  data = soup.long, family = binomial
-))), 5)
-
-        Estimate Std. Error z value Pr(&gt;|z|)
-SURE.f2 -2.15144    0.08255 -26.062   0.0000
-SURE.f3 -1.21271    0.06736 -18.004   0.0000
-SURE.f4 -0.91149    0.06472 -14.084   0.0000
-SURE.f5 -0.67782    0.06327 -10.713   0.0000
-SURE.f6 -0.06523    0.06178  -1.056   0.2911
-girl    -0.07326    0.04961  -1.477   0.1398
-day2    -0.26898    0.04653  -5.780   0.0000
-</code></pre>
-
-<p>Both the estimates and standard errors are inadequate.</p>
-
+        <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span> z value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">15144</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08255</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">26</span><span style="color:#f92672">.</span><span style="color:#ae81ff">062</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">21271</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">06736</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">18</span><span style="color:#f92672">.</span><span style="color:#ae81ff">004</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">91149</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">06472</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">14</span><span style="color:#f92672">.</span><span style="color:#ae81ff">084</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">67782</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">06327</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">10</span><span style="color:#f92672">.</span><span style="color:#ae81ff">713</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">06523</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0617</span><span style="color:#ae81ff">8</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">056</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2911</span>
+girl    <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">07326</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">961</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">477</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1398</span>
+day2    <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26898</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04653</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">780</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0000</span>
+</code></pre></div><p>Both the estimates and standard errors are inadequate.</p>
 <p>We can easily relax the proportional odds constraint in the <code>pom.bin</code> model. Let&rsquo;s run what some call a <em>partial proportional odds model</em> by relaxing this constraint for the <code>day2</code> predictor. We do this by estimating an interaction between the threshold dummies and the <code>day2</code> predictor. Note that there is no effect for the <code>day2</code> variable itself, it only appears in the interaction terms with the various intercepts.</p>
-
-<pre><code class="language-ruby">npom.bin &lt;- geeglm( # Partial prop odds, prop odds for girl only
-  VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl +
-    # SURE.f2:girl + SURE.f3:girl + SURE.f4:girl + SURE.f5:girl + SURE.f6:girl +
-    SURE.f2:day2 + SURE.f3:day2 + SURE.f4:day2 + SURE.f5:day2 + SURE.f6:day2,
-  id = ID, data = soup.long, family = binomial, corstr = &quot;unstructured&quot;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">npom<span style="color:#f92672">.</span>bin <span style="color:#f92672">&lt;-</span> geeglm( <span style="color:#75715e"># Partial prop odds, prop odds for girl only</span>
+  <span style="color:#66d9ef">VAL</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">+</span> girl <span style="color:#f92672">+</span>
+    <span style="color:#75715e"># SURE.f2:girl + SURE.f3:girl + SURE.f4:girl + SURE.f5:girl + SURE.f6:girl +</span>
+    <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6<span style="color:#e6db74">:day2</span>,
+  id <span style="color:#f92672">=</span> <span style="color:#66d9ef">ID</span>, data <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>long, family <span style="color:#f92672">=</span> binomial, corstr <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;unstructured&#34;</span>
 )
-</code></pre>
+</code></pre></div><p>I also run the same model in <code>ordinal</code> for comparison, using the nominal argument for <code>day2</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">npom<span style="color:#f92672">.</span>ord <span style="color:#f92672">&lt;-</span> clm( <span style="color:#75715e"># Using ordinal package for comparison</span>
+  <span style="color:#66d9ef">SURENESS</span> <span style="color:#f92672">~</span> girl, data <span style="color:#f92672">=</span> soup, nominal <span style="color:#f92672">=</span> <span style="color:#f92672">~</span> day2)
+<span style="color:#75715e"># Compare results</span>
+round(cbind(coef(summary(npom<span style="color:#f92672">.</span>bin))<span style="color:#f92672">[</span>c(<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>:<span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">6</span>), <span style="color:#f92672">]</span>,
+            coef(summary(npom<span style="color:#f92672">.</span>ord)))<span style="color:#f92672">[</span>, c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>)<span style="color:#f92672">]</span>, <span style="color:#ae81ff">5</span>)
 
-<p>I also run the same model in <code>ordinal</code> for comparison, using the nominal argument for <code>day2</code>.</p>
-
-<pre><code class="language-ruby">npom.ord &lt;- clm( # Using ordinal package for comparison
-  SURENESS ~ girl, data = soup, nominal = ~ day2)
-# Compare results
-round(cbind(coef(summary(npom.bin))[c(1:5, 7:11, 6), ],
-            coef(summary(npom.ord)))[, c(1, 5, 2, 6, 3, 7, 4, 8)], 5)
-
-             Estimate Estimate.1 Std.err Std. Error     Wald  z value Pr(&gt;|W|) Pr(&gt;|z|)
-SURE.f2      -2.02982   -2.03106 0.11800    0.11834 295.8986 -17.1630  0.00000  0.00000
-SURE.f3      -1.22087   -1.22213 0.09829    0.09857 154.2801 -12.3980  0.00000  0.00000
-SURE.f4      -0.92773   -0.92899 0.09458    0.09443  96.2112  -9.8375  0.00000  0.00000
-SURE.f5      -0.65744   -0.65870 0.09246    0.09188  50.5554  -7.1693  0.00000  0.00000
-SURE.f6      -0.04733   -0.04859 0.08955    0.08965   0.2793  -0.5420  0.59714  0.58784
-SURE.f2:day2  0.07359    0.07360 0.14148    0.14155   0.2705   0.5199  0.60298  0.60312
-SURE.f3:day2  0.31691    0.31697 0.10607    0.10613   8.9270   2.9867  0.00281  0.00282
-SURE.f4:day2  0.33301    0.33308 0.09970    0.09973  11.1551   3.3398  0.00084  0.00084
-SURE.f5:day2  0.26330    0.26339 0.09618    0.09616   7.4938   2.7391  0.00619  0.00616
-SURE.f6:day2  0.26741    0.26748 0.09347    0.09345   8.1842   2.8622  0.00423  0.00421
-girl         -0.04809   -0.04994 0.09048    0.09077   0.2825  -0.5502  0.59507  0.58221
-</code></pre>
-
-<p>The results are again comparable.</p>
-
+             <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Estimate</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span>err <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>     <span style="color:#66d9ef">Wald</span>  z value <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>W<span style="color:#f92672">|</span>) <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2      <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">02</span><span style="color:#ae81ff">982</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">03106</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">11800</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">11834</span> <span style="color:#ae81ff">295</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8986</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">17</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1630</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3      <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">22087</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">22213</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09829</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09857</span> <span style="color:#ae81ff">154</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2801</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">12</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3980</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4      <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">92773</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">92899</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09458</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09443</span>  <span style="color:#ae81ff">96</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2112</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8375</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5      <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">65744</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">65870</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09246</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09188</span>  <span style="color:#ae81ff">50</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5554</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1693</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00000</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6      <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04733</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">859</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08955</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08965</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2793</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5420</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">59714</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">58784</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2<span style="color:#e6db74">:day2</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0735</span><span style="color:#ae81ff">9</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">07360</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">14148</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">14155</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2705</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5199</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">60298</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">60312</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3<span style="color:#e6db74">:day2</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">31691</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">31697</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10607</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10613</span>   <span style="color:#ae81ff">8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9270</span>   <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9867</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">002</span><span style="color:#ae81ff">81</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">002</span><span style="color:#ae81ff">82</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4<span style="color:#e6db74">:day2</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">33301</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">33308</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09970</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09973</span>  <span style="color:#ae81ff">11</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1551</span>   <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3398</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">000</span><span style="color:#ae81ff">84</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">000</span><span style="color:#ae81ff">84</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5<span style="color:#e6db74">:day2</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26330</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26339</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09618</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09616</span>   <span style="color:#ae81ff">7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4938</span>   <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">7391</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0061</span><span style="color:#ae81ff">9</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00616</span>
+<span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6<span style="color:#e6db74">:day2</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26741</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26748</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09347</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09345</span>   <span style="color:#ae81ff">8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1842</span>   <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8622</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00423</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">00421</span>
+girl         <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">809</span>   <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">994</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09048</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09077</span>   <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2825</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5502</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">59507</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">58221</span>
+</code></pre></div><p>The results are again comparable.</p>
 <p>We can now compare the partial proportional odds binary model to the proportional odds binary model to test the constraint for the <code>day2</code> variable. Luckily, <code>geepack</code> permits <code>anova()</code> which conducts a Wald test comparing both models:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">anova(pom<span style="color:#f92672">.</span>bin, npom<span style="color:#f92672">.</span>bin) <span style="color:#75715e"># Testing partial proportional odds assumption.</span>
 
-<pre><code class="language-ruby">anova(pom.bin, npom.bin) # Testing partial proportional odds assumption.
+<span style="color:#66d9ef">Analysis</span> of <span style="color:#e6db74">&#39;Wald statistic&#39;</span> <span style="color:#66d9ef">Table</span>
 
-Analysis of 'Wald statistic' Table
-
-Model 1 VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + SURE.f2:day2 + SURE.f3:day2 + SURE.f4:day2 + SURE.f5:day2 + SURE.f6:day2
-Model 2 VAL ~ 0 + SURE.f2 + SURE.f3 + SURE.f4 + SURE.f5 + SURE.f6 + girl + day2
-  Df   X2 P(&gt;|Chi|)
-1  4 6.94      0.14
-</code></pre>
-
-<p>The difference between both models was not statistically significant, suggesting the proportionality constraint for the <code>day2</code> variable suffices.</p>
-
+<span style="color:#66d9ef">Model</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">VAL</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">+</span> girl <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5<span style="color:#e6db74">:day2</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6<span style="color:#e6db74">:day2</span>
+<span style="color:#66d9ef">Model</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">VAL</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f2 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f3 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f4 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f5 <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f6 <span style="color:#f92672">+</span> girl <span style="color:#f92672">+</span> day2
+  <span style="color:#66d9ef">Df</span>   <span style="color:#66d9ef">X2</span> P(<span style="color:#f92672">&gt;|</span><span style="color:#66d9ef">Chi</span><span style="color:#f92672">|</span>)
+<span style="color:#ae81ff">1</span>  <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">.</span><span style="color:#ae81ff">94</span>      <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">14</span>
+</code></pre></div><p>The difference between both models was not statistically significant, suggesting the proportionality constraint for the <code>day2</code> variable suffices.</p>
 <p>We can conduct the same test in <code>ordinal</code> either by comparing <code>pom.ord</code> and <code>npom.ord</code> models using <code>anova()</code>, or using the <code>nomimal_test()</code> function. Both are likelihood ratio tests, which are more adequate than the Wald test for the GEEs above.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">anova(pom<span style="color:#f92672">.</span>ord, npom<span style="color:#f92672">.</span>ord)
 
-<pre><code class="language-ruby">anova(pom.ord, npom.ord)
+<span style="color:#66d9ef">Likelihood</span> ratio tests of cumulative link <span style="color:#e6db74">models</span>:
 
-Likelihood ratio tests of cumulative link models:
+         <span style="color:#e6db74">formula</span>:               <span style="color:#e6db74">nominal</span>: <span style="color:#e6db74">link</span>: <span style="color:#e6db74">threshold</span>:
+pom<span style="color:#f92672">.</span>ord  <span style="color:#66d9ef">SURENESS</span> <span style="color:#f92672">~</span> girl <span style="color:#f92672">+</span> day2 <span style="color:#f92672">~</span><span style="color:#ae81ff">1</span>       logit flexible  
+npom<span style="color:#f92672">.</span>ord <span style="color:#66d9ef">SURENESS</span> <span style="color:#f92672">~</span> girl        <span style="color:#f92672">~</span>day2    logit flexible  
 
-         formula:               nominal: link: threshold:
-pom.ord  SURENESS ~ girl + day2 ~1       logit flexible  
-npom.ord SURENESS ~ girl        ~day2    logit flexible  
+         no<span style="color:#f92672">.</span>par  <span style="color:#66d9ef">AIC</span> logLik <span style="color:#66d9ef">LR</span><span style="color:#f92672">.</span>stat df <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;</span><span style="color:#66d9ef">Chisq</span>)
+pom<span style="color:#f92672">.</span>ord       <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">5554</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">2770</span>                      
+npom<span style="color:#f92672">.</span>ord     <span style="color:#ae81ff">11</span> <span style="color:#ae81ff">5555</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">2766</span>    <span style="color:#ae81ff">6</span><span style="color:#f92672">.</span><span style="color:#ae81ff">91</span>  <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">14</span>
 
-         no.par  AIC logLik LR.stat df Pr(&gt;Chisq)
-pom.ord       7 5554  -2770                      
-npom.ord     11 5555  -2766    6.91  4       0.14
+nominal_test(pom<span style="color:#f92672">.</span>ord)
 
-nominal_test(pom.ord)
+<span style="color:#66d9ef">Tests</span> of nominal effects
 
-Tests of nominal effects
-
-formula: SURENESS ~ girl + day2
-       Df logLik  AIC  LRT Pr(&gt;Chi)  
-&lt;none&gt;     -2770 5554                
-girl    4  -2766 5554 8.02    0.091 .
-day2    4  -2766 5555 6.91    0.141  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-</code></pre>
-
-<p>Both tests converge to the same result, and also give the same p-values for the Wald test comparing the GEE models. However, the Wald-$\chi^2$ test statistic was slightly higher.</p>
-
-<hr />
-
-<p>Having done this, of course using a package for ordinal data is much easier. However, there may be some advantage to treating the model as binary, but all this was driven by curiosity rather than necessity. For some reason I am yet to figure out, <code>ordinal</code> returns only one set of fitted probabilities when one attempts to obtain predicted probabilities from the model using the <code>fitted()</code> function. Ideally, it should return a fitted probability for each threshold. With <code>geepack</code>, obtaining the predicted probabilities at each level is straightforward using the <code>fitted()</code> function. However, this advantage is trivial. For one, <code>VGAM</code>&rsquo;s <code>vglm()</code> does not suffer the same problem, and calculating predicted probabilities is a relatively simple task.</p>
-
-<hr />
-
+<span style="color:#e6db74">formula</span>: <span style="color:#66d9ef">SURENESS</span> <span style="color:#f92672">~</span> girl <span style="color:#f92672">+</span> day2
+       <span style="color:#66d9ef">Df</span> logLik  <span style="color:#66d9ef">AIC</span>  <span style="color:#66d9ef">LRT</span> <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;</span><span style="color:#66d9ef">Chi</span>)  
+<span style="color:#f92672">&lt;</span>none<span style="color:#f92672">&gt;</span>     <span style="color:#f92672">-</span><span style="color:#ae81ff">2770</span> <span style="color:#ae81ff">5554</span>                
+girl    <span style="color:#ae81ff">4</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">2766</span> <span style="color:#ae81ff">5554</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">02</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">091</span> <span style="color:#f92672">.</span>
+day2    <span style="color:#ae81ff">4</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">2766</span> <span style="color:#ae81ff">5555</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">.</span><span style="color:#ae81ff">91</span>    <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">141</span>  
+<span style="color:#f92672">---</span>
+<span style="color:#66d9ef">Signif</span><span style="color:#f92672">.</span> <span style="color:#e6db74">codes</span>:  <span style="color:#ae81ff">0</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">***</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">001</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">**</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">01</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#f92672">.</span><span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span> <span style="color:#960050;background-color:#1e0010">‘</span> <span style="color:#960050;background-color:#1e0010">’</span> <span style="color:#ae81ff">1</span>
+</code></pre></div><p>Both tests converge to the same result, and also give the same p-values for the Wald test comparing the GEE models. However, the Wald-$\chi^2$ test statistic was slightly higher.</p>
+<hr>
+<p>Having done this, of course using a package for ordinal data is much easier. However, there may be some advantage to treating the model as binary, but all this was driven by curiosity rather than necessity. For some reason I am yet to figure out, <code>ordinal</code> returns only one set of fitted probabilities when one attempts to obtain predicted probabilities from the model using the <code>fitted()</code> function. Ideally, it should return a fitted probability for each threshold. With <code>geepack</code>, obtaining the predicted probabilities at each level is straightforward using the <code>fitted()</code> function. However, this advantage is trivial. For one, <code>VGAM</code>'s <code>vglm()</code> does not suffer the same problem, and calculating predicted probabilities is a relatively simple task.</p>
+<hr>
 <p>Also, if one is familiar with maximum likelihood estimation, one could simply program the likelihood function. It is the product of the probability of responding to each category within each person, followed by the product of these values across persons. If we take the log likelihood instead, we arrive at sums across persons, and within persons.</p>
-
 <p>Syntax for the example above in the proportional odds case would be:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(stats4) <span style="color:#75715e"># For maximum likelihood estimation</span>
 
-<pre><code class="language-ruby">library(stats4) # For maximum likelihood estimation
-
-# The coefficients from glm are useful starting values
-# Using them can remove the need for programming monotonicity of thresholds
-start.coefs &lt;- -coef(glm( # Reverse code the thresholds
-  VAL ~ 0 + SURE.f + girl + day2, binomial, soup.long))
-X &lt;- cbind(soup$girl, soup$day2) # matrix of predictors
-y &lt;- (soup$SURENESS) # response variable
-inv.logit &lt;- function(x) 1 / (1 + exp(-x)) # useful within likelihood function
-negll &lt;- function(a1, a2, a3, a4, a5, bg, bd) {
-  betas &lt;- -c(bg, bd) # Reverse coefs
-  # sums of probabilities, probability of 6 + prob of 5 + ...
-  ll &lt;- sum(log(1 - inv.logit(a5 + X %*% betas))[y == 6]) +
-    sum(log(inv.logit(a5 + X %*% betas) - inv.logit(a4 + X %*% betas))[y == 5]) +
-    sum(log(inv.logit(a4 + X %*% betas) - inv.logit(a3 + X %*% betas))[y == 4]) +
-    sum(log(inv.logit(a3 + X %*% betas) - inv.logit(a2 + X %*% betas))[y == 3]) +
-    sum(log(inv.logit(a2 + X %*% betas) - inv.logit(a1 + X %*% betas))[y == 2]) +
-    sum(log(inv.logit(a1 + X %*% betas))[y == 1])
-  -ll # return negative log likelihood
+<span style="color:#75715e"># The coefficients from glm are useful starting values</span>
+<span style="color:#75715e"># Using them can remove the need for programming monotonicity of thresholds</span>
+start<span style="color:#f92672">.</span>coefs <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">-</span>coef(glm( <span style="color:#75715e"># Reverse code the thresholds</span>
+  <span style="color:#66d9ef">VAL</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SURE</span><span style="color:#f92672">.</span>f <span style="color:#f92672">+</span> girl <span style="color:#f92672">+</span> day2, binomial, soup<span style="color:#f92672">.</span>long))
+X <span style="color:#f92672">&lt;-</span> cbind(soup$girl, soup$day2) <span style="color:#75715e"># matrix of predictors</span>
+y <span style="color:#f92672">&lt;-</span> (soup$SURENESS) <span style="color:#75715e"># response variable</span>
+inv<span style="color:#f92672">.</span>logit <span style="color:#f92672">&lt;-</span> function(x) <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> exp(<span style="color:#f92672">-</span>x)) <span style="color:#75715e"># useful within likelihood function</span>
+negll <span style="color:#f92672">&lt;-</span> function(a1, a2, a3, a4, a5, bg, bd) {
+  betas <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">-</span>c(bg, bd) <span style="color:#75715e"># Reverse coefs</span>
+  <span style="color:#75715e"># sums of probabilities, probability of 6 + prob of 5 + ...</span>
+  ll <span style="color:#f92672">&lt;-</span> sum(log(<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> inv<span style="color:#f92672">.</span>logit(a5 <span style="color:#f92672">+</span> X <span style="color:#e6db74">%*% betas))[y == 6]) +
+</span><span style="color:#e6db74">    sum(log(inv.logit(a5 + X %*</span><span style="color:#e6db74">% betas) </span> <span style="color:#f92672">-</span> inv<span style="color:#f92672">.</span>logit(a4 <span style="color:#f92672">+</span> X <span style="color:#e6db74">%*% betas))[y == 5]) +
+</span><span style="color:#e6db74">    sum(log(inv.logit(a4 + X %*</span><span style="color:#e6db74">% betas) </span> <span style="color:#f92672">-</span> inv<span style="color:#f92672">.</span>logit(a3 <span style="color:#f92672">+</span> X <span style="color:#e6db74">%*% betas))[y == 4]) +
+</span><span style="color:#e6db74">    sum(log(inv.logit(a3 + X %*</span><span style="color:#e6db74">% betas) </span> <span style="color:#f92672">-</span> inv<span style="color:#f92672">.</span>logit(a2 <span style="color:#f92672">+</span> X <span style="color:#e6db74">%*% betas))[y == 3]) +
+</span><span style="color:#e6db74">    sum(log(inv.logit(a2 + X %*</span><span style="color:#e6db74">% betas) </span> <span style="color:#f92672">-</span> inv<span style="color:#f92672">.</span>logit(a1 <span style="color:#f92672">+</span> X <span style="color:#e6db74">%*% betas))[y == 2]) +
+</span><span style="color:#e6db74">    sum(log(inv.logit(a1 + X %*</span><span style="color:#e6db74">% betas))[y </span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>)
+  <span style="color:#f92672">-</span>ll <span style="color:#75715e"># return negative log likelihood</span>
 }
-# Starting values need named list
-start.coefs &lt;- sapply(start.coefs, list)
-names(start.coefs) &lt;- c(paste0(&quot;a&quot;, 1:5), paste0(&quot;b&quot;, c(&quot;g&quot;, &quot;d&quot;)))
-res &lt;- mle(negll, start.coefs) # Obtain ML solution
+<span style="color:#75715e"># Starting values need named list</span>
+start<span style="color:#f92672">.</span>coefs <span style="color:#f92672">&lt;-</span> sapply(start<span style="color:#f92672">.</span>coefs, list)
+names(start<span style="color:#f92672">.</span>coefs) <span style="color:#f92672">&lt;-</span> c(paste0(<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">5</span>), paste0(<span style="color:#e6db74">&#34;b&#34;</span>, c(<span style="color:#e6db74">&#34;g&#34;</span>, <span style="color:#e6db74">&#34;d&#34;</span>)))
+res <span style="color:#f92672">&lt;-</span> mle(negll, start<span style="color:#f92672">.</span>coefs) <span style="color:#75715e"># Obtain ML solution</span>
 coef(summary(res))
-      Estimate Std. Error
-a1 -2.13155603 0.10450286
-a2 -1.19259266 0.09232077
-a3 -0.89079068 0.09010891
-a4 -0.65697671 0.08898063
-a5 -0.04477565 0.08788869
-bg -0.04917604 0.09073602
-bd -0.26037369 0.08578617
+      <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>
+a1 <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">13155603</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10450286</span>
+a2 <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">19259266</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09232077</span>
+a3 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">89079068</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09010891</span>
+a4 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">65697671</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08898063</span>
+a5 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04477565</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08788869</span>
+bg <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">917604</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09073602</span>
+bd <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26037369</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08578617</span>
 
-coef(summary(pom.ord))
-        Estimate Std. Error     z value     Pr(&gt;|z|)
-1|2  -2.13155281 0.10450291 -20.3970663 1.775532e-92
-2|3  -1.19259171 0.09232091 -12.9178937 3.567748e-38
-3|4  -0.89078590 0.09010896  -9.8856524 4.804418e-23
-4|5  -0.65697465 0.08898068  -7.3833401 1.543671e-13
-5|6  -0.04476553 0.08788871  -0.5093434 6.105115e-01
-girl -0.04917245 0.09073601  -0.5419287 5.878676e-01
-day2 -0.26037360 0.08578617  -3.0351465 2.404188e-03
-</code></pre>
+coef(summary(pom<span style="color:#f92672">.</span>ord))
+        <span style="color:#66d9ef">Estimate</span> <span style="color:#66d9ef">Std</span><span style="color:#f92672">.</span> <span style="color:#66d9ef">Error</span>     z value     <span style="color:#66d9ef">Pr</span>(<span style="color:#f92672">&gt;|</span>z<span style="color:#f92672">|</span>)
+<span style="color:#ae81ff">1</span><span style="color:#f92672">|</span><span style="color:#ae81ff">2</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">13155281</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">10450291</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">20</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3970663</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">775532</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">92</span>
+<span style="color:#ae81ff">2</span><span style="color:#f92672">|</span><span style="color:#ae81ff">3</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">19259171</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09232091</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">12</span><span style="color:#f92672">.</span><span style="color:#ae81ff">9178937</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">567748</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">38</span>
+<span style="color:#ae81ff">3</span><span style="color:#f92672">|</span><span style="color:#ae81ff">4</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">89078590</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09010896</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">9</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8856524</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">804418</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">23</span>
+<span style="color:#ae81ff">4</span><span style="color:#f92672">|</span><span style="color:#ae81ff">5</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">65697465</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08898068</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">7</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3833401</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">543671</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">13</span>
+<span style="color:#ae81ff">5</span><span style="color:#f92672">|</span><span style="color:#ae81ff">6</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04476553</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08788871</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5093434</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">.</span><span style="color:#ae81ff">105115</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">01</span>
+girl <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">04</span><span style="color:#ae81ff">917245</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">09073601</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5419287</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">.</span><span style="color:#ae81ff">878676</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">01</span>
+day2 <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">26037360</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">08578617</span>  <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0351465</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">404188</span>e<span style="color:#f92672">-</span><span style="color:#ae81ff">03</span>
+</code></pre></div><p>The results are pretty similar, and for a more certain way of comparing models, we can always compare log-likelihoods:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">logLik(res)
+<span style="color:#e6db74">&#39;log Lik.&#39;</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2769</span><span style="color:#f92672">.</span><span style="color:#ae81ff">784</span> (df<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
 
-<p>The results are pretty similar, and for a more certain way of comparing models, we can always compare log-likelihoods:</p>
-
-<pre><code class="language-ruby">logLik(res)
-'log Lik.' -2769.784 (df=7)
-
-logLik(pom.ord)
-'log Lik.' -2769.784 (df=7)
-</code></pre>
-
-<hr />
-
-<p><div id="acat"></p>
-
+logLik(pom<span style="color:#f92672">.</span>ord)
+<span style="color:#e6db74">&#39;log Lik.&#39;</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2769</span><span style="color:#f92672">.</span><span style="color:#ae81ff">784</span> (df<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>)
+</code></pre></div><hr>
+<!-- raw HTML omitted -->
 <p>Adjacent categories parameterization:</p>
-
 <p>$\begin{array}{c|ccc} &amp; 1 - 2 &amp; 2 - 3 &amp; 3 - 4\\ \hline 1 &amp; 0 &amp;  &amp;  \\ 2 &amp; 1 &amp; 0 &amp;  \\ 3 &amp;  &amp; 1 &amp; 0 \\ 4 &amp;  &amp;  &amp; 1\end{array}$</p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">Agresti, A. (2013). Categorical data analysis. Wiley-Interscience.
- <a class="footnote-return" href="#fnref:1">↩</a></li>
-<li id="fn:2">Under normal circumstances, we would also need to inform the software that the variances are different for each outcome. However this is the binomial regression, and the variance of the latent variable is fixed at $\frac{pi^2}{3}$. If this were an attempt at multivariate OLS regression, one would have to model the dispersion separately for each variable. I believe the <code>sformula =</code> argument in the <code>geese()</code> function in <code>geepack</code> should make this possible.
- <a class="footnote-return" href="#fnref:2">↩</a></li>
-<li id="fn:3">I use an <code>unstructured</code> working correlation structure because it allows the estimation of the correlation between each pair of outcomes. In the example here, there are five outcomes, so we would estimate 10 $\big(\frac{5 \times 4}{2}\big)$ correlations. Other alternatives do not permit this: <code>independence</code> places 1 on diagonal, and 0 off diagonal and produces the same parameter estimates as <code>glm()</code>; <code>exchangeable</code> forces all off diagonal elements to be the same (<em>compound symmetry</em> in ANOVA terminology) and would be overly constraining; and <code>ar1</code> uses a specification that is more adequate for time ordered data.
- <a class="footnote-return" href="#fnref:3">↩</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Agresti, A. (2013). Categorical data analysis. Wiley-Interscience. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>Under normal circumstances, we would also need to inform the software that the variances are different for each outcome. However this is the binomial regression, and the variance of the latent variable is fixed at $\frac{pi^2}{3}$. If this were an attempt at multivariate OLS regression, one would have to model the dispersion separately for each variable. I believe the <code>sformula =</code> argument in the <code>geese()</code> function in <code>geepack</code> should make this possible. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>I use an <code>unstructured</code> working correlation structure because it allows the estimation of the correlation between each pair of outcomes. In the example here, there are five outcomes, so we would estimate 10 $\big(\frac{5 \times 4}{2}\big)$ correlations. Other alternatives do not permit this: <code>independence</code> places 1 on diagonal, and 0 off diagonal and produces the same parameter estimates as <code>glm()</code>; <code>exchangeable</code> forces all off diagonal elements to be the same (<em>compound symmetry</em> in ANOVA terminology) and would be overly constraining; and <code>ar1</code> uses a specification that is more adequate for time ordered data. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </main>
 

@@ -82,72 +82,54 @@
 
 <main>
 <p>When I first came across the <a href="https://psyarxiv.com/3wy47/">recent preprint by McNeish and Gordon Wolf</a> on <a href="https://twitter.com/rogierK/status/1153907817687977984">Twitter</a> on how sum scores are factor scores from a heavily constrained model, my first reaction was: don&rsquo;t we all know this already? <a href="https://twitter.com/SachaEpskamp/status/1153908626186051584">Sacha Epskamp asked the same question</a> and there&rsquo;s a discussion that follows about how people who study these topics know this, but applied researchers may not.</p>
-
 <p>I skimmed the paper and the authors show how sum scores are factor scores when all item error variances are the same and all loadings are the same across items. This is a highly constrained model; fwiw, it&rsquo;s no different conceptually from the widely used Rasch model. And the authors argue that it&rsquo;s important to justify this sum score model. They also admit that in many situations, it makes no practical difference which score you use. And they point out that differences between both scores will exist when the loadings are different across items.</p>
-
-<p>Now, although I think the difference between the sum score and factor score is of importance, what is more important is the relationship any of these scores have with the latent trait (assuming such a thing exists). Another widely known fact is that any score from these models differs from the latent trait such that the correlation of these scores to the latent trait is less than one. This is why there is a new line of research by Ines Devlieger (reviving an older line of research) on how to properly use factor scores in models while accounting for the fact that the score is not the trait.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup><sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup></p>
-
-<p>Another feeling I had in reaction to the paper is that small sample sizes are quite common in applied research settings and a researcher is probably better off working with the sum score when their sample size is small.<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup> Although the CFA may return unbiased estimates of the relationship between items and the factor when the model is true, at small sample sizes, such estimates are likely to be unstable such that a crude guess like: &ldquo;a factor loading of 1 for each item&rdquo; i.e. sum scoring will be better. This is the <a href="https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">bias-variance trade-off</a>.<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></p>
-
+<p>Now, although I think the difference between the sum score and factor score is of importance, what is more important is the relationship any of these scores have with the latent trait (assuming such a thing exists). Another widely known fact is that any score from these models differs from the latent trait such that the correlation of these scores to the latent trait is less than one. This is why there is a new line of research by Ines Devlieger (reviving an older line of research) on how to properly use factor scores in models while accounting for the fact that the score is not the trait.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<p>Another feeling I had in reaction to the paper is that small sample sizes are quite common in applied research settings and a researcher is probably better off working with the sum score when their sample size is small.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> Although the CFA may return unbiased estimates of the relationship between items and the factor when the model is true, at small sample sizes, such estimates are likely to be unstable such that a crude guess like: &ldquo;a factor loading of 1 for each item&rdquo; i.e. sum scoring will be better. This is the <a href="https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">bias-variance trade-off</a>.<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>So I decided to test this issue empirically, my hypothesis being that the sum score will be better related to the latent trait under small sample sizes. After testing, the short answer is:</p>
-
 <blockquote>
 <p>When the data are not so informative (e.g. small sample + weak loadings), the sum score is better than the factor score.</p>
 </blockquote>
-
 <p>Here&rsquo;s how I went about:</p>
-
-<style type="text/css">
-  .gist-data {max-height: 200px;}
-</style>
-
-<script height="1" src="https://gist.github.com/stonegold546/d95c36da8f41c6113a1c812276facaec.js">
-</script>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>The <code>sim.fun()</code> function takes a latent variable, <code>lv</code>; a set of loadings, <code>lambda</code>; and the number of times to replicate a simulation and analysis. The first step is to generate multivariate normal data according to the standard CFA formula: $ \mathbf x = \boldsymbol{\Lambda\xi} + \boldsymbol{\delta}$; basically, multiply loadings by latent variable and add error. I wrote the code such that the error variance for each item = 1 - loading ^ 2 for the item. Hence, one can think of the loading squared as the proportion of variance in the item that is accounted for by the latent variable. The final analysis in the function is to compute sum scores, factor scores from a standard unidimensional CFA and coefficient alpha. The function then returns coefficient alpha, and the correlations of sum and factor scores to the supplied latent variable. I repeated this 2,000 times for five sets of loadings:</p>
-
-<p><img src="/img/posts/sum_scores/loadings.png" alt="loadings" /></p>
-
+<p><img src="/img/posts/sum_scores/loadings.png" alt="loadings"></p>
 <p>The latent variable was always a rankit score of sample size 60, hence, very close to standard normal.</p>
-
-<p>I assumed any difference from 1 in the correlation between the scores and the latent variable represented bias, and I calculated the mean squared error to assess estimation quality. I know both scores are somewhat different from the latent variable, so the correlations will generally be under one. I used the absolute value of the correlation of the factor score and latent trait in all calculations.<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">5</a></sup> Here&rsquo;s what the MSEs look like:</p>
-
-<p><img src="/img/posts/sum_scores/mse.png" alt="mse" /></p>
-
+<p>I assumed any difference from 1 in the correlation between the scores and the latent variable represented bias, and I calculated the mean squared error to assess estimation quality. I know both scores are somewhat different from the latent variable, so the correlations will generally be under one. I used the absolute value of the correlation of the factor score and latent trait in all calculations.<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> Here&rsquo;s what the MSEs look like:</p>
+<p><img src="/img/posts/sum_scores/mse.png" alt="mse"></p>
 <p>It&rsquo;s clear that under weak loadings, whether with 9 or 3 items, the sum score is much better correlated to the latent trait than the factor score. To get a better sense of what the correlations are, another plot:</p>
-
-<p><img src="/img/posts/sum_scores/cor.png" alt="correlations" /></p>
-
+<p><img src="/img/posts/sum_scores/cor.png" alt="correlations"></p>
 <p>We see here that when the loadings are weak, the correlation of the factor score to the latent trait has a very wide range relative to the same correlation for the sum scores. When the loadings are strong, the situation is reversed. Under the heterogeneous condition, the factor score is clearly better.</p>
-
 <p>But even when the loadings are strong, the relationship of the sum score to the trait is not much different from the relationship of the factor score to the trait. Moreover, when there are only three items, one still finds some low correlations (.5, .6, .7) when using the factor score approach - see black spikes under plot in 3 items strong panel.</p>
-
-<p>One of the key recommendations of the paper by McNeish and Gordon Wolf is to validate the sum score model. The easiest way to do this is to perform the CFA with loadings constrained equal and error variances constrained equal i.e. the sum score model and test it. Remember, this model like all models is always wrong.<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">6</a></sup> But if there is insufficient statistical power to detect the misspecification of this model, there is probably insufficient information in the data for more complicated modeling. So I also performed $\chi^2$ testing of the sum score model across replications:</p>
-
-<p><img src="/img/posts/sum_scores/power_misspec.png" alt="power" /></p>
-
+<p>One of the key recommendations of the paper by McNeish and Gordon Wolf is to validate the sum score model. The easiest way to do this is to perform the CFA with loadings constrained equal and error variances constrained equal i.e. the sum score model and test it. Remember, this model like all models is always wrong.<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> But if there is insufficient statistical power to detect the misspecification of this model, there is probably insufficient information in the data for more complicated modeling. So I also performed $\chi^2$ testing of the sum score model across replications:</p>
+<p><img src="/img/posts/sum_scores/power_misspec.png" alt="power"></p>
 <p>This plot is consistent with the rest of the text. But we should note that even when there is power to detect misspecification of the sum score model, the sum scores are still similarly correlated to the latent trait as the factor scores.</p>
-
 <p>In all, nothing here is new. None of these models will ever be correct for data. When data are uninformative, simple crude approaches like a sum score will do the job and may be better than more complicated modeling, unless the more complicated modeling is a well-done Bayesian analysis.</p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">Devlieger, I., Mayer, A., &amp; Rosseel, Y. (2016). Hypothesis Testing Using Factor Score Regression. <em>Educational and Psychological Measurement, 76</em>(5), 741–770. <a href="https://doi.org/10.1177/0013164415607618">https://doi.org/10.1177/0013164415607618</a>
- <a class="footnote-return" href="#fnref:1">↩</a></li>
-<li id="fn:2">Devlieger, I., &amp; Rosseel, Y. (2017). <em>Factor Score Path Analysis. Methodology, 13</em>(Supplement 1), 31–38. <a href="https://doi.org/10.1027/1614-2241/a000130">https://doi.org/10.1027/1614-2241/a000130</a>
- <a class="footnote-return" href="#fnref:2">↩</a></li>
-<li id="fn:3">My general approach these days is do everything so-called <em>subjective Bayesian</em> so that provides an approach for dealing with small samples.
- <a class="footnote-return" href="#fnref:3">↩</a></li>
-<li id="fn:4">See the <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0207239">paper by Davis-Stober, Dana and Rouder</a> for a good review of the bias-variance trade off in psychology.
- <a class="footnote-return" href="#fnref:4">↩</a></li>
-<li id="fn:5">The reason for this is at small sample size, the marker variable for the factor analysis may be negatively related to the original factor due to sampling error such that the factor is negatively related to the latent trait.
- <a class="footnote-return" href="#fnref:5">↩</a></li>
-<li id="fn:6">Loadings will never be equal across items, and neither will error variances. See Nester (2006) - An applied statistician’s creed, <a href="https://doi.org/10.2307/2986064">https://doi.org/10.2307/2986064</a>
- <a class="footnote-return" href="#fnref:6">↩</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Devlieger, I., Mayer, A., &amp; Rosseel, Y. (2016). Hypothesis Testing Using Factor Score Regression. <em>Educational and Psychological Measurement, 76</em>(5), 741–770. <a href="https://doi.org/10.1177/0013164415607618">https://doi.org/10.1177/0013164415607618</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>Devlieger, I., &amp; Rosseel, Y. (2017). <em>Factor Score Path Analysis. Methodology, 13</em>(Supplement 1), 31–38. <a href="https://doi.org/10.1027/1614-2241/a000130">https://doi.org/10.1027/1614-2241/a000130</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>My general approach these days is do everything so-called <em>subjective Bayesian</em> so that provides an approach for dealing with small samples. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>See the <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0207239">paper by Davis-Stober, Dana and Rouder</a> for a good review of the bias-variance trade off in psychology. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p>The reason for this is at small sample size, the marker variable for the factor analysis may be negatively related to the original factor due to sampling error such that the factor is negatively related to the latent trait. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p>Loadings will never be equal across items, and neither will error variances. See Nester (2006) - An applied statistician’s creed, <a href="https://doi.org/10.2307/2986064">https://doi.org/10.2307/2986064</a> <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </main>
 

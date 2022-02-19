@@ -81,499 +81,400 @@
 
 
 <main>
-
-
-<p>I&rsquo;ve been interested in the relationship between ordinal regression and item response theory (IRT) for a few months now. There are several helpful papers on the topic, here are some randomly picked ones <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> <sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> <sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup> <sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup> <sup class="footnote-ref" id="fnref:5"><a href="#fn:5">5</a></sup>, and a book.<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">6</a></sup> In this post, I focus on Rasch analysis. To do any of these analyses as a regression, your data need to be in long format - single column identifying items (regression predictor), single column with item response categories (regression outcome), and column holding the person ID. Using the right dummy coding of the variables, you can get so-called <em>item difficulties</em> as regression coefficients for the items - more on this later.</p>
-
-<p>Most recently, I spent some type trying to understand (in English) the different estimation methods. The clearest reading I found is the Software chapter of De Boeck &amp; Wilson&rsquo;s Explanatory item response models, the final chapter.<sup class="footnote-ref" id="fnref:6"><a href="#fn:6">6</a></sup> I&rsquo;ve learned a few things. The three most common estimation methods are:</p>
-
+<p>I&rsquo;ve been interested in the relationship between ordinal regression and item response theory (IRT) for a few months now. There are several helpful papers on the topic, here are some randomly picked ones <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, and a book.<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> In this post, I focus on Rasch analysis. To do any of these analyses as a regression, your data need to be in long format - single column identifying items (regression predictor), single column with item response categories (regression outcome), and column holding the person ID. Using the right dummy coding of the variables, you can get so-called <em>item difficulties</em> as regression coefficients for the items - more on this later.</p>
+<p>Most recently, I spent some type trying to understand (in English) the different estimation methods. The clearest reading I found is the Software chapter of De Boeck &amp; Wilson&rsquo;s Explanatory item response models, the final chapter.<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> I&rsquo;ve learned a few things. The three most common estimation methods are:</p>
 <ul>
-<li><p>Joint maximum likelihood (JML): To do this, you include both the items and the persons as dummy variables in the model predicting the responses, and apply ordinal logistic regression. You &ldquo;maximize the likelihood&rdquo; of both item and person measures, hence the &ldquo;joint&rdquo; in the joint maximum likelihood. Things can get unwieldy (bonkers) pretty quickly; if you have a thousand persons, you have 999 dummies for persons. And it seems to be the least recommended of the three estimation methods.</p></li>
-
-<li><p>Conditional logistic regression, referred to as conditional maximum likelihood (CML) in the measurement literature. This method treats the individual effects as nuisance parameters (intercepts disappear from model), and is the closest you get to so-called &ldquo;person-free&rdquo; item measures in Rasch analysis. Thing is, it does not use all of the data; only individuals whose responses vary contribute to the estimation (perfect pass or fail are discarded). So you have the sample size loss resulting in <em>inefficient variance estimation</em> (larger standard errors). Additionally, you cannot obtain predicted values from this model, as the intercept is gone. A common method to obtain person intercepts measurement folks have come up with: use the item coefficients from CML in JML as the item coefficients, then estimate coefficients for person dummy codes.</p></li>
-
-<li><p>Standard multilevel model, referred to as marginal maximum likelihood (MML) in the measurement literature. Item difficulties are item fixed effects, and person abilities are random intercepts. Essentially, this is the simplest multilevel model you could build.</p></li>
+<li>
+<p>Joint maximum likelihood (JML): To do this, you include both the items and the persons as dummy variables in the model predicting the responses, and apply ordinal logistic regression. You &ldquo;maximize the likelihood&rdquo; of both item and person measures, hence the &ldquo;joint&rdquo; in the joint maximum likelihood. Things can get unwieldy (bonkers) pretty quickly; if you have a thousand persons, you have 999 dummies for persons. And it seems to be the least recommended of the three estimation methods.</p>
+</li>
+<li>
+<p>Conditional logistic regression, referred to as conditional maximum likelihood (CML) in the measurement literature. This method treats the individual effects as nuisance parameters (intercepts disappear from model), and is the closest you get to so-called &ldquo;person-free&rdquo; item measures in Rasch analysis. Thing is, it does not use all of the data; only individuals whose responses vary contribute to the estimation (perfect pass or fail are discarded). So you have the sample size loss resulting in <em>inefficient variance estimation</em> (larger standard errors). Additionally, you cannot obtain predicted values from this model, as the intercept is gone. A common method to obtain person intercepts measurement folks have come up with: use the item coefficients from CML in JML as the item coefficients, then estimate coefficients for person dummy codes.</p>
+</li>
+<li>
+<p>Standard multilevel model, referred to as marginal maximum likelihood (MML) in the measurement literature. Item difficulties are item fixed effects, and person abilities are random intercepts. Essentially, this is the simplest multilevel model you could build.</p>
+</li>
 </ul>
-
 <p>After doing the reading, I decided to try out a Rasch analysis, produce several Rasch outputs.</p>
-
 <h2 id="demonstration">Demonstration</h2>
-
 <p>Following this demonstration probably requires good knowledge of ggplot2 and dplyr to create the plots.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">library(eRm) <span style="color:#75715e"># Standard Rasch analysis with CML estimation</span>
+<span style="color:#75715e"># glmmTMB for binary logistic regression than glmer, but does not accept contrasts.</span>
+<span style="color:#75715e"># If you want your regression coefficients to be item difficulties on arrival, not good</span>
+<span style="color:#75715e"># library(glmmTMB)</span>
+<span style="color:#75715e"># survival performs conditional logistic regression, clogit(), but does not accept contrasts</span>
+<span style="color:#75715e"># library(survival)</span>
+library(<span style="color:#66d9ef">Epi</span>) <span style="color:#75715e"># For conditional logistic regression with contrasts</span>
+library(lme4) <span style="color:#75715e"># For glmer</span>
+library(ggplot2) <span style="color:#75715e"># For plotting</span>
+library(ggrepel) <span style="color:#75715e"># For plot labeling</span>
+library(dplyr) <span style="color:#75715e"># For data manipulation</span>
+library(scales) <span style="color:#75715e"># For formatted percent on ggplot axes</span>
+</code></pre></div><p>Data comes from eRm package, it is simulated, has 30 items and 100 persons binary response format.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">raschdat1 <span style="color:#f92672">&lt;-</span> as<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>frame(raschdat1)
+</code></pre></div><h3 id="cml-estimation-using-erm-package">CML estimation using eRm package</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">res<span style="color:#f92672">.</span>rasch <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">RM</span>(raschdat1)
+</code></pre></div><p>Coefficients are item &ldquo;easiness&rdquo;, need to multiply by -1 to obtain difficulties.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">coef(res<span style="color:#f92672">.</span>rasch)
 
-<pre><code class="language-ruby">library(eRm) # Standard Rasch analysis with CML estimation
-# glmmTMB for binary logistic regression than glmer, but does not accept contrasts.
-# If you want your regression coefficients to be item difficulties on arrival, not good
-# library(glmmTMB)
-# survival performs conditional logistic regression, clogit(), but does not accept contrasts
-# library(survival)
-library(Epi) # For conditional logistic regression with contrasts
-library(lme4) # For glmer
-library(ggplot2) # For plotting
-library(ggrepel) # For plot labeling
-library(dplyr) # For data manipulation
-library(scales) # For formatted percent on ggplot axes
-</code></pre>
+beta <span style="color:#66d9ef">V1</span>      beta <span style="color:#66d9ef">V2</span>      beta <span style="color:#66d9ef">V3</span>      beta <span style="color:#66d9ef">V4</span>      beta <span style="color:#66d9ef">V5</span>
+<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">565269700</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05117171</span><span style="color:#ae81ff">9</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">782190094</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">650231958</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">300578876</span>
+beta <span style="color:#66d9ef">V6</span>      beta <span style="color:#66d9ef">V7</span>      beta <span style="color:#66d9ef">V8</span>      beta <span style="color:#66d9ef">V9</span>     beta <span style="color:#66d9ef">V10</span>
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">099296282</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">681696827</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">731734160</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">533662275</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">107727126</span>
+beta <span style="color:#66d9ef">V11</span>     beta <span style="color:#66d9ef">V12</span>     beta <span style="color:#66d9ef">V13</span>     beta <span style="color:#66d9ef">V14</span>     beta <span style="color:#66d9ef">V15</span>
+<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">650231959</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">387903893</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">511191830</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">116116897</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">339649394</span>
+beta <span style="color:#66d9ef">V16</span>     beta <span style="color:#66d9ef">V17</span>     beta <span style="color:#66d9ef">V18</span>     beta <span style="color:#66d9ef">V19</span>     beta <span style="color:#66d9ef">V20</span>
+<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">597111141</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">339649397</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">093927362</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">758721132</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">681696827</span>
+beta <span style="color:#66d9ef">V21</span>     beta <span style="color:#66d9ef">V22</span>     beta <span style="color:#66d9ef">V23</span>     beta <span style="color:#66d9ef">V24</span>     beta <span style="color:#66d9ef">V25</span>
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">936549373</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">989173502</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">681696830</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">002</span><span style="color:#ae81ff">949605</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">814227487</span>
+beta <span style="color:#66d9ef">V26</span>     beta <span style="color:#66d9ef">V27</span>     beta <span style="color:#66d9ef">V28</span>     beta <span style="color:#66d9ef">V29</span>     beta <span style="color:#66d9ef">V30</span>
+<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">207133468</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">093927362</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">290443234</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">758721133</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">731734150</span>
+</code></pre></div><h3 id="repeated-using-regression">Repeated using regression</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">raschdat1<span style="color:#f92672">.</span>long <span style="color:#f92672">&lt;-</span> raschdat1
+raschdat1<span style="color:#f92672">.</span>long$tot <span style="color:#f92672">&lt;-</span> rowSums(raschdat1<span style="color:#f92672">.</span>long) <span style="color:#75715e"># Create total score</span>
+c(min(raschdat1<span style="color:#f92672">.</span>long$tot), max(raschdat1<span style="color:#f92672">.</span>long$tot)) <span style="color:#75715e"># Min and max score</span>
 
-<p>Data comes from eRm package, it is simulated, has 30 items and 100 persons binary response format.</p>
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>  <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">26</span>
 
-<pre><code class="language-ruby">raschdat1 &lt;- as.data.frame(raschdat1)
-</code></pre>
-
-<h3 id="cml-estimation-using-erm-package">CML estimation using eRm package</h3>
-
-<pre><code class="language-ruby">res.rasch &lt;- RM(raschdat1)
-</code></pre>
-
-<p>Coefficients are item &ldquo;easiness&rdquo;, need to multiply by -1 to obtain difficulties.</p>
-
-<pre><code class="language-ruby">coef(res.rasch)
-
-beta V1      beta V2      beta V3      beta V4      beta V5
-1.565269700  0.051171719  0.782190094 -0.650231958 -1.300578876
-beta V6      beta V7      beta V8      beta V9     beta V10
-0.099296282  0.681696827  0.731734160  0.533662275 -1.107727126
-beta V11     beta V12     beta V13     beta V14     beta V15
--0.650231959  0.387903893 -1.511191830 -2.116116897  0.339649394
-beta V16     beta V17     beta V18     beta V19     beta V20
--0.597111141  0.339649397 -0.093927362 -0.758721132  0.681696827
-beta V21     beta V22     beta V23     beta V24     beta V25
-0.936549373  0.989173502  0.681696830  0.002949605 -0.814227487
-beta V26     beta V27     beta V28     beta V29     beta V30
-1.207133468 -0.093927362 -0.290443234 -0.758721133  0.731734150
-</code></pre>
-
-<h3 id="repeated-using-regression">Repeated using regression</h3>
-
-<pre><code class="language-ruby">raschdat1.long &lt;- raschdat1
-raschdat1.long$tot &lt;- rowSums(raschdat1.long) # Create total score
-c(min(raschdat1.long$tot), max(raschdat1.long$tot)) # Min and max score
-
-[1]  1 26
-
-raschdat1.long$ID &lt;- 1:nrow(raschdat1.long) # create person ID
-raschdat1.long &lt;- tidyr::gather(raschdat1.long, item, value, V1:V30) # Wide to long
-# Make item a factor
-raschdat1.long$item &lt;- factor(
-  raschdat1.long$item, levels = paste0(&quot;V&quot;, 1:30), ordered = TRUE)
-</code></pre>
-
-<h4 id="conditional-maximum-likelihood">Conditional maximum likelihood</h4>
-
-<pre><code class="language-ruby"># Use clogistic() function in Epi package, note the contrasts
-res.clogis &lt;- clogistic(
-  value ~ item, strata = ID, raschdat1.long,
-  contrasts = list(item = rbind(rep(-1, 29), diag(29))))
-# Regression coefficients
-coef(res.clogis)
+raschdat1<span style="color:#f92672">.</span>long$ID <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">:nrow</span>(raschdat1<span style="color:#f92672">.</span>long) <span style="color:#75715e"># create person ID</span>
+raschdat1<span style="color:#f92672">.</span>long <span style="color:#f92672">&lt;-</span> tidyr<span style="color:#f92672">::</span>gather(raschdat1<span style="color:#f92672">.</span>long, item, value, <span style="color:#e6db74">V1</span>:<span style="color:#66d9ef">V30</span>) <span style="color:#75715e"># Wide to long</span>
+<span style="color:#75715e"># Make item a factor</span>
+raschdat1<span style="color:#f92672">.</span>long$item <span style="color:#f92672">&lt;-</span> factor(
+  raschdat1<span style="color:#f92672">.</span>long$item, levels <span style="color:#f92672">=</span> paste0(<span style="color:#e6db74">&#34;V&#34;</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span>), ordered <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
+</code></pre></div><h4 id="conditional-maximum-likelihood">Conditional maximum likelihood</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Use clogistic() function in Epi package, note the contrasts</span>
+res<span style="color:#f92672">.</span>clogis <span style="color:#f92672">&lt;-</span> clogistic(
+  value <span style="color:#f92672">~</span> item, strata <span style="color:#f92672">=</span> <span style="color:#66d9ef">ID</span>, raschdat1<span style="color:#f92672">.</span>long,
+  contrasts <span style="color:#f92672">=</span> list(item <span style="color:#f92672">=</span> rbind(rep(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">29</span>), diag(<span style="color:#ae81ff">29</span>))))
+<span style="color:#75715e"># Regression coefficients</span>
+coef(res<span style="color:#f92672">.</span>clogis)
 
 item1        item2        item3        item4        item5
-0.051193209  0.782190560 -0.650241362 -1.300616876  0.099314453
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0511</span><span style="color:#ae81ff">93209</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">782190560</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">650241362</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">300616876</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">099314453</span>
 item6        item7        item8        item9       item10
-0.681691285  0.731731557  0.533651426 -1.107743224 -0.650241362
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">681691285</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">731731557</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">533651426</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">107743224</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">650241362</span>
 item11       item12       item13       item14       item15
-0.387896763 -1.511178125 -2.116137610  0.339645555 -0.597120333
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">387896763</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">511178125</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">116137610</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">339645555</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">597120333</span>
 item16       item17       item18       item19       item20
-0.339645555 -0.093902568 -0.758728000  0.681691285  0.936556599
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">339645555</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">093902568</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">758728000</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">681691285</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">936556599</span>
 item21       item22       item23       item24       item25
-0.989181510  0.681691285  0.002973418 -0.814232531  1.207139323
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">989181510</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">681691285</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">002</span><span style="color:#ae81ff">973418</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">814232531</span>  <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">207139323</span>
 item26       item27       item28       item29        
--0.093902568 -0.290430680 -0.758728000  0.731731557           
-</code></pre>
+<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">093902568</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">290430680</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">758728000</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">731731557</span>           
+</code></pre></div><p>Note that item1 is V2 not V1, and item29 is V30. The values correspond to the results from the eRm package. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">sum(coef(res<span style="color:#f92672">.</span>clogis)<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">29</span><span style="color:#f92672">]</span>) <span style="color:#f92672">*</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
 
-<p>Note that item1 is V2 not V1, and item29 is V30. The values correspond to the results from the eRm package. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1.</p>
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">565278</span>
 
-<pre><code class="language-ruby">sum(coef(res.clogis)[1:29]) * -1
+<span style="color:#75715e"># A few more things to confirm both models are equivalent</span>
+res<span style="color:#f92672">.</span>rasch$loglik <span style="color:#75715e"># Rasch log-likelihood</span>
 
-[1] 1.565278
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1434</span><span style="color:#f92672">.</span><span style="color:#ae81ff">482</span>
 
-# A few more things to confirm both models are equivalent
-res.rasch$loglik # Rasch log-likelihood
+<span style="color:#75715e"># conditional logsitic log-likelihood, second value is log-likelihood of final model</span>
+res<span style="color:#f92672">.</span>clogis$loglik
 
-[1] -1434.482
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1630</span><span style="color:#f92672">.</span><span style="color:#ae81ff">180</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1434</span><span style="color:#f92672">.</span><span style="color:#ae81ff">482</span>
 
-# conditional logsitic log-likelihood, second value is log-likelihood of final model
-res.clogis$loglik
+<span style="color:#75715e"># One can also compare confidence intervals, variances, ...</span>
 
-[1] -1630.180 -1434.482
+<span style="color:#75715e"># clogistic allows you to check the actual sample size for the analysis using:</span>
+res<span style="color:#f92672">.</span>clogis$n
 
-# One can also compare confidence intervals, variances, ...
-
-# clogistic allows you to check the actual sample size for the analysis using:
-res.clogis$n
-
-[1] 3000
-</code></pre>
-
-<p>Aparently, all of the data (30 * 100) were used in the estimation. This is because no participant scored zero on all questions, or 1 on all questions (minimum was 1 and maximum was 26 out of 30). All the data contributed to estimation, so the variance estimation in this example was efficient(?)</p>
-
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">3000</span>
+</code></pre></div><p>Aparently, all of the data (30 * 100) were used in the estimation. This is because no participant scored zero on all questions, or 1 on all questions (minimum was 1 and maximum was 26 out of 30). All the data contributed to estimation, so the variance estimation in this example was efficient(?)</p>
 <h4 id="joint-maximum-likelihood">Joint maximum likelihood</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># Standard logistic regression, note the use of contrasts</span>
+res<span style="color:#f92672">.</span>jml <span style="color:#f92672">&lt;-</span> glm(
+  value <span style="color:#f92672">~</span> item <span style="color:#f92672">+</span> factor(<span style="color:#66d9ef">ID</span>), data <span style="color:#f92672">=</span> raschdat1<span style="color:#f92672">.</span>long, family <span style="color:#f92672">=</span> binomial,
+  contrasts <span style="color:#f92672">=</span> list(item <span style="color:#f92672">=</span> rbind(rep(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">29</span>), diag(<span style="color:#ae81ff">29</span>))))
+<span style="color:#75715e"># First thirty coefficients</span>
+coef(res<span style="color:#f92672">.</span>jml)<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span><span style="color:#f92672">]</span>
 
-<pre><code class="language-ruby"># Standard logistic regression, note the use of contrasts
-res.jml &lt;- glm(
-  value ~ item + factor(ID), data = raschdat1.long, family = binomial,
-  contrasts = list(item = rbind(rep(-1, 29), diag(29))))
-# First thirty coefficients
-coef(res.jml)[1:30]
-
-(Intercept)        item1        item2        item3        item4
--3.688301292  0.052618523  0.811203577 -0.674538589 -1.348580496
+(<span style="color:#66d9ef">Intercept</span>)        item1        item2        item3        item4
+<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">688301292</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05261</span><span style="color:#ae81ff">8523</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">811203577</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">674538589</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">348580496</span>
       item5        item6        item7        item8        item9
-0.102524596  0.706839644  0.758800752  0.553154545 -1.148683041
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">102524596</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">706839644</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">758800752</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">553154545</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">148683041</span>
      item10       item11       item12       item13       item14
--0.674538589  0.401891360 -1.566821260 -2.193640539  0.351826379
+<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">674538589</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">401891360</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">566821260</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">193640539</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">351826379</span>
      item15       item16       item17       item18       item19
--0.619482689  0.351826379 -0.097839229 -0.786973625  0.706839644
+<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">619482689</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">351826379</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">097839229</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">786973625</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">706839644</span>
      item20       item21       item22       item23       item24
-0.971562267  1.026247034  0.706839644  0.002613624 -0.844497142
+<span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">971562267</span>  <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">026247034</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">706839644</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">002613624</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">844497142</span>
      item25       item26       item27       item28       item29
-1.252837340 -0.097839229 -0.301589647 -0.786973625  0.758800752
-</code></pre>
+<span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">252837340</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">097839229</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">301589647</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">786973625</span>  <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">758800752</span>
+</code></pre></div><p>item29 is the same as V30. Note that they are very similar to the coefficients from the eRm package. Differences result from differences in estimation method. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">sum(coef(res<span style="color:#f92672">.</span>jml)<span style="color:#f92672">[</span><span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">30</span><span style="color:#f92672">]</span>) <span style="color:#f92672">*</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
 
-<p>item29 is the same as V30. Note that they are very similar to the coefficients from the eRm package. Differences result from differences in estimation method. To obtain the easiness of the first item V1, simply sum the coefficients of the item1 to item29 and multiply by -1.</p>
-
-<pre><code class="language-ruby">sum(coef(res.jml)[2:30]) * -1
-
-[1] 1.625572
-</code></pre>
-
-<h4 id="multilevel-logistic-regression-or-mml">Multilevel logistic regression or MML</h4>
-
+<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">625572</span>
+</code></pre></div><h4 id="multilevel-logistic-regression-or-mml">Multilevel logistic regression or MML</h4>
 <p><code>glmer()</code> does not converge with the data. <code>glmmTMB()</code> does. But I want the regression coefficients to be item difficulties/easiness on arrival, and <code>glmmTMB()</code> does not provide an option for contrasts. What I do is run <code>glmer()</code> twice, with the fixed effects and random effects from the first run as starting values in the second run.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l <span style="color:#f92672">&lt;-</span> glmer(
+  value <span style="color:#f92672">~</span> item <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">ID</span>), raschdat1<span style="color:#f92672">.</span>long, family <span style="color:#f92672">=</span> binomial,
+  contrasts <span style="color:#f92672">=</span> list(item <span style="color:#f92672">=</span> rbind(rep(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">29</span>), diag(<span style="color:#ae81ff">29</span>))))
+<span style="color:#75715e"># Warning message:</span>
+<span style="color:#75715e"># In checkConv(attr(opt, &#34;derivs&#34;), opt$par, ctrl = control$checkConv,  :</span>
+<span style="color:#75715e">#   Model failed to converge with max|grad| = 0.00134715 (tol = 0.001, component 1)</span>
 
-<pre><code class="language-ruby">res.mlm.l &lt;- glmer(
-  value ~ item + (1 | ID), raschdat1.long, family = binomial,
-  contrasts = list(item = rbind(rep(-1, 29), diag(29))))
-# Warning message:
-# In checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control$checkConv,  :
-#   Model failed to converge with max|grad| = 0.00134715 (tol = 0.001, component 1)
-
-# No warning after this :)
-res.mlm.l &lt;- glmer(
-  value ~ item + (1 | ID), raschdat1.long, family = binomial,
-  contrasts = list(item = rbind(rep(-1, 29), diag(29))),
-  start = list(fixef = fixef(res.mlm.l), theta = getME(res.mlm.l, &quot;theta&quot;)))
-</code></pre>
-
-<h3 id="using-the-multilevel-model-to-replicate-the-rasch-results">Using the multilevel model to replicate the Rasch results</h3>
-
+<span style="color:#75715e"># No warning after this :)</span>
+res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l <span style="color:#f92672">&lt;-</span> glmer(
+  value <span style="color:#f92672">~</span> item <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">ID</span>), raschdat1<span style="color:#f92672">.</span>long, family <span style="color:#f92672">=</span> binomial,
+  contrasts <span style="color:#f92672">=</span> list(item <span style="color:#f92672">=</span> rbind(rep(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">29</span>), diag(<span style="color:#ae81ff">29</span>))),
+  start <span style="color:#f92672">=</span> list(fixef <span style="color:#f92672">=</span> fixef(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l), theta <span style="color:#f92672">=</span> getME(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l, <span style="color:#e6db74">&#34;theta&#34;</span>)))
+</code></pre></div><h3 id="using-the-multilevel-model-to-replicate-the-rasch-results">Using the multilevel model to replicate the Rasch results</h3>
 <h4 id="person-item-map">Person-Item map</h4>
-
 <p>eRm provides a person-item map with a single line:</p>
-
-<pre><code class="language-ruby">plotPImap(res.rasch)
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/pimap.png" alt="PIMAP" /></p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">plotPImap(res<span style="color:#f92672">.</span>rasch)
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/pimap.png" alt="PIMAP"></p>
 <p>To create this map, we need item difficulties (regression coefficients * -1) and person abilities (random intercepts).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">item<span style="color:#f92672">.</span>diff <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> coef(summary(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l))<span style="color:#f92672">[</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#75715e"># Regression coefficients * -1</span>
+item<span style="color:#f92672">.</span>diff<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> sum(item<span style="color:#f92672">.</span>diff<span style="color:#f92672">[</span><span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">30</span><span style="color:#f92672">]</span>) <span style="color:#75715e"># Difficulty of first item is sum of all others</span>
+item<span style="color:#f92672">.</span>diff <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(
+  item<span style="color:#f92672">.</span>diff <span style="color:#f92672">=</span> as<span style="color:#f92672">.</span>numeric(item<span style="color:#f92672">.</span>diff), item <span style="color:#f92672">=</span> paste0(<span style="color:#e6db74">&#34;V&#34;</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span>))
+head(item<span style="color:#f92672">.</span>diff, <span style="color:#ae81ff">3</span>) <span style="color:#75715e"># What have we done?</span>
 
-<pre><code class="language-ruby">item.diff &lt;- -1 * coef(summary(res.mlm.l))[, 1] # Regression coefficients * -1
-item.diff[1] &lt;- -1 * sum(item.diff[2:30]) # Difficulty of first item is sum of all others
-item.diff &lt;- data.frame(
-  item.diff = as.numeric(item.diff), item = paste0(&quot;V&quot;, 1:30))
-head(item.diff, 3) # What have we done?
+    item<span style="color:#f92672">.</span>diff item
+<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">56449994</span>   <span style="color:#66d9ef">V1</span>
+<span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">05166222</span>   <span style="color:#66d9ef">V2</span>
+<span style="color:#ae81ff">3</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">78247594</span>   <span style="color:#66d9ef">V3</span>
 
-    item.diff item
-1 -1.56449994   V1
-2 -0.05166222   V2
-3 -0.78247594   V3
+item<span style="color:#f92672">.</span>diff$move <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span> <span style="color:#75715e"># Cosmetic move to help me when creating PI chart</span>
 
-item.diff$move &lt;- 1:30 # Cosmetic move to help me when creating PI chart
+<span style="color:#75715e"># For person abilities</span>
+pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(pers<span style="color:#f92672">.</span>ability <span style="color:#f92672">=</span> ranef(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l)$ID<span style="color:#f92672">[</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>)
 
-# For person abilities
-pers.ab.df &lt;- data.frame(pers.ability = ranef(res.mlm.l)$ID[, 1])
-
-# GGPLOT-ING
-ggplot(pers.ab.df, aes(x = pers.ability)) +
-  geom_histogram(aes(y = ..count..), binwidth = .02, colour = 1) +
-  geom_segment(mapping = aes(x = item.diff, xend = item.diff, yend = -.25),
-               data = data.frame(item.diff), y = 0, linetype = 1) +
-  geom_point(mapping = aes(x = item.diff, y = -.75 - move / 2),
-            data = data.frame(item.diff), size = 1) +
-  scale_y_continuous(breaks = c((-.75 + (-30:-1)/2), 0:8),
-                     labels = c(paste0(&quot;V&quot;, 30:1), 0:8)) +
-  geom_hline(yintercept = c(-.75 + seq(-29, 0, 2)/2), linetype = 3, size = .5) +
-  geom_hline(yintercept = 0) +
-  scale_x_continuous(breaks = seq(-4, 4, .5)) +
-  labs(x = &quot;Latent dimension&quot;, y = &quot;&quot;, title = &quot;Person-item map&quot;) +
-  theme_classic() +
-  geom_label(label = &quot;Distribution of person ability&quot;, x = -1.8, y = 8) +
-  theme(axis.title.y = element_text(hjust = 1))
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/pimap_mlm.png" alt="PIMAP_MLM" /></p>
-
+<span style="color:#75715e"># GGPLOT-ING</span>
+ggplot(pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df, aes(x <span style="color:#f92672">=</span> pers<span style="color:#f92672">.</span>ability)) <span style="color:#f92672">+</span>
+  geom_histogram(aes(y <span style="color:#f92672">=</span> <span style="color:#f92672">..</span>count<span style="color:#f92672">..</span>), binwidth <span style="color:#f92672">=</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">02</span>, colour <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span>
+  geom_segment(mapping <span style="color:#f92672">=</span> aes(x <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>diff, xend <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>diff, yend <span style="color:#f92672">=</span> <span style="color:#f92672">-.</span><span style="color:#ae81ff">25</span>),
+               data <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>frame(item<span style="color:#f92672">.</span>diff), y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, linetype <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span>
+  geom_point(mapping <span style="color:#f92672">=</span> aes(x <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>diff, y <span style="color:#f92672">=</span> <span style="color:#f92672">-.</span><span style="color:#ae81ff">75</span> <span style="color:#f92672">-</span> move <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>),
+            data <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>frame(item<span style="color:#f92672">.</span>diff), size <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span>
+  scale_y_continuous(breaks <span style="color:#f92672">=</span> c((<span style="color:#f92672">-.</span><span style="color:#ae81ff">75</span> <span style="color:#f92672">+</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">30</span><span style="color:#e6db74">:-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>), <span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">8</span>),
+                     labels <span style="color:#f92672">=</span> c(paste0(<span style="color:#e6db74">&#34;V&#34;</span>, <span style="color:#ae81ff">30</span>:<span style="color:#ae81ff">1</span>), <span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">8</span>)) <span style="color:#f92672">+</span>
+  geom_hline(yintercept <span style="color:#f92672">=</span> c(<span style="color:#f92672">-.</span><span style="color:#ae81ff">75</span> <span style="color:#f92672">+</span> seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>), linetype <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>, size <span style="color:#f92672">=</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span>
+  geom_hline(yintercept <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Latent dimension&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person-item map&#34;</span>) <span style="color:#f92672">+</span>
+  theme_classic() <span style="color:#f92672">+</span>
+  geom_label(label <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Distribution of person ability&#34;</span>, x <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">8</span>, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">+</span>
+  theme(axis<span style="color:#f92672">.</span>title<span style="color:#f92672">.</span>y <span style="color:#f92672">=</span> element_text(hjust <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>))
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/pimap_mlm.png" alt="PIMAP_MLM"></p>
 <p>The extreme person scores are different. This is down to differences in MML and whatever method eRm uses to obtain person measures. It has to use a two-step process of sorts because CML does not provide person measures.</p>
-
 <h4 id="item-characteristic-curves">Item-Characteristic Curves</h4>
-
 <p>eRm provides a item characteristic curves with a single line:</p>
-
-<pre><code class="language-ruby">plotjointICC(res.rasch)
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/icc_joint.png" alt="ICC" /></p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">plotjointICC(res<span style="color:#f92672">.</span>rasch)
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/icc_joint.png" alt="ICC"></p>
 <p>Here, we need to be able to predict the probability that a student will get an item correct, given their latent ability. What I did was use the logistic equation to predict probabilities. The log-odds given a latent ability is the difference between a latent ability and an item difficulty. Once this log-odds is obtained, calculating the predicted probability is easy. Since I&rsquo;m using loops to do this, I also calculate item information, which is predicted probability multiplied by 1 - predicted probability. Here&rsquo;s how:</p>
-
-<pre><code class="language-ruby">{
-  theta.s &lt;- seq(-6, 6, .01) # Person abilities for prediction
-  pred.prob &lt;- c() # Vector to hold predicted probabilities
-  test.info.df &lt;- c() # Vector to hold test info
-  for (i in theta.s) { # Loop through abilities
-    for (j in 1:30) { # Loop through items
-      l &lt;- i - item.diff$item.diff[j] # log-odds is ability - difficulty
-      l &lt;- exp(-l) # Exponentiate -log-odds
-      l &lt;- 1 / (1 + l) # Calculate predicted probability
-      pred.prob &lt;- c(pred.prob, l) # Store predicted probability
-      l &lt;- l * (1 - l) # Calculate test information
-      test.info.df &lt;- c(test.info.df, l) # Store test information
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">{
+  theta<span style="color:#f92672">.</span>s <span style="color:#f92672">&lt;-</span> seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">6</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">01</span>) <span style="color:#75715e"># Person abilities for prediction</span>
+  pred<span style="color:#f92672">.</span>prob <span style="color:#f92672">&lt;-</span> c() <span style="color:#75715e"># Vector to hold predicted probabilities</span>
+  test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> c() <span style="color:#75715e"># Vector to hold test info</span>
+  <span style="color:#66d9ef">for</span> (i <span style="color:#66d9ef">in</span> theta<span style="color:#f92672">.</span>s) { <span style="color:#75715e"># Loop through abilities</span>
+    <span style="color:#66d9ef">for</span> (j <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span>) { <span style="color:#75715e"># Loop through items</span>
+      l <span style="color:#f92672">&lt;-</span> i <span style="color:#f92672">-</span> item<span style="color:#f92672">.</span>diff$item<span style="color:#f92672">.</span>diff<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#75715e"># log-odds is ability - difficulty</span>
+      l <span style="color:#f92672">&lt;-</span> exp(<span style="color:#f92672">-</span>l) <span style="color:#75715e"># Exponentiate -log-odds</span>
+      l <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> l) <span style="color:#75715e"># Calculate predicted probability</span>
+      pred<span style="color:#f92672">.</span>prob <span style="color:#f92672">&lt;-</span> c(pred<span style="color:#f92672">.</span>prob, l) <span style="color:#75715e"># Store predicted probability</span>
+      l <span style="color:#f92672">&lt;-</span> l <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> l) <span style="color:#75715e"># Calculate test information</span>
+      test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> c(test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df, l) <span style="color:#75715e"># Store test information</span>
     }
   }
-  # Save it all to data frame
-  test.info.df &lt;- data.frame(
-    theta = sort(rep(theta.s, 30)),
-    item = rep(paste0(&quot;V&quot;, 1:30), length(theta.s)),
-    info = test.info.df,
-    prob = pred.prob,
-    diff = item.diff$item.diff
+  <span style="color:#75715e"># Save it all to data frame</span>
+  test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(
+    theta <span style="color:#f92672">=</span> sort(rep(theta<span style="color:#f92672">.</span>s, <span style="color:#ae81ff">30</span>)),
+    item <span style="color:#f92672">=</span> rep(paste0(<span style="color:#e6db74">&#34;V&#34;</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span>), length(theta<span style="color:#f92672">.</span>s)),
+    info <span style="color:#f92672">=</span> test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df,
+    prob <span style="color:#f92672">=</span> pred<span style="color:#f92672">.</span>prob,
+    diff <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>diff$item<span style="color:#f92672">.</span>diff
   )
-  rm(i, j, theta.s, pred.prob, l) # Clean environment
+  rm(i, j, theta<span style="color:#f92672">.</span>s, pred<span style="color:#f92672">.</span>prob, l) <span style="color:#75715e"># Clean environment</span>
 }
 
-## GGPLOT-ING
-ggplot(test.info.df, aes(x = theta, y = prob, colour = reorder(item, diff, mean))) +
-  geom_line() +
-  scale_y_continuous(labels = percent) +
-  scale_x_continuous(breaks = -6:6, limits = c(-4, 4)) +
-  labs(x = &quot;Person ability&quot;, y = &quot;Probability of correct response&quot;, colour = &quot;Item&quot;,
-       title = &quot;Joint item characteristic plot&quot;) +
+<span style="color:#75715e">## GGPLOT-ING</span>
+ggplot(test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df, aes(x <span style="color:#f92672">=</span> theta, y <span style="color:#f92672">=</span> prob, colour <span style="color:#f92672">=</span> reorder(item, diff, mean))) <span style="color:#f92672">+</span>
+  geom_line() <span style="color:#f92672">+</span>
+  scale_y_continuous(labels <span style="color:#f92672">=</span> percent) <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>:<span style="color:#ae81ff">6</span>, limits <span style="color:#f92672">=</span> c(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person ability&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Probability of correct response&#34;</span>, colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item&#34;</span>,
+       title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Joint item characteristic plot&#34;</span>) <span style="color:#f92672">+</span>
   theme_classic()
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/icc_joint_mlm.png" alt="ICC_MLM" /></p>
-
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/icc_joint_mlm.png" alt="ICC_MLM"></p>
 <p>I find the colours ambiguous, the code below would produce an item by item plot, not printed</p>
-
-<pre><code class="language-ruby">ggplot(test.info.df, aes(x = theta, y = prob)) + geom_line() +
-  scale_x_continuous(breaks = seq(-6, 6, 2), limits = c(-4, 4)) +
-  scale_y_continuous(labels = percent, breaks = seq(0, 1, .25)) +
-  labs(x = &quot;Person ability&quot;, y = &quot;Probability of correct response&quot;,
-       title = &quot;Item characteristic plot&quot;,
-       subtitle = &quot;Items ordered from least to most difficult&quot;) +
-  facet_wrap(~ reorder(item, diff, mean), ncol = 10) +
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">ggplot(test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df, aes(x <span style="color:#f92672">=</span> theta, y <span style="color:#f92672">=</span> prob)) <span style="color:#f92672">+</span> geom_line() <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">2</span>), limits <span style="color:#f92672">=</span> c(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">+</span>
+  scale_y_continuous(labels <span style="color:#f92672">=</span> percent, breaks <span style="color:#f92672">=</span> seq(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">25</span>)) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person ability&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Probability of correct response&#34;</span>,
+       title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item characteristic plot&#34;</span>,
+       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Items ordered from least to most difficult&#34;</span>) <span style="color:#f92672">+</span>
+  facet_wrap(<span style="color:#f92672">~</span> reorder(item, diff, mean), ncol <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>) <span style="color:#f92672">+</span>
   theme_classic()
-</code></pre>
-
-<h4 id="person-parameter-plot">Person parameter plot</h4>
-
+</code></pre></div><h4 id="person-parameter-plot">Person parameter plot</h4>
 <p>Again, a one-liner in eRm:</p>
-
-<pre><code class="language-ruby">plot(person.parameter(res.rasch))
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/pp.png" alt="PERS_PAR" /></p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">plot(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch))
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/pp.png" alt="PERS_PAR"></p>
 <p>Compared to others, this is fairly straightforward. We need the estimated person abilities:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">raschdat1<span style="color:#f92672">.</span>long$ability <span style="color:#f92672">&lt;-</span> ranef(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l)$ID<span style="color:#f92672">[</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">]</span>
 
-<pre><code class="language-ruby">raschdat1.long$ability &lt;- ranef(res.mlm.l)$ID[, 1]
-
-# And GGPLOT-ING IT:
-ggplot(raschdat1.long, aes(x = tot, y = ability)) +
-  geom_point(shape = 1, size = 2) + geom_line() +
-  scale_x_continuous(breaks = 1:26) +
-  scale_y_continuous(breaks = round(c(
-    min(raschdat1.long$ability),seq(-1.5, 1.5, .5),
-    max(raschdat1.long$ability)), 2)) +
-  labs(x = &quot;Raw scores&quot;, y = &quot;Latent scores&quot;, title = &quot;Person parameter plot&quot;) +
+<span style="color:#75715e"># And GGPLOT-ING IT:</span>
+ggplot(raschdat1<span style="color:#f92672">.</span>long, aes(x <span style="color:#f92672">=</span> tot, y <span style="color:#f92672">=</span> ability)) <span style="color:#f92672">+</span>
+  geom_point(shape <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> geom_line() <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">26</span>) <span style="color:#f92672">+</span>
+  scale_y_continuous(breaks <span style="color:#f92672">=</span> round(c(
+    min(raschdat1<span style="color:#f92672">.</span>long$ability),seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>),
+    max(raschdat1<span style="color:#f92672">.</span>long$ability)), <span style="color:#ae81ff">2</span>)) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Raw scores&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Latent scores&#34;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person parameter plot&#34;</span>) <span style="color:#f92672">+</span>
   theme_classic()
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/pp_mlm.png" alt="PERS_PAR_MLM" /></p>
-
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/pp_mlm.png" alt="PERS_PAR_MLM"></p>
 <p>Both plots are not the same, though they overlap for the most part. Because estimation of person parameters is more tedious in CML, I&rsquo;d trust the multilevel values.</p>
-
 <h4 id="item-fit-using-mean-square">Item fit using mean square</h4>
-
 <p>For the outfit MSQ, you square the residual (on the response scale, or actual score - predicted probability), and divide it by the predicted probability $\times$ (1 - predicted probability). The average of this value for each item is its outfit mean square. The average of this value for each person is their outfit mean square.</p>
-
 <p>For the infit MSQ, you perform the same computations. However, you perform these computations within the items for item infit, and within the persons for person infit. This is a vague; for some reason, I had issues typing out the formula in MathJax. See slides 14 and 15 <a href="http://statmath.wu-wien.ac.at/people/hatz/psychometrics/10w/RM_handouts_5.pdf">here</a> for formulae.</p>
-
 <p>eRm one-liner:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">itemfit(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch)) <span style="color:#75715e"># Not printed</span>
 
-<pre><code class="language-ruby">itemfit(person.parameter(res.rasch)) # Not printed
+<span style="color:#75715e"># First, we need fitted and residual values</span>
+raschdat1<span style="color:#f92672">.</span>long$fitted <span style="color:#f92672">&lt;-</span> fitted(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l)
+raschdat1<span style="color:#f92672">.</span>long$resid <span style="color:#f92672">&lt;-</span> resid(res<span style="color:#f92672">.</span>mlm<span style="color:#f92672">.</span>l, type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;response&#34;</span>)
 
-# First, we need fitted and residual values
-raschdat1.long$fitted &lt;- fitted(res.mlm.l)
-raschdat1.long$resid &lt;- resid(res.mlm.l, type = &quot;response&quot;)
+<span style="color:#75715e"># To calculate outfit MSQ:</span>
+raschdat1<span style="color:#f92672">.</span>long$o<span style="color:#f92672">.</span>msq <span style="color:#f92672">&lt;-</span> (raschdat1<span style="color:#f92672">.</span>long$resid <span style="color:#f92672">^</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">/</span>
+  (raschdat1<span style="color:#f92672">.</span>long$fitted <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> raschdat1<span style="color:#f92672">.</span>long$fitted))
 
-# To calculate outfit MSQ:
-raschdat1.long$o.msq &lt;- (raschdat1.long$resid ^ 2) /
-  (raschdat1.long$fitted * (1 - raschdat1.long$fitted))
+<span style="color:#75715e"># Summarize it by item using mean</span>
+item<span style="color:#f92672">.</span>diff$o<span style="color:#f92672">.</span>msq <span style="color:#f92672">&lt;-</span> summarize(group_by(raschdat1<span style="color:#f92672">.</span>long, item),
+                             o<span style="color:#f92672">.</span>msq <span style="color:#f92672">=</span> mean(o<span style="color:#f92672">.</span>msq))$o<span style="color:#f92672">.</span>msq
 
-# Summarize it by item using mean
-item.diff$o.msq &lt;- summarize(group_by(raschdat1.long, item),
-                             o.msq = mean(o.msq))$o.msq
+<span style="color:#75715e"># To calculate infit MSQ:</span>
+item<span style="color:#f92672">.</span>diff$i<span style="color:#f92672">.</span>msq <span style="color:#f92672">&lt;-</span> summarize(group_by(raschdat1<span style="color:#f92672">.</span>long, item), i<span style="color:#f92672">.</span>msq <span style="color:#f92672">=</span> sum(resid <span style="color:#f92672">^</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">/</span>
+                              sum(fitted <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> fitted)))$i<span style="color:#f92672">.</span>msq
 
-# To calculate infit MSQ:
-item.diff$i.msq &lt;- summarize(group_by(raschdat1.long, item), i.msq = sum(resid ^ 2) /
-                              sum(fitted * (1 - fitted)))$i.msq
-
-# Move everything into one data frame to compare using GGPLOT
+<span style="color:#75715e"># Move everything into one data frame to compare using GGPLOT</span>
 {
-  item.fit.df &lt;- data.frame(
-    item = paste0(&quot;V&quot;, 1:30), mml.osq = item.diff$o.msq, mml.isq = item.diff$i.msq,
-    cml.osq = itemfit(person.parameter(res.rasch))$i.outfitMSQ,
-    cml.isq = itemfit(person.parameter(res.rasch))$i.infitMSQ
+  item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(
+    item <span style="color:#f92672">=</span> paste0(<span style="color:#e6db74">&#34;V&#34;</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">30</span>), mml<span style="color:#f92672">.</span>osq <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>diff$o<span style="color:#f92672">.</span>msq, mml<span style="color:#f92672">.</span>isq <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>diff$i<span style="color:#f92672">.</span>msq,
+    cml<span style="color:#f92672">.</span>osq <span style="color:#f92672">=</span> itemfit(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch))$i<span style="color:#f92672">.</span>outfitMSQ,
+    cml<span style="color:#f92672">.</span>isq <span style="color:#f92672">=</span> itemfit(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch))$i<span style="color:#f92672">.</span>infitMSQ
   )
-  item.fit.df &lt;- cbind(
-    tidyr::gather(item.fit.df[, 1:3], method.mml, mml, mml.osq:mml.isq),
-    tidyr::gather(item.fit.df[, 4:5], method.cml, cml, cml.osq:cml.isq)
+  item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> cbind(
+    tidyr<span style="color:#f92672">::</span>gather(item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df<span style="color:#f92672">[</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span><span style="color:#f92672">]</span>, method<span style="color:#f92672">.</span>mml, mml, mml<span style="color:#f92672">.</span>osq<span style="color:#e6db74">:mml</span><span style="color:#f92672">.</span>isq),
+    tidyr<span style="color:#f92672">::</span>gather(item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df<span style="color:#f92672">[</span>, <span style="color:#ae81ff">4</span>:<span style="color:#ae81ff">5</span><span style="color:#f92672">]</span>, method<span style="color:#f92672">.</span>cml, cml, cml<span style="color:#f92672">.</span>osq<span style="color:#e6db74">:cml</span><span style="color:#f92672">.</span>isq)
   )
-  item.fit.df &lt;- cbind(item.fit.df[, c(1, 3, 5)], method = c(
-    rep(&quot;Outfit MSQ&quot;, 30), rep(&quot;Infit MSQ&quot;, 30)))
+  item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> cbind(item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df<span style="color:#f92672">[</span>, c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>)<span style="color:#f92672">]</span>, method <span style="color:#f92672">=</span> c(
+    rep(<span style="color:#e6db74">&#34;Outfit MSQ&#34;</span>, <span style="color:#ae81ff">30</span>), rep(<span style="color:#e6db74">&#34;Infit MSQ&#34;</span>, <span style="color:#ae81ff">30</span>)))
 }
 
-ggplot(item.fit.df, aes(x = mml, y = cml)) +
-  scale_x_continuous(breaks = seq(0, 2, .1)) +
-  scale_y_continuous(breaks = seq(0, 2, .1)) +
-  geom_point(shape = 1) + geom_abline(slope = 1) + theme_classic() +
-  geom_smooth(se = FALSE) + facet_wrap(~ method, ncol = 2) +
-  labs(x = &quot;glmer (MML)&quot;, y = &quot;eRm (CML)&quot;, title = &quot;Item fit comparing CML and MML&quot;)
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/msq_comp_item.png" alt="COMP_ITEM_FIT" /></p>
-
+ggplot(item<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df, aes(x <span style="color:#f92672">=</span> mml, y <span style="color:#f92672">=</span> cml)) <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span>
+  scale_y_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span>
+  geom_point(shape <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> geom_abline(slope <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> theme_classic() <span style="color:#f92672">+</span>
+  geom_smooth(se <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>) <span style="color:#f92672">+</span> facet_wrap(<span style="color:#f92672">~</span> method, ncol <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;glmer (MML)&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eRm (CML)&#34;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item fit comparing CML and MML&#34;</span>)
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/msq_comp_item.png" alt="COMP_ITEM_FIT"></p>
 <p>Interestingly, it seems the MSQ from CML is almost always higher than that from the multilevel model (MML).</p>
-
 <h4 id="person-fit-using-mean-square">Person fit using mean square</h4>
-
 <p>eRm one-liner:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">personfit(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch)) <span style="color:#75715e"># Not printed</span>
 
-<pre><code class="language-ruby">personfit(person.parameter(res.rasch)) # Not printed
+pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df$ID <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">100</span>
 
-pers.ab.df$ID &lt;- 1:100
+<span style="color:#75715e"># Person outfit MSQ:</span>
+pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df$o<span style="color:#f92672">.</span>msq <span style="color:#f92672">&lt;-</span> summarize(group_by(raschdat1<span style="color:#f92672">.</span>long, <span style="color:#66d9ef">ID</span>), o<span style="color:#f92672">.</span>msq <span style="color:#f92672">=</span> mean(o<span style="color:#f92672">.</span>msq))$o<span style="color:#f92672">.</span>msq
 
-# Person outfit MSQ:
-pers.ab.df$o.msq &lt;- summarize(group_by(raschdat1.long, ID), o.msq = mean(o.msq))$o.msq
+<span style="color:#75715e"># Person infit MSQ:</span>
+pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df$i<span style="color:#f92672">.</span>msq <span style="color:#f92672">&lt;-</span> summarize(group_by(raschdat1<span style="color:#f92672">.</span>long, <span style="color:#66d9ef">ID</span>), i<span style="color:#f92672">.</span>msq <span style="color:#f92672">=</span> sum(resid <span style="color:#f92672">^</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">/</span>
+                                sum(fitted <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> fitted)))$i<span style="color:#f92672">.</span>msq
 
-# Person infit MSQ:
-pers.ab.df$i.msq &lt;- summarize(group_by(raschdat1.long, ID), i.msq = sum(resid ^ 2) /
-                                sum(fitted * (1 - fitted)))$i.msq
-
-# Move everything into one data frame to compare using GGPLOT
+<span style="color:#75715e"># Move everything into one data frame to compare using GGPLOT</span>
 {
-  person.fit.df &lt;- data.frame(
-    ID = 1:100, mml.osq = pers.ab.df$o.msq, mml.isq = pers.ab.df$i.msq,
-    cml.osq = personfit(person.parameter(res.rasch))$p.outfitMSQ,
-    cml.isq = personfit(person.parameter(res.rasch))$p.infitMSQ
+  person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">.</span>frame(
+    <span style="color:#66d9ef">ID</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">100</span>, mml<span style="color:#f92672">.</span>osq <span style="color:#f92672">=</span> pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df$o<span style="color:#f92672">.</span>msq, mml<span style="color:#f92672">.</span>isq <span style="color:#f92672">=</span> pers<span style="color:#f92672">.</span>ab<span style="color:#f92672">.</span>df$i<span style="color:#f92672">.</span>msq,
+    cml<span style="color:#f92672">.</span>osq <span style="color:#f92672">=</span> personfit(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch))$p<span style="color:#f92672">.</span>outfitMSQ,
+    cml<span style="color:#f92672">.</span>isq <span style="color:#f92672">=</span> personfit(person<span style="color:#f92672">.</span>parameter(res<span style="color:#f92672">.</span>rasch))$p<span style="color:#f92672">.</span>infitMSQ
   )
-  person.fit.df &lt;- cbind(
-    tidyr::gather(person.fit.df[, 1:3], method.mml, mml, mml.osq:mml.isq),
-    tidyr::gather(person.fit.df[, 4:5], method.cml, cml, cml.osq:cml.isq)
+  person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> cbind(
+    tidyr<span style="color:#f92672">::</span>gather(person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df<span style="color:#f92672">[</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span><span style="color:#f92672">]</span>, method<span style="color:#f92672">.</span>mml, mml, mml<span style="color:#f92672">.</span>osq<span style="color:#e6db74">:mml</span><span style="color:#f92672">.</span>isq),
+    tidyr<span style="color:#f92672">::</span>gather(person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df<span style="color:#f92672">[</span>, <span style="color:#ae81ff">4</span>:<span style="color:#ae81ff">5</span><span style="color:#f92672">]</span>, method<span style="color:#f92672">.</span>cml, cml, cml<span style="color:#f92672">.</span>osq<span style="color:#e6db74">:cml</span><span style="color:#f92672">.</span>isq)
   )
-  person.fit.df &lt;- cbind(person.fit.df[, c(1, 3, 5)], method = c(
-    rep(&quot;Outfit MSQ&quot;, 100), rep(&quot;Infit MSQ&quot;, 100)))
+  person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df <span style="color:#f92672">&lt;-</span> cbind(person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df<span style="color:#f92672">[</span>, c(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>)<span style="color:#f92672">]</span>, method <span style="color:#f92672">=</span> c(
+    rep(<span style="color:#e6db74">&#34;Outfit MSQ&#34;</span>, <span style="color:#ae81ff">100</span>), rep(<span style="color:#e6db74">&#34;Infit MSQ&#34;</span>, <span style="color:#ae81ff">100</span>)))
 }
 
-ggplot(person.fit.df, aes(x = mml, y = cml)) +
-  scale_x_continuous(breaks = seq(0, 2, .1)) +
-  scale_y_continuous(breaks = seq(0, 2, .1)) +
-  geom_point(shape = 1) + geom_abline(slope = 1) + theme_classic() +
-  geom_smooth(se = FALSE) + facet_wrap(~ method, ncol = 2) +
+ggplot(person<span style="color:#f92672">.</span>fit<span style="color:#f92672">.</span>df, aes(x <span style="color:#f92672">=</span> mml, y <span style="color:#f92672">=</span> cml)) <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span>
+  scale_y_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span>
+  geom_point(shape <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> geom_abline(slope <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> theme_classic() <span style="color:#f92672">+</span>
+  geom_smooth(se <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>) <span style="color:#f92672">+</span> facet_wrap(<span style="color:#f92672">~</span> method, ncol <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span>
   geom_text_repel(aes(
-    label = ifelse(cml &gt;= 1.5 | mml &gt;= 1.5 | cml &lt;= 0.5 | mml &lt;= 0.5, ID, &quot;&quot;))) +
-  geom_hline(yintercept = c(.5, 1.5), linetype = 2) +
-  geom_vline(xintercept = c(.5, 1.5), linetype = 2) +
-  labs(x = &quot;glmer (MML)&quot;, y = &quot;eRm (CML)&quot;, title = &quot;Person fit comparing CML and MML&quot;)
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/msq_comp_person.png" alt="COMP_PERS_FIT" /></p>
-
+    label <span style="color:#f92672">=</span> ifelse(cml <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">|</span> mml <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">|</span> cml <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">|</span> mml <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#66d9ef">ID</span>, <span style="color:#e6db74">&#34;&#34;</span>))) <span style="color:#f92672">+</span>
+  geom_hline(yintercept <span style="color:#f92672">=</span> c(<span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>), linetype <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span>
+  geom_vline(xintercept <span style="color:#f92672">=</span> c(<span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>), linetype <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;glmer (MML)&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eRm (CML)&#34;</span>, title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person fit comparing CML and MML&#34;</span>)
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/msq_comp_person.png" alt="COMP_PERS_FIT"></p>
 <p>Same pattern, MSQ from CML is almost always higher than that from the multilevel model (MML) I used the conventional cut-offs to identify misfitting persons. Person 1 with low infit and outfit MSQ got only one question correct, cannot recall what stood out about 8, 26 and 53.</p>
-
 <h4 id="test-information">Test information</h4>
-
 <p>eRm one-liner:</p>
-
-<pre><code class="language-ruby">plotINFO(res.rasch)
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/iic_joint.png" alt="IIC" /></p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">plotINFO(res<span style="color:#f92672">.</span>rasch)
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/iic_joint.png" alt="IIC"></p>
 <p>We&rsquo;ve already done the work for this above when we created the ICCs, and calculated the test information. All that remains is plotting. For the overall test information, we need to sum each item&rsquo;s test information:</p>
-
-<pre><code class="language-ruby">ggplot(summarise(group_by(test.info.df, theta), info = sum(info)),
-       aes(x = theta, y = info)) + geom_line() +
-  scale_x_continuous(breaks = -6:6) +
-  scale_y_continuous(breaks = c(1:5, .10, 6.42)) +
-  labs(x = &quot;Person ability&quot;, y = &quot;Test information&quot;, colour = &quot;Item&quot;,
-       title = &quot;Test information plot&quot;) +
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">ggplot(summarise(group_by(test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df, theta), info <span style="color:#f92672">=</span> sum(info)),
+       aes(x <span style="color:#f92672">=</span> theta, y <span style="color:#f92672">=</span> info)) <span style="color:#f92672">+</span> geom_line() <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>:<span style="color:#ae81ff">6</span>) <span style="color:#f92672">+</span>
+  scale_y_continuous(breaks <span style="color:#f92672">=</span> c(<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">5</span>, <span style="color:#f92672">.</span><span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">6</span><span style="color:#f92672">.</span><span style="color:#ae81ff">42</span>)) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person ability&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Test information&#34;</span>, colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item&#34;</span>,
+       title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Test information plot&#34;</span>) <span style="color:#f92672">+</span>
   theme_classic()
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/iic_joint_mlm.png" alt="IIC_MLM" /></p>
-
-<pre><code class="language-ruby"># And the ambiguous colour plot:
-ggplot(test.info.df, aes(x = theta, y = info)) +
-  geom_line(aes(colour = reorder(item, diff, mean))) +
-  scale_x_continuous(breaks = seq(-6, 6, 1)) +
-  labs(x = &quot;Person ability&quot;, y = &quot;Item information&quot;, colour = &quot;Item&quot;,
-       title = &quot;Item information plot&quot;,
-       subtitle = &quot;Items ordered from least to most difficult&quot;) +
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/iic_joint_mlm.png" alt="IIC_MLM"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># And the ambiguous colour plot:</span>
+ggplot(test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df, aes(x <span style="color:#f92672">=</span> theta, y <span style="color:#f92672">=</span> info)) <span style="color:#f92672">+</span>
+  geom_line(aes(colour <span style="color:#f92672">=</span> reorder(item, diff, mean))) <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Person ability&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item information&#34;</span>, colour <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item&#34;</span>,
+       title <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Item information plot&#34;</span>,
+       subtitle <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Items ordered from least to most difficult&#34;</span>) <span style="color:#f92672">+</span>
   theme_classic()
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/iic_overlay_mlm.png" alt="IIC_OVER" /></p>
-
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/iic_overlay_mlm.png" alt="IIC_OVER"></p>
 <p>And finally, using the Standard Error of Measurement (SEM), I thought you could create a confidence-band like plot. The SEM is the inverse of the root of test information.</p>
-
-<pre><code class="language-ruby">ggplot(summarise(group_by(test.info.df, theta), info = 1 / sqrt(sum(info))),
-       aes(x = theta)) +
-  scale_x_continuous(breaks = seq(-3, 3, 1), limits = c(-3, 3)) +
-  scale_y_continuous(breaks = c(seq(-3, 3, 1), -4.5, 4.5), limits = c(-4.5, 4.5)) +
-  geom_line(aes(y = theta), size = .5) +
-  geom_errorbar(aes(ymin = -1.96 * info + theta, ymax = 1.96 * info + theta), size = .05) +
-  labs(x = &quot;Estimated person ability&quot;, y = &quot;Range of 95% of true scores&quot;) +
-  geom_hline(yintercept = c(seq(-3, 3, 1), -4.5, 4.5), linetype = 1, size = .05) +
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">ggplot(summarise(group_by(test<span style="color:#f92672">.</span>info<span style="color:#f92672">.</span>df, theta), info <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> sqrt(sum(info))),
+       aes(x <span style="color:#f92672">=</span> theta)) <span style="color:#f92672">+</span>
+  scale_x_continuous(breaks <span style="color:#f92672">=</span> seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1</span>), limits <span style="color:#f92672">=</span> c(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)) <span style="color:#f92672">+</span>
+  scale_y_continuous(breaks <span style="color:#f92672">=</span> c(seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1</span>), <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>), limits <span style="color:#f92672">=</span> c(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span>
+  geom_line(aes(y <span style="color:#f92672">=</span> theta), size <span style="color:#f92672">=</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span>
+  geom_errorbar(aes(ymin <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">96</span> <span style="color:#f92672">*</span> info <span style="color:#f92672">+</span> theta, ymax <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">96</span> <span style="color:#f92672">*</span> info <span style="color:#f92672">+</span> theta), size <span style="color:#f92672">=</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">05</span>) <span style="color:#f92672">+</span>
+  labs(x <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Estimated person ability&#34;</span>, y <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Range of 95% of true scores&#34;</span>) <span style="color:#f92672">+</span>
+  geom_hline(yintercept <span style="color:#f92672">=</span> c(seq(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1</span>), <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>), linetype <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, size <span style="color:#f92672">=</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">05</span>) <span style="color:#f92672">+</span>
   theme_classic()
-</code></pre>
-
-<p><img src="/img/posts/rasch_bin_logistic/sem.png" alt="SEM" /></p>
-
+</code></pre></div><p><img src="/img/posts/rasch_bin_logistic/sem.png" alt="SEM"></p>
 <p>This is the one I like best, because I feel it is most informative. This plot shows that for a kid with an estimated ability of -3, their ability is estimated with such precision that their actual score could lie between -1.5 and -4.5. In the middle at 0, the actual score could lie between, by my guess, -.8 and .8. I am not so sure this interpretation is correct, but it is appealing :).</p>
-
-<hr />
-
-<p>I&rsquo;m not sure what I have achieved here, apart from a lot of ggplot-ing, &hellip; But having worked through this, I feel I can better understand what the model is trying to claim a series of items, and what some of its diagnostics are about. Also, because the model is a regression model, it is set for the addition of additional predictors - but that&rsquo;s no longer a Rasch model. I guess the next step would be to replicate this on real data I am working on. The <code>vcrpart</code> &amp; <code>ordinal</code> packages could work for this, as it performs ordinal multilevel regression. However, ordinal only performs cumulative link logistic regression (Rijmen et al.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> call it the <em>graded response model</em>), while <code>vcrpart</code> performs cumulative link, adjacent categories (<em>partial credit model</em> and <em>rating scale model</em>), and baseline category (<em>nominal response model</em>) ordinal regression models.</p>
-
-<p>I have left out differential item functioning, but I believe that to be testing the fixed effects of groups in the data, and testing the interaction between test items and groups.<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup></p>
-
-<hr />
-
+<hr>
+<p>I&rsquo;m not sure what I have achieved here, apart from a lot of ggplot-ing, &hellip; But having worked through this, I feel I can better understand what the model is trying to claim a series of items, and what some of its diagnostics are about. Also, because the model is a regression model, it is set for the addition of additional predictors - but that&rsquo;s no longer a Rasch model. I guess the next step would be to replicate this on real data I am working on. The <code>vcrpart</code> &amp; <code>ordinal</code> packages could work for this, as it performs ordinal multilevel regression. However, ordinal only performs cumulative link logistic regression (Rijmen et al.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> call it the <em>graded response model</em>), while <code>vcrpart</code> performs cumulative link, adjacent categories (<em>partial credit model</em> and <em>rating scale model</em>), and baseline category (<em>nominal response model</em>) ordinal regression models.</p>
+<p>I have left out differential item functioning, but I believe that to be testing the fixed effects of groups in the data, and testing the interaction between test items and groups.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<hr>
 <blockquote>
 <p>P.S.: Rasch analysis is not just math (multilevel logistic regression, conditional logistic regression), it also seems to be a philosophy. So I guess the title here is misleading :). I have not used glmer() to perform Rasch analysis, I just created the outputs that support Rasch analysis.</p>
 </blockquote>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">Rijmen, F., Tuerlinckx, F., De Boeck, P., &amp; Kuppens, P. (2003). A nonlinear mixed model framework for item response theory. Psychological Methods, 8(2), 185–205. <a href="https://doi.org/10.1037/1082-989X.8.2.185">https://doi.org/10.1037/1082-989X.8.2.185</a>
- <a class="footnote-return" href="#fnref:1">↩</a></li>
-<li id="fn:2">De Boeck, P., Bakker, M., Zwitser, R., Nivard, M., Hofman, A., Tuerlinckx, F., &amp; Partchev, I. (2011). The Estimation of Item Response Models with the lmer Function from the lme4 Package in R. Journal Of Statistical Software, 39(12), 1–28. <a href="https://doi.org/10.18637/jss.v039.i12">https://doi.org/10.18637/jss.v039.i12</a>
- <a class="footnote-return" href="#fnref:2">↩</a></li>
-<li id="fn:3">Hedeker, D., Mermelstein, R. J., Demirtas, H., &amp; Berbaum, M. L. (2016). A mixed-effects location-scale model for ordinal questionnaire data. Health Services and Outcomes Research Methodology, 16(3), 117–131. <a href="https://doi.org/10.1007/s10742-016-0145-9">https://doi.org/10.1007/s10742-016-0145-9</a>
- <a class="footnote-return" href="#fnref:3">↩</a></li>
-<li id="fn:4">Engec, N. (1998). Logistic regression and item response theory: Estimation item and ability parameters by using logistic regression in IRT. ProQuest Dissertations and Theses. Retrieved from <a href="http://digitalcommons.lsu.edu/gradschool_disstheses/6731">http://digitalcommons.lsu.edu/gradschool_disstheses/6731</a>
- <a class="footnote-return" href="#fnref:4">↩</a></li>
-<li id="fn:5">Reise, S. P. (2000). Using mutlilevel logistic regression to evaluate person-fit in IRT models. Multivariate Behavioral Research, 35(4), 543–568. <a href="https://doi.org/10.1207/S15327906MBR3504_06">https://doi.org/10.1207/S15327906MBR3504_06</a>
- <a class="footnote-return" href="#fnref:5">↩</a></li>
-<li id="fn:6">De Boeck, P., &amp; Wilson, M. (2004). Explanatory item response models : a generalized linear and nonlinear approach. (P. De Boeck &amp; M. Wilson, Eds.). New York, NY: Springer New York. <a href="https://doi.org/10.1007/978-1-4757-3990-9">https://doi.org/10.1007/978-1-4757-3990-9</a>
- <a class="footnote-return" href="#fnref:6">↩</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Rijmen, F., Tuerlinckx, F., De Boeck, P., &amp; Kuppens, P. (2003). A nonlinear mixed model framework for item response theory. Psychological Methods, 8(2), 185–205. <a href="https://doi.org/10.1037/1082-989X.8.2.185">https://doi.org/10.1037/1082-989X.8.2.185</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>De Boeck, P., Bakker, M., Zwitser, R., Nivard, M., Hofman, A., Tuerlinckx, F., &amp; Partchev, I. (2011). The Estimation of Item Response Models with the lmer Function from the lme4 Package in R. Journal Of Statistical Software, 39(12), 1–28. <a href="https://doi.org/10.18637/jss.v039.i12">https://doi.org/10.18637/jss.v039.i12</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Hedeker, D., Mermelstein, R. J., Demirtas, H., &amp; Berbaum, M. L. (2016). A mixed-effects location-scale model for ordinal questionnaire data. Health Services and Outcomes Research Methodology, 16(3), 117–131. <a href="https://doi.org/10.1007/s10742-016-0145-9">https://doi.org/10.1007/s10742-016-0145-9</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>Engec, N. (1998). Logistic regression and item response theory: Estimation item and ability parameters by using logistic regression in IRT. ProQuest Dissertations and Theses. Retrieved from <a href="http://digitalcommons.lsu.edu/gradschool_disstheses/6731">http://digitalcommons.lsu.edu/gradschool_disstheses/6731</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p>Reise, S. P. (2000). Using mutlilevel logistic regression to evaluate person-fit in IRT models. Multivariate Behavioral Research, 35(4), 543–568. <a href="https://doi.org/10.1207/S15327906MBR3504_06">https://doi.org/10.1207/S15327906MBR3504_06</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p>De Boeck, P., &amp; Wilson, M. (2004). Explanatory item response models : a generalized linear and nonlinear approach. (P. De Boeck &amp; M. Wilson, Eds.). New York, NY: Springer New York. <a href="https://doi.org/10.1007/978-1-4757-3990-9">https://doi.org/10.1007/978-1-4757-3990-9</a> <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </main>
 

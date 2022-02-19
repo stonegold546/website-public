@@ -1,28 +1,75 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://www.jamesuanhoro.com/categories/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/post/2022/02/19/creating-installers-for-shiny-apps-on-windows/</loc>
+    <lastmod>2022-02-19T10:51:26-06:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-19T10:51:26-06:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <lastmod>2022-02-19T10:51:26-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/</loc>
+    <lastmod>2021-06-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/jobs/</loc>
+    <lastmod>2021-06-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/jobs/</loc>
+    <lastmod>2021-06-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2021/06/27/my-job-market-experience/</loc>
+    <lastmod>2021-06-27T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/</loc>
+    <lastmod>2021-06-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/binary/</loc>
     <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/measurement-error/</loc>
+    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
+    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
+    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</loc>
+    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/tetrachoric/</loc>
+    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -31,51 +78,38 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/binary/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/effect-size/</loc>
+    <lastmod>2019-12-06T01:43:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/measurement-error/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/post/2019/12/06/large-scale-rcts-in-education-suggest-small-effects-this-is-not-surprising/</loc>
+    <lastmod>2019-12-06T01:43:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/regression/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/meta-analysis/</loc>
+    <lastmod>2019-12-06T01:43:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/categories/stats/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.jamesuanhoro.com/tags/tetrachoric/</loc>
-    <lastmod>2021-01-18T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/random-effects/</loc>
+    <lastmod>2019-12-06T01:43:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/glm/</loc>
     <lastmod>2019-11-25T11:43:14-05:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
+    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/ols/</loc>
     <lastmod>2019-11-25T11:43:14-05:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -84,15 +118,8 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/effect-size/</loc>
-    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.jamesuanhoro.com/tags/logistic-regression/</loc>
-    <lastmod>2019-11-25T11:43:14-05:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/bayesian/</loc>
+    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -101,50 +128,38 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/bayesian/</loc>
-    <lastmod>2019-09-26T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://www.jamesuanhoro.com/tags/practical-significance/</loc>
     <lastmod>2019-09-26T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.jamesuanhoro.com/post/2019/08/02/when-data-are-not-so-informative-it-pays-to-choose-the-sum-score-over-the-factor-score/</loc>
-    <lastmod>2019-08-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/factor-analysis/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/factor-score/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/small-samples/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/sum-score/</loc>
     <lastmod>2019-08-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2019/08/02/when-data-are-not-so-informative-it-pays-to-choose-the-sum-score-over-the-factor-score/</loc>
+    <lastmod>2019-08-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -155,13 +170,16 @@
   <url>
     <loc>https://www.jamesuanhoro.com/tags/multilevel-regression/</loc>
     <lastmod>2018-11-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/categories/rstan/</loc>
     <lastmod>2018-11-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
+    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -170,9 +188,8 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/heteroskedasticity/</loc>
-    <lastmod>2018-10-20T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/categories/rstats/</loc>
+    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -181,15 +198,13 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/categories/rstats/</loc>
+    <loc>https://www.jamesuanhoro.com/tags/simulation/</loc>
     <lastmod>2018-10-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/simulation/</loc>
-    <lastmod>2018-10-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/robust-regression/</loc>
+    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -198,9 +213,13 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/robust-regression/</loc>
-    <lastmod>2018-10-06T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/maximum-likelihood/</loc>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/tags/model-validation/</loc>
+    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -214,15 +233,13 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/maximum-likelihood/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/multivariate-glm/</loc>
+    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/model-validation/</loc>
-    <lastmod>2018-05-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/ordinal-regression/</loc>
+    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -231,32 +248,18 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/multivariate-glm/</loc>
-    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.jamesuanhoro.com/tags/ordinal-regression/</loc>
-    <lastmod>2018-02-12T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>https://www.jamesuanhoro.com/tags/item-response-theory/</loc>
+    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/rasch-model/</loc>
     <lastmod>2018-01-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/post/2018/01/02/using-glmer-to-perform-rasch-analysis/</loc>
     <lastmod>2018-01-02T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.jamesuanhoro.com/tags/item-response-theory/</loc>
-    <lastmod>2018-01-02T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -267,13 +270,11 @@
   <url>
     <loc>https://www.jamesuanhoro.com/tags/fit-indices/</loc>
     <lastmod>2017-11-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/misspecification/</loc>
     <lastmod>2017-11-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -287,20 +288,18 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</loc>
-    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://www.jamesuanhoro.com/tags/missing-data/</loc>
     <lastmod>2017-09-21T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://www.jamesuanhoro.com/tags/outliers/</loc>
     <lastmod>2017-09-21T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</loc>
+    <lastmod>2017-09-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -309,14 +308,13 @@
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/post/2017/08/11/on-the-interpretation-of-regression-coefficients/</loc>
+    <loc>https://www.jamesuanhoro.com/tags/causality/</loc>
     <lastmod>2017-08-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.jamesuanhoro.com/tags/causality/</loc>
+    <loc>https://www.jamesuanhoro.com/post/2017/08/11/on-the-interpretation-of-regression-coefficients/</loc>
     <lastmod>2017-08-11T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
