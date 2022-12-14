@@ -6,30 +6,15 @@
     <description>Recent content in Posts on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 19 Feb 2022 10:51:26 -0600</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/post/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 14 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Creating installers for Shiny apps on Windows</title>
-      <link>https://www.jamesuanhoro.com/post/2022/02/19/creating-installers-for-shiny-apps-on-windows/</link>
-      <pubDate>Sat, 19 Feb 2022 10:51:26 -0600</pubDate>
+      <title>Meta-analytic Bayesian structural equation modeling</title>
+      <link>https://www.jamesuanhoro.com/post/2022/12/14/meta-analytic-bayesian-structural-equation-modeling/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/post/2022/02/19/creating-installers-for-shiny-apps-on-windows/</guid>
-      <description>I had the goal of packaging a Shiny app such that I could simply hand an installation file to a person, they install the file on their system and they can use the Shiny app. Most common way of sharing Shiny apps is uploading the app online. But if the app requires raw data, there are good reasons why people should not upload their raw data.
-The setup I lay out is for Windows, but it should be possible to do all this for Mac.</description>
-    </item>
-    
-    <item>
-      <title>My job market experience</title>
-      <link>https://www.jamesuanhoro.com/post/2021/06/27/my-job-market-experience/</link>
-      <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/post/2021/06/27/my-job-market-experience/</guid>
-      <description>I was on the job market this last year and ended up with a faculty job. I think it&amp;rsquo;s worth sharing aspects of my process, so maybe someone learns something from it.
-Prior to entering the job market, I decided two things.
- I would not be a postdoc unless it was a postdoc to faculty position: I have moved around for school since age 10 when I went to boarding school.</description>
+      <guid>https://www.jamesuanhoro.com/post/2022/12/14/meta-analytic-bayesian-structural-equation-modeling/</guid>
+      <description>There is a non-pay-walled version below, but the version of record is available at the Structural Equation Modeling, http://www.tandfonline.com/10.1080/10705511.2022.2142128.
+Here&amp;rsquo;s the PDF and OSF repository with simulation and data analyses code in R.</description>
     </item>
     
     <item>
@@ -39,16 +24,7 @@ Prior to entering the job market, I decided two things.
       
       <guid>https://www.jamesuanhoro.com/post/2021/01/18/traditional-sem-overly-focuses-on-lisrel-equations-to-the-detriment-of-dealing-with-measurement-error/</guid>
       <description>So I don&amp;rsquo;t listen to the Quantitude podcast. It&amp;rsquo;s really difficult for me to get into it when my playlist includes podcasts with episodes titles like: Interstellar Jihad. However, I saw several tweets inspired by the SEM vs. regression episode. And I have too many thoughts, opinions, feelings to stay quiet. I lay them out here.
-   SEM is regression A case of cultural differences The actual difference is LISREL But too much LISREL, not enough measurement error LISREL works well for normal-data normal-model no manifest covariates models Covariance matrix -&amp;gt; LISREL likely fails with discrete indicators LISREL likely fails for SEMs with observed covariates (e.</description>
-    </item>
-    
-    <item>
-      <title>Large scale RCTs in education suggest small effects; this is not surprising</title>
-      <link>https://www.jamesuanhoro.com/post/2019/12/06/large-scale-rcts-in-education-suggest-small-effects-this-is-not-surprising/</link>
-      <pubDate>Fri, 06 Dec 2019 01:43:14 -0500</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/post/2019/12/06/large-scale-rcts-in-education-suggest-small-effects-this-is-not-surprising/</guid>
-      <description>A recent article in the Educational Researcher by Lortie-Forgues and Inglis (hereafter LFI)1 concluded that large-scale educational RCTs for academic achievement are &amp;ldquo;often uninformative&amp;rdquo;, and found this to be cause for concern. LFI&amp;rsquo;s work is transparent and easy to follow. They gathered study results from two funding sources (one in the UK, another in the US) over the course of 11 years. All the studies were large scale RCTs. They had 271 outcomes from the 141 studies.</description>
+SEM is regression A case of cultural differences The actual difference is LISREL But too much LISREL, not enough measurement error LISREL works well for normal-data normal-model no manifest covariates models Covariance matrix -&amp;gt; LISREL likely fails with discrete indicators LISREL likely fails for SEMs with observed covariates (e.</description>
     </item>
     
     <item>
@@ -166,7 +142,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/11/16/a-chi-square-test-of-close-fit-in-covariance-based-sem/</guid>
       <description>TLDR: If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.
- When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size.</description>
+When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size.</description>
     </item>
     
     <item>
@@ -176,7 +152,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/10/28/misspecification-and-fit-indices-in-covariance-based-sem/</guid>
       <description>TLDR: If you have good measurement quality, conventional benchmarks for fit indices may lead to bad decisions. Additionally, global fit indices are not informative for investigating misspecification.
- I am working with one of my professors, Dr. Jessica Logan, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project.</description>
+I am working with one of my professors, Dr. Jessica Logan, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project.</description>
     </item>
     
     <item>
@@ -186,7 +162,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</guid>
       <description>TLDR: Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.
- I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
+I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
     </item>
     
     <item>
@@ -196,8 +172,8 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</guid>
       <description>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the Theil-Sen estimator.
- A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
- Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope  Calculating the slope this way happens to be quite robust.</description>
+A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
+Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope Calculating the slope this way happens to be quite robust.</description>
     </item>
     
     <item>
@@ -207,7 +183,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/19/linear-regression-with-violation-of-heteroskedasticity-with-small-samples/</guid>
       <description>TLDR: In small samples, the wild bootstrap implemented in the R hcci package is a good bet when heteroskedasticity is a concern.
- Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
+Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
     </item>
     
     <item>
@@ -217,7 +193,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/08/11/on-the-interpretation-of-regression-coefficients/</guid>
       <description>TLDR: We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.
- I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&amp;rsquo;s Data analysis using regression and multilevel/hierarchical models.1 So I started reading it and it&amp;rsquo;s a good book.
+I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&amp;rsquo;s Data analysis using regression and multilevel/hierarchical models.1 So I started reading it and it&amp;rsquo;s a good book.
 A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p.</description>
     </item>
     

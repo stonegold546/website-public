@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="James Uanhoro&#39;s personal website.">
     <title>Problems with using odds ratios as effect sizes in binary logistic regression and alternative approaches | James Uanhoro</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
+    
     <header>
-  
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-        processEscapes: true
-      }
-    });
-  </script>
 
-  
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   <nav>
     <ul>
       
       
       <li class="pull-left ">
-        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+        <a href="https://www.jamesuanhoro.com/">~/james uanhoro</a>
       </li>
       
       
@@ -79,13 +74,13 @@
 </div>
 
 
-
-<main>
-<p>This is my first (first author) journal article. We started writing it in Summer 2018, with first submission by November 2018. So my thinking has changed somewhat since then.
+<div class="content-wrapper">
+  <main>
+    <p>This is my first (first author) journal article. We started writing it in Summer 2018, with first submission by November 2018. So my thinking has changed somewhat since then.
 There is a non-pay-walled version below, but the version of record is available at the Journal of Experimental Education, <a href="http://www.tandfonline.com/10.1080/00220973.2019.1693328">http://www.tandfonline.com/10.1080/00220973.2019.1693328</a>.
 The best part of the review process was communicating with the editor, Professor Brian French - he was very kind.</p>
 <p>Here&rsquo;s the <a href="/pdf/bin_eff_paper_revise_3.pdf">PDF</a> and <a href="https://github.com/jamesuanhoro/reproducing_articles/tree/master/2019_jxe_odds_ratio">GitHub repository</a> with simulation and figure reproduction code in R (very little comments).</p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p>Something I dislike in the paper is the hypothetical two-by-two contingency table repeated from Peng, Lee and Ingersoll (PLI, 2001, a well-cited review of logistic regression).<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Their hypothetical example had some inner city school children recommended to remedial reading. However, given that the example is hypothetical/invented, why invent inner city school children in need of saving?</p>
 <p>Perhaps, PLI were analyzing a related real-life dataset when they wrote this. But what excuse do I have for choosing this example?<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> None. I make these comments so methodologists can do better with our choice of examples, real or hypothetical. Given that the example datasets we use are sometimes ancillary to our work, we can be more thoughtful.</p>
 <p>The summary of the paper is:</p>
@@ -106,41 +101,26 @@ The best part of the review process was communicating with the editor, Professor
 <li>One thing in the paper that I&rsquo;ve not seen in the literature is the simple derivation for a log-probability model in Appendix A.</li>
 <li>The correlated predictors in both simulations were generated using the copula method. And the correlation was adjusted for attenuation given that the binary was dichotomized.</li>
 </ul>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Peng, C.-Y. J., Lee, K. L., &amp; Ingersoll, G. M. (2002). An introduction to logistic regression analysis and reporting. The Journal of Educational Research, 96(1), 3–14. <a href="https://doi.org/10.1080/00220670209598786">https://doi.org/10.1080/00220670209598786</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Peng, C.-Y. J., Lee, K. L., &amp; Ingersoll, G. M. (2002). An introduction to logistic regression analysis and reporting. The Journal of Educational Research, 96(1), 3–14. <a href="https://doi.org/10.1080/00220670209598786">https://doi.org/10.1080/00220670209598786</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>I, not my co-authors, chose this example. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>I, not my co-authors, chose this example.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>Horrace, W. C., &amp; Oaxaca, R. L. (2003, January 1). New Wine in Old Bottles: A Sequential Estimation Technique for the Lpm. Retrieved from <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>Horrace, W. C., &amp; Oaxaca, R. L. (2003, January 1). New Wine in Old Bottles: A Sequential Estimation Technique for the Lpm. Retrieved from <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=383102</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
-
-</main>
-
-<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
-<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
-
-<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
-<noscript>Please enable Javascript to view comments.</noscript>
-<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
-<a href="https://www.talkyard.io">Talkyard</a>.</p>
 </div>
 
-
-
+    <a href="/"> >> Home</a>
+  </main>
+</div>
     <footer>
-      <script src="//yihui.name/js/math-code.js"></script>
-<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-<script async src="//yihui.name/js/center-img.js"></script>
-
-
+      
 <script>
 (function() {
   function center_el(tagName) {

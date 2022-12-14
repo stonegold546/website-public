@@ -6,11 +6,7 @@
     <description>Recent content in confirmatory-factor-analysis on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 02 Aug 2019 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 02 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/confirmatory-factor-analysis/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>When data are not so informative, it pays to choose the sum score over the factor score</title>
       <link>https://www.jamesuanhoro.com/post/2019/08/02/when-data-are-not-so-informative-it-pays-to-choose-the-sum-score-over-the-factor-score/</link>
@@ -39,7 +35,7 @@ I like to understand most statistical methods as regression models. This way, it
       
       <guid>https://www.jamesuanhoro.com/post/2017/11/16/a-chi-square-test-of-close-fit-in-covariance-based-sem/</guid>
       <description>TLDR: If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.
- When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size.</description>
+When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size.</description>
     </item>
     
     <item>
@@ -49,7 +45,7 @@ I like to understand most statistical methods as regression models. This way, it
       
       <guid>https://www.jamesuanhoro.com/post/2017/10/28/misspecification-and-fit-indices-in-covariance-based-sem/</guid>
       <description>TLDR: If you have good measurement quality, conventional benchmarks for fit indices may lead to bad decisions. Additionally, global fit indices are not informative for investigating misspecification.
- I am working with one of my professors, Dr. Jessica Logan, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project.</description>
+I am working with one of my professors, Dr. Jessica Logan, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project.</description>
     </item>
     
   </channel>

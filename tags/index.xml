@@ -6,17 +6,40 @@
     <description>Recent content in Tags on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 27 Jun 2021 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 14 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MASEM</title>
+      <link>https://www.jamesuanhoro.com/tags/masem/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/masem/</guid>
+      <description></description>
+    </item>
     
     <item>
-      <title>jobs</title>
-      <link>https://www.jamesuanhoro.com/tags/jobs/</link>
-      <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
+      <title>misspecification</title>
+      <link>https://www.jamesuanhoro.com/tags/misspecification/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://www.jamesuanhoro.com/tags/jobs/</guid>
+      <guid>https://www.jamesuanhoro.com/tags/misspecification/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>structural-equation-modeling</title>
+      <link>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Wishart</title>
+      <link>https://www.jamesuanhoro.com/tags/wishart/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.jamesuanhoro.com/tags/wishart/</guid>
       <description></description>
     </item>
     
@@ -48,15 +71,6 @@
     </item>
     
     <item>
-      <title>structural-equation-modeling</title>
-      <link>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</link>
-      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/structural-equation-modeling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>tetrachoric</title>
       <link>https://www.jamesuanhoro.com/tags/tetrachoric/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
@@ -68,27 +82,9 @@
     <item>
       <title>effect-size</title>
       <link>https://www.jamesuanhoro.com/tags/effect-size/</link>
-      <pubDate>Fri, 06 Dec 2019 01:43:14 -0500</pubDate>
+      <pubDate>Mon, 25 Nov 2019 11:43:14 -0500</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/effect-size/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>meta-analysis</title>
-      <link>https://www.jamesuanhoro.com/tags/meta-analysis/</link>
-      <pubDate>Fri, 06 Dec 2019 01:43:14 -0500</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/meta-analysis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>random-effects</title>
-      <link>https://www.jamesuanhoro.com/tags/random-effects/</link>
-      <pubDate>Fri, 06 Dec 2019 01:43:14 -0500</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/random-effects/</guid>
       <description></description>
     </item>
     
@@ -278,15 +274,6 @@
       <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
       
       <guid>https://www.jamesuanhoro.com/tags/fit-indices/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>misspecification</title>
-      <link>https://www.jamesuanhoro.com/tags/misspecification/</link>
-      <pubDate>Thu, 16 Nov 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/tags/misspecification/</guid>
       <description></description>
     </item>
     

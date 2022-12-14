@@ -6,11 +6,7 @@
     <description>Recent content in regression on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/regression/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/regression/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Traditional SEM overly focuses on LISREL equations to the detriment of dealing with measurement error</title>
       <link>https://www.jamesuanhoro.com/post/2021/01/18/traditional-sem-overly-focuses-on-lisrel-equations-to-the-detriment-of-dealing-with-measurement-error/</link>
@@ -18,7 +14,7 @@
       
       <guid>https://www.jamesuanhoro.com/post/2021/01/18/traditional-sem-overly-focuses-on-lisrel-equations-to-the-detriment-of-dealing-with-measurement-error/</guid>
       <description>So I don&amp;rsquo;t listen to the Quantitude podcast. It&amp;rsquo;s really difficult for me to get into it when my playlist includes podcasts with episodes titles like: Interstellar Jihad. However, I saw several tweets inspired by the SEM vs. regression episode. And I have too many thoughts, opinions, feelings to stay quiet. I lay them out here.
-   SEM is regression A case of cultural differences The actual difference is LISREL But too much LISREL, not enough measurement error LISREL works well for normal-data normal-model no manifest covariates models Covariance matrix -&amp;gt; LISREL likely fails with discrete indicators LISREL likely fails for SEMs with observed covariates (e.</description>
+SEM is regression A case of cultural differences The actual difference is LISREL But too much LISREL, not enough measurement error LISREL works well for normal-data normal-model no manifest covariates models Covariance matrix -&amp;gt; LISREL likely fails with discrete indicators LISREL likely fails for SEMs with observed covariates (e.</description>
     </item>
     
     <item>
@@ -78,8 +74,8 @@ I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</de
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</guid>
       <description>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the Theil-Sen estimator.
- A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
- Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope  Calculating the slope this way happens to be quite robust.</description>
+A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
+Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope Calculating the slope this way happens to be quite robust.</description>
     </item>
     
     <item>
@@ -89,7 +85,7 @@ I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</de
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/19/linear-regression-with-violation-of-heteroskedasticity-with-small-samples/</guid>
       <description>TLDR: In small samples, the wild bootstrap implemented in the R hcci package is a good bet when heteroskedasticity is a concern.
- Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
+Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
     </item>
     
     <item>
@@ -99,7 +95,7 @@ I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</de
       
       <guid>https://www.jamesuanhoro.com/post/2017/08/11/on-the-interpretation-of-regression-coefficients/</guid>
       <description>TLDR: We should interpret regression coefficients for continuous variables as we would descriptive dummy variables, unless we intend to make causal claims.
- I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&amp;rsquo;s Data analysis using regression and multilevel/hierarchical models.1 So I started reading it and it&amp;rsquo;s a good book.
+I am going to be teaching regression labs in the Fall, and somehow, I stumbled onto Gelman and Hill&amp;rsquo;s Data analysis using regression and multilevel/hierarchical models.1 So I started reading it and it&amp;rsquo;s a good book.
 A useful piece of advice they give is to interpret regression coefficients in a predictive manner (p.</description>
     </item>
     

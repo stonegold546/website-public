@@ -6,11 +6,7 @@
     <description>Recent content in simulation on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Oct 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/simulation/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 07 Oct 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/simulation/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Should you perform logistic regression on a dichotomized continuous variable when you have access to the continuous variable? I&#39;m not sure.</title>
       <link>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</link>
@@ -38,7 +34,7 @@ I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</de
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</guid>
       <description>TLDR: Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.
- I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
+I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
     </item>
     
     <item>
@@ -48,8 +44,8 @@ I gave a somewhat detailed answer and liked it, so pasting it here verbatim.</de
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</guid>
       <description>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the Theil-Sen estimator.
- A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
- Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope  Calculating the slope this way happens to be quite robust.</description>
+A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
+Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope Calculating the slope this way happens to be quite robust.</description>
     </item>
     
   </channel>

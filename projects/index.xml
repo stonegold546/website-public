@@ -5,10 +5,6 @@
     <link>https://www.jamesuanhoro.com/projects/</link>
     <description>Recent content in Programming projects on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    
-	<atom:link href="https://www.jamesuanhoro.com/projects/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en-us</language><atom:link href="https://www.jamesuanhoro.com/projects/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

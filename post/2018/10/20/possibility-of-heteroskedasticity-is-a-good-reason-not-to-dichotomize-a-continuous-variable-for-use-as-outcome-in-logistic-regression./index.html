@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="James Uanhoro&#39;s personal website.">
     <title>Possibility of heteroskedasticity is a good reason not to dichotomize a continuous variable for use as outcome in logistic regression. | James Uanhoro</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
+    
     <header>
-  
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-        processEscapes: true
-      }
-    });
-  </script>
 
-  
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   <nav>
     <ul>
       
       
       <li class="pull-left ">
-        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+        <a href="https://www.jamesuanhoro.com/">~/james uanhoro</a>
       </li>
       
       
@@ -79,11 +74,11 @@
 </div>
 
 
-
-<main>
-<p>Continuing on whether it&rsquo;s a good idea to dichotomize continuous variables prior to analysis for substantive reasons, I think I settle on the side of bad idea. The major reason is potential heteroskedasticity of the error term in the linear regression model for the original continuous variable.</p>
+<div class="content-wrapper">
+  <main>
+    <p>Continuing on whether it&rsquo;s a good idea to dichotomize continuous variables prior to analysis for substantive reasons, I think I settle on the side of bad idea. The major reason is potential heteroskedasticity of the error term in the linear regression model for the original continuous variable.</p>
 <p>This is an interesting issue, but one that I do not want to devote time to write about. So I decided to write a brief methods note. The goal is that the document is easy to read, simple and at least causes any reader to rethink dichotomization if they do it normally. However, none of it is new.</p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p>Links:</p>
 <ul>
 <li><a href="/pdf/dicho_het_log/dicho_het_log.pdf">PDF</a></li>
@@ -92,26 +87,11 @@
 </ul>
 <p>N.B.: I don&rsquo;t mention it in the methodological note, but the reason methods like generalized additive models and kernel regularized least squares with logistic loss might work is heteroskedasticity in the continuous variable manifests as a different mean function than the inverse logit function. So methods that relax the linearity assumptions of regression (linear/logistic) can do a good job estimating the true relations in the data.</p>
 
-</main>
-
-<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
-<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
-
-<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
-<noscript>Please enable Javascript to view comments.</noscript>
-<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
-<a href="https://www.talkyard.io">Talkyard</a>.</p>
+    <a href="/"> >> Home</a>
+  </main>
 </div>
-
-
-
     <footer>
-      <script src="//yihui.name/js/math-code.js"></script>
-<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-<script async src="//yihui.name/js/center-img.js"></script>
-
-
+      
 <script>
 (function() {
   function center_el(tagName) {

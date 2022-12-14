@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="James Uanhoro&#39;s personal website.">
     <title>Multidimensional CFA with RStan | James Uanhoro</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
+    
     <header>
-  
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-        processEscapes: true
-      }
-    });
-  </script>
 
-  
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   <nav>
     <ul>
       
       
       <li class="pull-left ">
-        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+        <a href="https://www.jamesuanhoro.com/">~/james uanhoro</a>
       </li>
       
       
@@ -79,9 +74,9 @@
 </div>
 
 
-
-<main>
-<p>For starters, here&rsquo;s the <a href="/misc/scripts/cfa.stan">Stan code</a>. And here&rsquo;s the R script: <a href="/misc/scripts/cfa_stan_demo.R">Stan code</a>. If you are already familiar with RStan, the basic concepts you need to combine are standard multilevel models with correlated random slopes and heteroskedastic errors.</p>
+<div class="content-wrapper">
+  <main>
+    <p>For starters, here&rsquo;s the <a href="/misc/scripts/cfa.stan">Stan code</a>. And here&rsquo;s the R script: <a href="/misc/scripts/cfa_stan_demo.R">Stan code</a>. If you are already familiar with RStan, the basic concepts you need to combine are standard multilevel models with correlated random slopes and heteroskedastic errors.</p>
 <p>I will embed R code into the demonstration. The required packages are <code>lavaan</code>, <code>lme4</code> and <code>RStan</code>.</p>
 <p>I like to understand most statistical methods as regression models. This way, it&rsquo;s easy to understand the claims underlying a large number of techniques. It&rsquo;s an approach that works for multilevel, SEM, and IRT models. Here, I&rsquo;ll be focusing on confirmatory factor analysis (CFA), so I&rsquo;ll begin by developing CFA from a model that is easy to fit in any multilevel regression software:</p>
 <p>$$
@@ -90,89 +85,89 @@ $$</p>
 <p>where $y_{pi}$ is the response of person $p$ to item $i$, $\theta_p$ is the random intercept that varies by person and is assumed to be normal with mean zero and standard deviation $\alpha$ $\big(\mathcal{N}(0, \alpha^2)\big)$, $\beta_i$ are the coefficients of the item dummies, and $\epsilon$ is the residual (level 1) error assumed normal with mean zero and standard deviation $\sigma,\ \mathcal{N}(0, \sigma^2)$.</p>
 <p>Anyone familiar with multilevel regression can fit this basic random-intercept model. Shape your person by item data to &ldquo;long form&rdquo; where each row contains a person ID, an item ID and the item response. Make the item response the outcome, make each item into a dummy variable as predictors (at level 1) and place a random intercept on the person. Your random intercept standard deviation is $\alpha$, residual standard deviation (or level one error) is $\sigma$ and the item dummies are $\beta_i$. If your software permits, remove the fixed intercept and use all item dummies. Finally, $\theta_p$ represents the latent score for each individual $p$.</p>
 <p>To demonstrate, I use the HolzingerSwineford dataset. There are 9 items, items 1 to 3 load on factor 1, 4 to 6 on factor 2, and 7 to 9 on factor 3.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(lavaan)
-
-dat <span style="color:#f92672">&lt;-</span> HolzingerSwineford1939
-dat<span style="color:#f92672">$</span>sex <span style="color:#f92672">&lt;-</span> dat<span style="color:#f92672">$</span>sex <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#75715e"># Who is 1, no idea</span>
-dat<span style="color:#f92672">$</span>grade <span style="color:#f92672">&lt;-</span> dat<span style="color:#f92672">$</span>grade <span style="color:#f92672">-</span> <span style="color:#a6e22e">min</span>(dat<span style="color:#f92672">$</span>grade, na.rm <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
-dat<span style="color:#f92672">$</span>ID <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(dat)
-
-<span style="color:#75715e"># Make data long</span>
-dat.l <span style="color:#f92672">&lt;-</span> tidyr<span style="color:#f92672">::</span><span style="color:#a6e22e">gather</span>(dat, item, score, x1<span style="color:#f92672">:</span>x9)
-dat.l<span style="color:#f92672">$</span>item.no <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">as.integer</span>(<span style="color:#a6e22e">gsub</span>(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>, dat.l<span style="color:#f92672">$</span>item))
-
-<span style="color:#a6e22e">library</span>(lme4)
-
-<span style="color:#a6e22e">lmer</span>(score <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">factor</span>(item.no) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> ID), dat.l, REML <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
-
-<span style="color:#75715e"># Random effects:</span>
-<span style="color:#75715e"># Groups   Name        Std.Dev.</span>
-<span style="color:#75715e"># ID       (Intercept) 0.5758  </span>
-<span style="color:#75715e"># Residual             0.9694  </span>
-<span style="color:#75715e"># Number of obs: 2709, groups:  ID, 301</span>
-</code></pre></div><p>The model above fit with ML not REML is identical to a unidimensional CFA where we constrain all the item loadings to be the same value and the item errors to be the same value. The random intercept standard deviation, $\alpha$, is the factor loading for all items and $\sigma^2$ is the item error variance for all items. To get the standardized loading which we will call $\lambda$, use:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">library</span>(lavaan)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dat <span style="color:#f92672">&lt;-</span> HolzingerSwineford1939
+</span></span><span style="display:flex;"><span>dat<span style="color:#f92672">$</span>sex <span style="color:#f92672">&lt;-</span> dat<span style="color:#f92672">$</span>sex <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#75715e"># Who is 1, no idea</span>
+</span></span><span style="display:flex;"><span>dat<span style="color:#f92672">$</span>grade <span style="color:#f92672">&lt;-</span> dat<span style="color:#f92672">$</span>grade <span style="color:#f92672">-</span> <span style="color:#a6e22e">min</span>(dat<span style="color:#f92672">$</span>grade, na.rm <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
+</span></span><span style="display:flex;"><span>dat<span style="color:#f92672">$</span>ID <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(dat)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Make data long</span>
+</span></span><span style="display:flex;"><span>dat.l <span style="color:#f92672">&lt;-</span> tidyr<span style="color:#f92672">::</span><span style="color:#a6e22e">gather</span>(dat, item, score, x1<span style="color:#f92672">:</span>x9)
+</span></span><span style="display:flex;"><span>dat.l<span style="color:#f92672">$</span>item.no <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">as.integer</span>(<span style="color:#a6e22e">gsub</span>(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>, dat.l<span style="color:#f92672">$</span>item))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">library</span>(lme4)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lmer</span>(score <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">factor</span>(item.no) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> ID), dat.l, REML <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Random effects:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Groups   Name        Std.Dev.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ID       (Intercept) 0.5758  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Residual             0.9694  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Number of obs: 2709, groups:  ID, 301</span>
+</span></span></code></pre></div><p>The model above fit with ML not REML is identical to a unidimensional CFA where we constrain all the item loadings to be the same value and the item errors to be the same value. The random intercept standard deviation, $\alpha$, is the factor loading for all items and $\sigma^2$ is the item error variance for all items. To get the standardized loading which we will call $\lambda$, use:</p>
 <p>$$\lambda = \frac{\alpha}{\sqrt{\alpha^2+\sigma^2}} = \frac{0.5758}{\sqrt{0.5758^2+0.9694^2}}=0.5107$$</p>
 <p>The lavaan model below should confirm this to be true. Note that in the lavaan syntax, the factor is standardized to have variance of 1 using <code>std.lv = TRUE</code>. The item dummies (not shown) from lme4 are also the CFA item intercepts.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">parameterEstimates</span>(<span style="color:#a6e22e">sem</span>(
-  <span style="color:#e6db74">&#34;F1 =~ a * x1 + a * x2 + a * x3 + a * x4 + a * x5 + a * x6 + a * x7 + a * x8 + a * x9\n
-</span><span style="color:#e6db74">  x1 ~~ f * x1\nx2 ~~ f * x2\nx3 ~~ f * x3\nx4 ~~ f * x4\n
-</span><span style="color:#e6db74">  x5 ~~ f * x5\nx6 ~~ f * x6\nx7 ~~ f * x7\nx8 ~~ f * x8\nx9 ~~ f * x9&#34;</span>,
-  dat, std.lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>
-), standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)<span style="color:#a6e22e">[c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">:</span><span style="color:#ae81ff">11</span>), <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">12</span>)]
-
-<span style="color:#75715e">#    lhs op rhs label   est std.all</span>
-<span style="color:#75715e"># 1   F1 =~  x1     a 0.576   0.511</span>
-<span style="color:#75715e"># 2   F1 =~  x2     a 0.576   0.511</span>
-<span style="color:#75715e"># 10  x1 ~~  x1     f 0.940   0.739</span>
-<span style="color:#75715e"># 11  x2 ~~  x2     f 0.940   0.739</span>
-</code></pre></div><p>The standardized loading has a similar formula to the (residual) intraclass correlation coefficient (ICC) which is $\frac{\alpha^2}{\alpha^2+\sigma^2}$. So we have that $\lambda=\sqrt{\mathrm{ICC}}$. This is in line with thinking of standardized loadings as correlation coefficients and ICCs as $R^2$.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">parameterEstimates</span>(<span style="color:#a6e22e">sem</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;F1 =~ a * x1 + a * x2 + a * x3 + a * x4 + a * x5 + a * x6 + a * x7 + a * x8 + a * x9\n
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  x1 ~~ f * x1\nx2 ~~ f * x2\nx3 ~~ f * x3\nx4 ~~ f * x4\n
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  x5 ~~ f * x5\nx6 ~~ f * x6\nx7 ~~ f * x7\nx8 ~~ f * x8\nx9 ~~ f * x9&#34;</span>,
+</span></span><span style="display:flex;"><span>  dat, std.lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>
+</span></span><span style="display:flex;"><span>), standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)<span style="color:#a6e22e">[c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">:</span><span style="color:#ae81ff">11</span>), <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">12</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    lhs op rhs label   est std.all</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1   F1 =~  x1     a 0.576   0.511</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2   F1 =~  x2     a 0.576   0.511</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 10  x1 ~~  x1     f 0.940   0.739</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 11  x2 ~~  x2     f 0.940   0.739</span>
+</span></span></code></pre></div><p>The standardized loading has a similar formula to the (residual) intraclass correlation coefficient (ICC) which is $\frac{\alpha^2}{\alpha^2+\sigma^2}$. So we have that $\lambda=\sqrt{\mathrm{ICC}}$. This is in line with thinking of standardized loadings as correlation coefficients and ICCs as $R^2$.</p>
 <p>Now, everyone familiar with CFA knows we almost never constrain all item loadings and item errors to have the same value (for what it&rsquo;s worth, this is what we do in the <a href="/post/2018/01/02/using-glmer-to-perform-rasch-analysis/">Rasch model with binary outcomes</a>). But we will maintain the <em>CFA as regression</em> for as long as possible. Let us extend the model to include multiple factors. To include multiple factors, we create an indicator column in long form that uniquely identifies the factor an item belongs to. And instead of using a single random intercept, we use the factor dummies as random slopes without the random intercept. In this model, we assume:</p>
 <p>$$
 y_{pi} = \mathbf{\theta}_{pf} + \beta_i + \epsilon
 $$</p>
 <p>where $\mathbf{\theta}_{pf}$ instead of being the same at all times for any individual now also depends on the specific factor $f$. Precisely, we assume the latent scores are multivariate normal, $\mathbf{\theta}_{pf}\sim\mathcal{N}_f(\mathbf{0,\Sigma})$, where $f$ is the number of factors, and $\mathbf{\Sigma}$ represents the covariance matrix of the random slopes. The square root of the diagonal of this covariance matrix (i.e. standard deviations of random slopes) will again be the unstandardized factor loadings, $\alpha_f$. The off-diagonal covariances when standardized (i.e. correlations) will be the interfactor correlations. We can again fit this model in <code>lme4</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Assign item to factors</span>
-dat.l<span style="color:#f92672">$</span>Fs <span style="color:#f92672">&lt;-</span> ((dat.l<span style="color:#f92672">$</span>item.no <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%/%</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-
-<span style="color:#a6e22e">lmer</span>(score <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">factor</span>(item) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">factor</span>(Fs) <span style="color:#f92672">|</span> ID), dat.l, REML <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
-
-<span style="color:#75715e"># Random effects:</span>
-<span style="color:#75715e">#  Groups   Name        Std.Dev. Corr     </span>
-<span style="color:#75715e">#  ID       factor(Fs)1 0.7465            </span>
-<span style="color:#75715e">#           factor(Fs)2 0.9630   0.41     </span>
-<span style="color:#75715e">#           factor(Fs)3 0.6729   0.38 0.30</span>
-<span style="color:#75715e">#  Residual             0.7909            </span>
-</code></pre></div><p>The corresponding lavaan model is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">parameterEstimates</span>(<span style="color:#a6e22e">sem</span>(
-  <span style="color:#e6db74">&#34;F1 =~ a * x1 + a * x2 + a * x3\nF2 =~ b * x4 + b * x5 + b * x6\nF3 =~ c * x7 + c * x8 + c * x9\n
-</span><span style="color:#e6db74">  x1 ~~ f * x1\nx2 ~~ f * x2\nx3 ~~ f * x3\nx4 ~~ f * x4\nx5 ~~ f * x5\n
-</span><span style="color:#e6db74">  x6 ~~ f * x6\nx7 ~~ f * x7\nx8 ~~ f * x8\nx9 ~~ f * x9&#34;</span>,
-  dat, std.lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>
-), standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)<span style="color:#a6e22e">[c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">22</span><span style="color:#f92672">:</span><span style="color:#ae81ff">24</span>), <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">12</span>)]
-
-<span style="color:#75715e">#    lhs op rhs label   est std.all</span>
-<span style="color:#75715e"># 1   F1 =~  x1     a 0.746   0.686</span>
-<span style="color:#75715e"># 2   F1 =~  x2     a 0.746   0.686</span>
-<span style="color:#75715e"># 3   F1 =~  x3     a 0.746   0.686</span>
-<span style="color:#75715e"># 4   F2 =~  x4     b 0.963   0.773</span>
-<span style="color:#75715e"># 5   F2 =~  x5     b 0.963   0.773</span>
-<span style="color:#75715e"># 6   F2 =~  x6     b 0.963   0.773</span>
-<span style="color:#75715e"># 7   F3 =~  x7     c 0.673   0.648</span>
-<span style="color:#75715e"># 8   F3 =~  x8     c 0.673   0.648</span>
-<span style="color:#75715e"># 9   F3 =~  x9     c 0.673   0.648</span>
-<span style="color:#75715e"># 10  x1 ~~  x1     f 0.626   0.529</span>
-<span style="color:#75715e"># 22  F1 ~~  F2       0.407   0.407</span>
-<span style="color:#75715e"># 23  F1 ~~  F3       0.385   0.385</span>
-<span style="color:#75715e"># 24  F2 ~~  F3       0.301   0.301</span>
-</code></pre></div><p>We see that the factor loadings in CFA are the random slope standard deviations from multilevel. And the interfactor correlation matrix matches the random slope correlations from multilevel.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Assign item to factors</span>
+</span></span><span style="display:flex;"><span>dat.l<span style="color:#f92672">$</span>Fs <span style="color:#f92672">&lt;-</span> ((dat.l<span style="color:#f92672">$</span>item.no <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%/%</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lmer</span>(score <span style="color:#f92672">~</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">factor</span>(item) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">factor</span>(Fs) <span style="color:#f92672">|</span> ID), dat.l, REML <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Random effects:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  Groups   Name        Std.Dev. Corr     </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  ID       factor(Fs)1 0.7465            </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#           factor(Fs)2 0.9630   0.41     </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#           factor(Fs)3 0.6729   0.38 0.30</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  Residual             0.7909            </span>
+</span></span></code></pre></div><p>The corresponding lavaan model is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">parameterEstimates</span>(<span style="color:#a6e22e">sem</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;F1 =~ a * x1 + a * x2 + a * x3\nF2 =~ b * x4 + b * x5 + b * x6\nF3 =~ c * x7 + c * x8 + c * x9\n
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  x1 ~~ f * x1\nx2 ~~ f * x2\nx3 ~~ f * x3\nx4 ~~ f * x4\nx5 ~~ f * x5\n
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  x6 ~~ f * x6\nx7 ~~ f * x7\nx8 ~~ f * x8\nx9 ~~ f * x9&#34;</span>,
+</span></span><span style="display:flex;"><span>  dat, std.lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>
+</span></span><span style="display:flex;"><span>), standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)<span style="color:#a6e22e">[c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">22</span><span style="color:#f92672">:</span><span style="color:#ae81ff">24</span>), <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">12</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    lhs op rhs label   est std.all</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1   F1 =~  x1     a 0.746   0.686</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2   F1 =~  x2     a 0.746   0.686</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3   F1 =~  x3     a 0.746   0.686</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4   F2 =~  x4     b 0.963   0.773</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5   F2 =~  x5     b 0.963   0.773</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6   F2 =~  x6     b 0.963   0.773</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 7   F3 =~  x7     c 0.673   0.648</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 8   F3 =~  x8     c 0.673   0.648</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 9   F3 =~  x9     c 0.673   0.648</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 10  x1 ~~  x1     f 0.626   0.529</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 22  F1 ~~  F2       0.407   0.407</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 23  F1 ~~  F3       0.385   0.385</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 24  F2 ~~  F3       0.301   0.301</span>
+</span></span></code></pre></div><p>We see that the factor loadings in CFA are the random slope standard deviations from multilevel. And the interfactor correlation matrix matches the random slope correlations from multilevel.</p>
 <p>The final model we can fit with some, not all, multilevel regression software is:</p>
 <p>$$
 y_{pi} = \mathbf{\theta}_{pf} + \beta_i + \epsilon_i
 $$</p>
 <p>where we permit the residual error, $\epsilon_i$, to be different depending on the item. This is a heteroskedastic regression model. One would have to switch to from <code>lme4</code> to <code>nlme</code> or <code>glmmTMB</code> in R to estimate it; it should be possible in HLM. In <code>lavaan</code>, the model syntax would be:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># Drop the error variance constraints</span>
-<span style="color:#e6db74">&#34;F1 =~ a * X1 + a * X2 + a * X3\nF2 =~ b * X4 + b * X5 + b * X6\nF3 =~c * X7 + c * X8 + c * X9&#34;</span>
-</code></pre></div><p>The latest model is very close to a standard CFA model. The final change is that we need to permit the item loadings to vary by item, not by factor. Once we do this, we can no longer fit the model with multilevel regression software. The equation becomes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># Drop the error variance constraints</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;F1 =~ a * X1 + a * X2 + a * X3\nF2 =~ b * X4 + b * X5 + b * X6\nF3 =~c * X7 + c * X8 + c * X9&#34;</span>
+</span></span></code></pre></div><p>The latest model is very close to a standard CFA model. The final change is that we need to permit the item loadings to vary by item, not by factor. Once we do this, we can no longer fit the model with multilevel regression software. The equation becomes:</p>
 <p>$$
 y_{pi} = \alpha_i\theta_{pf} + \beta_i + \epsilon_i
 $$</p>
@@ -186,211 +181,196 @@ $$</p>
 </ul>
 <p>The one point requiring additional comments is the multivariate normal prior for $\mathbf{\theta}_{pf}$. For a positive-definite correlation matrix, $\mathbf{R}$, we can apply the Cholesky decomposition: $\mathbf{R} = \mathbf{L}\mathbf{L}^*$. In Stan, it is computationally more convenient to apply a prior on $\mathbf{L}$ and generate the multivariate normal latent scores using $\mathbf{L}$. The recommended choice of prior for $\mathbf{L}$ is the LKJ-prior.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
 <p>In Stan syntax, the required data are:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">data {
-  real g_alpha; <span style="color:#f92672">//</span> for inverse gamma
-  real g_beta; <span style="color:#f92672">//</span> for inverse gamma
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> N; <span style="color:#f92672">//</span> scalar, number of person times number of items
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> Ni; <span style="color:#f92672">//</span> scalar, number of items
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> Np; <span style="color:#f92672">//</span> scalar, number of persons
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> Nf; <span style="color:#f92672">//</span> scalar, number of factors
-  vector[N] response; <span style="color:#f92672">//</span> vector, long form of item responses
-  <span style="color:#f92672">//</span> all remaining entries are data in long form
-  <span style="color:#f92672">//</span> with consecutive integers beginning at <span style="color:#ae81ff">1</span> acting as unique identifiers
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, upper <span style="color:#f92672">=</span> Ni<span style="color:#f92672">&gt;</span> items[N];
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, upper <span style="color:#f92672">=</span> Np<span style="color:#f92672">&gt;</span> persons[N];
-  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, upper <span style="color:#f92672">=</span> Nf<span style="color:#f92672">&gt;</span> factors[N];
-}
-</code></pre></div><p>The estimated parameters are:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">parameters {
-  vector<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>[Ni] item_vars; <span style="color:#f92672">//</span> item vars heteroskedastic
-  real<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> sigma_alpha; <span style="color:#f92672">//</span> sd of loadings, hyperparm
-  vector<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>[Ni] alphas; <span style="color:#f92672">//</span> loadings
-  vector[Ni] betas; <span style="color:#f92672">//</span> item intercepts, default uniform prior
-  vector[Nf] thetas[Np]; <span style="color:#f92672">//</span> person scores for each factor
-  cholesky_factor_corr[Nf] L; <span style="color:#f92672">//</span> Cholesky decomp of corr mat of random slopes
-}
-</code></pre></div><p>We need some transformed parameters to capture the mean and variance of the item responses. This is where we provide the regression equation verbatim:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">transformed parameters {
-  vector[N] yhat;
-  vector[N] item_sds_i;
-
-  <span style="color:#a6e22e">for </span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>N) {
-    yhat[i] <span style="color:#f92672">=</span> alphas[items[i]] <span style="color:#f92672">*</span> thetas[persons[i], factors[i]] <span style="color:#f92672">+</span> betas[items[i]];
-    item_sds_i[i] <span style="color:#f92672">=</span> <span style="color:#a6e22e">sqrt</span>(item_vars[items[i]]);
-  }
-}
-</code></pre></div><p>And for the priors:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">model {
-  vector[Nf] A <span style="color:#f92672">=</span> <span style="color:#a6e22e">rep_vector</span>(<span style="color:#ae81ff">1</span>, Nf); <span style="color:#f92672">//</span> Vector of random slope variances
-  matrix[Nf, Nf] A0;
-
-  L <span style="color:#f92672">~</span> <span style="color:#a6e22e">lkj_corr_cholesky</span>(Nf);
-  A0 <span style="color:#f92672">=</span> <span style="color:#a6e22e">diag_pre_multiply</span>(A, L);
-  thetas <span style="color:#f92672">~</span> <span style="color:#a6e22e">multi_normal_cholesky</span>(<span style="color:#a6e22e">rep_vector</span>(<span style="color:#ae81ff">0</span>, Nf), A0);
-
-  alphas <span style="color:#f92672">~</span> <span style="color:#a6e22e">lognormal</span>(<span style="color:#ae81ff">0</span>, sigma_alpha);
-  sigma_alpha <span style="color:#f92672">~</span> <span style="color:#a6e22e">cauchy</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2.5</span>); <span style="color:#f92672">//</span> hyperparm
-  item_vars <span style="color:#f92672">~</span> <span style="color:#a6e22e">inv_gamma</span>(g_alpha, g_beta);
-
-  response <span style="color:#f92672">~</span> <span style="color:#a6e22e">normal</span>(yhat, item_sds_i);
-}
-</code></pre></div><p>Finally, we can compute the standardized loadings and the interfactor correlation matrix, R:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">generated quantities {
-  vector<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>[Ni] loadings_std; <span style="color:#f92672">//</span> obtain loadings_std
-  matrix[Nf, Nf] R;
-
-  R <span style="color:#f92672">=</span> <span style="color:#a6e22e">tcrossprod</span>(L);
-  <span style="color:#a6e22e">for </span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>Ni) {
-    loadings_std[i] <span style="color:#f92672">=</span> alphas[i] <span style="color:#f92672">/</span> <span style="color:#a6e22e">sqrt</span>(<span style="color:#a6e22e">square</span>(alphas[i]) <span style="color:#f92672">+</span> item_vars[i]);
-  }
-}
-</code></pre></div><p>We could make a few modifications:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>data {
+</span></span><span style="display:flex;"><span>  real g_alpha; <span style="color:#f92672">//</span> for inverse gamma
+</span></span><span style="display:flex;"><span>  real g_beta; <span style="color:#f92672">//</span> for inverse gamma
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> N; <span style="color:#f92672">//</span> scalar, number of person times number of items
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> Ni; <span style="color:#f92672">//</span> scalar, number of items
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> Np; <span style="color:#f92672">//</span> scalar, number of persons
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> Nf; <span style="color:#f92672">//</span> scalar, number of factors
+</span></span><span style="display:flex;"><span>  vector[N] response; <span style="color:#f92672">//</span> vector, long form of item responses
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">//</span> all remaining entries are data in long form
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">//</span> with consecutive integers beginning at <span style="color:#ae81ff">1</span> acting as unique identifiers
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, upper <span style="color:#f92672">=</span> Ni<span style="color:#f92672">&gt;</span> items[N];
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, upper <span style="color:#f92672">=</span> Np<span style="color:#f92672">&gt;</span> persons[N];
+</span></span><span style="display:flex;"><span>  int<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, upper <span style="color:#f92672">=</span> Nf<span style="color:#f92672">&gt;</span> factors[N];
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The estimated parameters are:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>parameters {
+</span></span><span style="display:flex;"><span>  vector<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>[Ni] item_vars; <span style="color:#f92672">//</span> item vars heteroskedastic
+</span></span><span style="display:flex;"><span>  real<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span> sigma_alpha; <span style="color:#f92672">//</span> sd of loadings, hyperparm
+</span></span><span style="display:flex;"><span>  vector<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>[Ni] alphas; <span style="color:#f92672">//</span> loadings
+</span></span><span style="display:flex;"><span>  vector[Ni] betas; <span style="color:#f92672">//</span> item intercepts, default uniform prior
+</span></span><span style="display:flex;"><span>  vector[Nf] thetas[Np]; <span style="color:#f92672">//</span> person scores for each factor
+</span></span><span style="display:flex;"><span>  cholesky_factor_corr[Nf] L; <span style="color:#f92672">//</span> Cholesky decomp of corr mat of random slopes
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We need some transformed parameters to capture the mean and variance of the item responses. This is where we provide the regression equation verbatim:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>transformed parameters {
+</span></span><span style="display:flex;"><span>  vector[N] yhat;
+</span></span><span style="display:flex;"><span>  vector[N] item_sds_i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">for </span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>N) {
+</span></span><span style="display:flex;"><span>    yhat[i] <span style="color:#f92672">=</span> alphas[items[i]] <span style="color:#f92672">*</span> thetas[persons[i], factors[i]] <span style="color:#f92672">+</span> betas[items[i]];
+</span></span><span style="display:flex;"><span>    item_sds_i[i] <span style="color:#f92672">=</span> <span style="color:#a6e22e">sqrt</span>(item_vars[items[i]]);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And for the priors:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>model {
+</span></span><span style="display:flex;"><span>  vector[Nf] A <span style="color:#f92672">=</span> <span style="color:#a6e22e">rep_vector</span>(<span style="color:#ae81ff">1</span>, Nf); <span style="color:#f92672">//</span> Vector of random slope variances
+</span></span><span style="display:flex;"><span>  matrix[Nf, Nf] A0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  L <span style="color:#f92672">~</span> <span style="color:#a6e22e">lkj_corr_cholesky</span>(Nf);
+</span></span><span style="display:flex;"><span>  A0 <span style="color:#f92672">=</span> <span style="color:#a6e22e">diag_pre_multiply</span>(A, L);
+</span></span><span style="display:flex;"><span>  thetas <span style="color:#f92672">~</span> <span style="color:#a6e22e">multi_normal_cholesky</span>(<span style="color:#a6e22e">rep_vector</span>(<span style="color:#ae81ff">0</span>, Nf), A0);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  alphas <span style="color:#f92672">~</span> <span style="color:#a6e22e">lognormal</span>(<span style="color:#ae81ff">0</span>, sigma_alpha);
+</span></span><span style="display:flex;"><span>  sigma_alpha <span style="color:#f92672">~</span> <span style="color:#a6e22e">cauchy</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2.5</span>); <span style="color:#f92672">//</span> hyperparm
+</span></span><span style="display:flex;"><span>  item_vars <span style="color:#f92672">~</span> <span style="color:#a6e22e">inv_gamma</span>(g_alpha, g_beta);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  response <span style="color:#f92672">~</span> <span style="color:#a6e22e">normal</span>(yhat, item_sds_i);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Finally, we can compute the standardized loadings and the interfactor correlation matrix, R:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>generated quantities {
+</span></span><span style="display:flex;"><span>  vector<span style="color:#f92672">&lt;</span>lower <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">&gt;</span>[Ni] loadings_std; <span style="color:#f92672">//</span> obtain loadings_std
+</span></span><span style="display:flex;"><span>  matrix[Nf, Nf] R;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  R <span style="color:#f92672">=</span> <span style="color:#a6e22e">tcrossprod</span>(L);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">for </span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>Ni) {
+</span></span><span style="display:flex;"><span>    loadings_std[i] <span style="color:#f92672">=</span> alphas[i] <span style="color:#f92672">/</span> <span style="color:#a6e22e">sqrt</span>(<span style="color:#a6e22e">square</span>(alphas[i]) <span style="color:#f92672">+</span> item_vars[i]);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We could make a few modifications:</p>
 <ul>
 <li>We can standardize the item responses prior to modeling to improve computational stability</li>
 <li>Then apply a normal prior to the item intercepts</li>
 </ul>
 <p>The syntax to run the model would then be:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e"># First, let&#39;s fit the model in lavaan:</span>
-cfa.lav.fit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sem</span>(
-  <span style="color:#e6db74">&#34;F1 =~ x1 + x2 + x3\nF2 =~ x4 + x5 + x6\nF3 =~ x7 + x8 + x9&#34;</span>,
-  dat, std.lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, meanstructure <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
-
-<span style="color:#a6e22e">library</span>(rstan)
-
-<span style="color:#a6e22e">options</span>(mc.cores <span style="color:#f92672">=</span> parallel<span style="color:#f92672">::</span><span style="color:#a6e22e">detectCores</span>()) <span style="color:#75715e"># Use multiple cores</span>
-<span style="color:#a6e22e">rstan_options</span>(auto_write <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>) <span style="color:#75715e"># One time Stan program compilation</span>
-
-cfa.mm <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">stan_model</span>(stanc_ret <span style="color:#f92672">=</span> <span style="color:#a6e22e">stanc</span>(file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;bayes_script/cfa.stan&#34;</span>)) <span style="color:#75715e"># Compile Stan code</span>
-
-cfa.stan.fit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sampling</span>(
-  cfa.mm, data <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(
-    N <span style="color:#f92672">=</span> <span style="color:#a6e22e">nrow</span>(dat.l), Ni <span style="color:#f92672">=</span> <span style="color:#a6e22e">length</span>(<span style="color:#a6e22e">unique</span>(dat.l<span style="color:#f92672">$</span>item)),
-    Np <span style="color:#f92672">=</span> <span style="color:#a6e22e">length</span>(<span style="color:#a6e22e">unique</span>(dat.l<span style="color:#f92672">$</span>ID)), Nf <span style="color:#f92672">=</span> <span style="color:#a6e22e">length</span>(<span style="color:#a6e22e">unique</span>(dat.l<span style="color:#f92672">$</span>Fs)),
-    items <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>item.no, factors <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>Fs,
-    persons <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>ID, response <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>score,
-    g_alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, g_beta <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>),
-  control <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(adapt_delta <span style="color:#f92672">=</span> <span style="color:#ae81ff">.99999</span>, max_treedepth <span style="color:#f92672">=</span> <span style="color:#ae81ff">15</span>))
-</code></pre></div><p>What are some loadings?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;alphas&#34;</span>, <span style="color:#e6db74">&#34;loadings_std&#34;</span>),
-  probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-
-<span style="color:#75715e">#                  mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
-<span style="color:#75715e"># alphas[1]       0.889   0.003 0.078 0.733 0.890 1.041   790 1.002</span>
-<span style="color:#75715e"># alphas[4]       0.991   0.002 0.056 0.885 0.988 1.101  1263 1.002</span>
-<span style="color:#75715e"># alphas[5]       1.102   0.002 0.062 0.980 1.102 1.224  1056 1.001</span>
-<span style="color:#75715e"># alphas[9]       0.692   0.003 0.075 0.548 0.692 0.846   799 1.005</span>
-<span style="color:#75715e"># loadings_std[1] 0.751   0.002 0.052 0.643 0.752 0.848   601 1.003</span>
-<span style="color:#75715e"># loadings_std[4] 0.848   0.001 0.023 0.801 0.849 0.890  1275 1.003</span>
-<span style="color:#75715e"># loadings_std[5] 0.851   0.001 0.023 0.803 0.852 0.891  1176 1.001</span>
-<span style="color:#75715e"># loadings_std[9] 0.672   0.003 0.059 0.552 0.673 0.786   556 1.007</span>
-
-<span style="color:#75715e"># For comparison, the lavaan loadings are:</span>
-<span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[1<span style="color:#f92672">:</span><span style="color:#ae81ff">9</span>, <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">11</span>)]
-
-<span style="color:#75715e">#   lhs op rhs   est    se std.all</span>
-<span style="color:#75715e"># 1  F1 =~  x1 0.900 0.081   0.772</span>
-<span style="color:#75715e"># 4  F2 =~  x4 0.990 0.057   0.852</span>
-<span style="color:#75715e"># 5  F2 =~  x5 1.102 0.063   0.855</span>
-<span style="color:#75715e"># 9  F3 =~  x9 0.670 0.065   0.665</span>
-</code></pre></div><p>For the interfactor correlations:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;R[1, 2]&#34;</span>, <span style="color:#e6db74">&#34;R[1, 3]&#34;</span>, <span style="color:#e6db74">&#34;R[2, 3]&#34;</span>),
-      probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-
-<span style="color:#75715e">#       mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
-<span style="color:#75715e"># R[1,2] 0.435   0.001 0.065 0.303 0.437 0.557  2019 0.999</span>
-<span style="color:#75715e"># R[1,3] 0.451   0.003 0.081 0.289 0.450 0.607   733 1.005</span>
-<span style="color:#75715e"># R[2,3] 0.271   0.001 0.071 0.130 0.272 0.406  2599 1.000</span>
-
-<span style="color:#75715e"># From lavaan:</span>
-<span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[22<span style="color:#f92672">:</span><span style="color:#ae81ff">24</span>, <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">11</span>)]
-
-<span style="color:#75715e">#    lhs op rhs   est    se std.all</span>
-<span style="color:#75715e"># 22  F1 ~~  F2 0.459 0.064   0.459</span>
-<span style="color:#75715e"># 23  F1 ~~  F3 0.471 0.073   0.471</span>
-<span style="color:#75715e"># 24  F2 ~~  F3 0.283 0.069   0.283</span>
-</code></pre></div><p>For the error variances:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;item_vars&#34;</span>),
-      probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-
-<span style="color:#75715e">#               mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
-<span style="color:#75715e"># item_vars[3] 0.829   0.003 0.095 0.652 0.828 1.026  1292 1.000</span>
-<span style="color:#75715e"># item_vars[4] 0.383   0.001 0.049 0.292 0.381 0.481  1552 1.002</span>
-<span style="color:#75715e"># item_vars[5] 0.459   0.001 0.059 0.351 0.456 0.581  1577 1.001</span>
-<span style="color:#75715e"># item_vars[9] 0.575   0.004 0.085 0.410 0.575 0.739   532 1.008</span>
-
-<span style="color:#75715e"># From lavaan:</span>
-<span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[10<span style="color:#f92672">:</span><span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]
-
-<span style="color:#75715e">#    lhs op rhs   est    se</span>
-<span style="color:#75715e"># 12  x3 ~~  x3 0.844 0.091</span>
-<span style="color:#75715e"># 13  x4 ~~  x4 0.371 0.048</span>
-<span style="color:#75715e"># 14  x5 ~~  x5 0.446 0.058</span>
-<span style="color:#75715e"># 18  x9 ~~  x9 0.566 0.071</span>
-</code></pre></div><p>For the item intercepts:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;betas&#34;</span>),
-      probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-
-<span style="color:#75715e">#         mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
-<span style="color:#75715e"># betas[2] 6.087   0.001 0.068 5.954 6.089 6.219  2540 1.001</span>
-<span style="color:#75715e"># betas[3] 2.248   0.001 0.066 2.122 2.248 2.381  1980 1.002</span>
-<span style="color:#75715e"># betas[6] 2.182   0.003 0.063 2.058 2.182 2.302   625 1.008</span>
-<span style="color:#75715e"># betas[7] 4.185   0.002 0.066 4.054 4.186 4.315  1791 1.001</span>
-
-<span style="color:#75715e"># From lavaan:</span>
-<span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[25<span style="color:#f92672">:</span><span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]
-<span style="color:#75715e">#    lhs op rhs   est    se</span>
-<span style="color:#75715e"># 26  x2 ~1     6.088 0.068</span>
-<span style="color:#75715e"># 27  x3 ~1     2.250 0.065</span>
-<span style="color:#75715e"># 30  x6 ~1     2.186 0.063</span>
-<span style="color:#75715e"># 31  x7 ~1     4.186 0.063</span>
-</code></pre></div><p>So we are able to replicate the results from lavaan. From here, you can extend the model in interesting ways to arrive at other results.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#75715e"># First, let&#39;s fit the model in lavaan:</span>
+</span></span><span style="display:flex;"><span>cfa.lav.fit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sem</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;F1 =~ x1 + x2 + x3\nF2 =~ x4 + x5 + x6\nF3 =~ x7 + x8 + x9&#34;</span>,
+</span></span><span style="display:flex;"><span>  dat, std.lv <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, meanstructure <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">library</span>(rstan)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">options</span>(mc.cores <span style="color:#f92672">=</span> parallel<span style="color:#f92672">::</span><span style="color:#a6e22e">detectCores</span>()) <span style="color:#75715e"># Use multiple cores</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rstan_options</span>(auto_write <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>) <span style="color:#75715e"># One time Stan program compilation</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cfa.mm <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">stan_model</span>(stanc_ret <span style="color:#f92672">=</span> <span style="color:#a6e22e">stanc</span>(file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;bayes_script/cfa.stan&#34;</span>)) <span style="color:#75715e"># Compile Stan code</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cfa.stan.fit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sampling</span>(
+</span></span><span style="display:flex;"><span>  cfa.mm, data <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(
+</span></span><span style="display:flex;"><span>    N <span style="color:#f92672">=</span> <span style="color:#a6e22e">nrow</span>(dat.l), Ni <span style="color:#f92672">=</span> <span style="color:#a6e22e">length</span>(<span style="color:#a6e22e">unique</span>(dat.l<span style="color:#f92672">$</span>item)),
+</span></span><span style="display:flex;"><span>    Np <span style="color:#f92672">=</span> <span style="color:#a6e22e">length</span>(<span style="color:#a6e22e">unique</span>(dat.l<span style="color:#f92672">$</span>ID)), Nf <span style="color:#f92672">=</span> <span style="color:#a6e22e">length</span>(<span style="color:#a6e22e">unique</span>(dat.l<span style="color:#f92672">$</span>Fs)),
+</span></span><span style="display:flex;"><span>    items <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>item.no, factors <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>Fs,
+</span></span><span style="display:flex;"><span>    persons <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>ID, response <span style="color:#f92672">=</span> dat.l<span style="color:#f92672">$</span>score,
+</span></span><span style="display:flex;"><span>    g_alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, g_beta <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>),
+</span></span><span style="display:flex;"><span>  control <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(adapt_delta <span style="color:#f92672">=</span> <span style="color:#ae81ff">.99999</span>, max_treedepth <span style="color:#f92672">=</span> <span style="color:#ae81ff">15</span>))
+</span></span></code></pre></div><p>What are some loadings?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;alphas&#34;</span>, <span style="color:#e6db74">&#34;loadings_std&#34;</span>),
+</span></span><span style="display:flex;"><span>  probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#                  mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># alphas[1]       0.889   0.003 0.078 0.733 0.890 1.041   790 1.002</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># alphas[4]       0.991   0.002 0.056 0.885 0.988 1.101  1263 1.002</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># alphas[5]       1.102   0.002 0.062 0.980 1.102 1.224  1056 1.001</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># alphas[9]       0.692   0.003 0.075 0.548 0.692 0.846   799 1.005</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># loadings_std[1] 0.751   0.002 0.052 0.643 0.752 0.848   601 1.003</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># loadings_std[4] 0.848   0.001 0.023 0.801 0.849 0.890  1275 1.003</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># loadings_std[5] 0.851   0.001 0.023 0.803 0.852 0.891  1176 1.001</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># loadings_std[9] 0.672   0.003 0.059 0.552 0.673 0.786   556 1.007</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># For comparison, the lavaan loadings are:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[1<span style="color:#f92672">:</span><span style="color:#ae81ff">9</span>, <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">11</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   lhs op rhs   est    se std.all</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1  F1 =~  x1 0.900 0.081   0.772</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4  F2 =~  x4 0.990 0.057   0.852</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5  F2 =~  x5 1.102 0.063   0.855</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 9  F3 =~  x9 0.670 0.065   0.665</span>
+</span></span></code></pre></div><p>For the interfactor correlations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;R[1, 2]&#34;</span>, <span style="color:#e6db74">&#34;R[1, 3]&#34;</span>, <span style="color:#e6db74">&#34;R[2, 3]&#34;</span>),
+</span></span><span style="display:flex;"><span>      probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#       mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># R[1,2] 0.435   0.001 0.065 0.303 0.437 0.557  2019 0.999</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># R[1,3] 0.451   0.003 0.081 0.289 0.450 0.607   733 1.005</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># R[2,3] 0.271   0.001 0.071 0.130 0.272 0.406  2599 1.000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># From lavaan:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[22<span style="color:#f92672">:</span><span style="color:#ae81ff">24</span>, <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">11</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    lhs op rhs   est    se std.all</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 22  F1 ~~  F2 0.459 0.064   0.459</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 23  F1 ~~  F3 0.471 0.073   0.471</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 24  F2 ~~  F3 0.283 0.069   0.283</span>
+</span></span></code></pre></div><p>For the error variances:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;item_vars&#34;</span>),
+</span></span><span style="display:flex;"><span>      probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#               mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># item_vars[3] 0.829   0.003 0.095 0.652 0.828 1.026  1292 1.000</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># item_vars[4] 0.383   0.001 0.049 0.292 0.381 0.481  1552 1.002</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># item_vars[5] 0.459   0.001 0.059 0.351 0.456 0.581  1577 1.001</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># item_vars[9] 0.575   0.004 0.085 0.410 0.575 0.739   532 1.008</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># From lavaan:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[10<span style="color:#f92672">:</span><span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    lhs op rhs   est    se</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 12  x3 ~~  x3 0.844 0.091</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 13  x4 ~~  x4 0.371 0.048</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 14  x5 ~~  x5 0.446 0.058</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 18  x9 ~~  x9 0.566 0.071</span>
+</span></span></code></pre></div><p>For the item intercepts:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">print</span>(cfa.stan.fit, pars <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;betas&#34;</span>),
+</span></span><span style="display:flex;"><span>      probs <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.975</span>), digits_summary <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#         mean se_mean    sd  2.5%   50% 97.5% n_eff  Rhat</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># betas[2] 6.087   0.001 0.068 5.954 6.089 6.219  2540 1.001</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># betas[3] 2.248   0.001 0.066 2.122 2.248 2.381  1980 1.002</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># betas[6] 2.182   0.003 0.063 2.058 2.182 2.302   625 1.008</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># betas[7] 4.185   0.002 0.066 4.054 4.186 4.315  1791 1.001</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># From lavaan:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">parameterEstimates</span>(cfa.lav.fit, standardized <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>)[25<span style="color:#f92672">:</span><span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    lhs op rhs   est    se</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 26  x2 ~1     6.088 0.068</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 27  x3 ~1     2.250 0.065</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 30  x6 ~1     2.186 0.063</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 31  x7 ~1     4.186 0.063</span>
+</span></span></code></pre></div><p>So we are able to replicate the results from lavaan. From here, you can extend the model in interesting ways to arrive at other results.</p>
 <hr>
 <p>For example, if you want to do a regression of the factors, you can use the posterior of the correlation matrix and the <code>solve()</code> function to arrive at the coefficients for the factors in the regression. Here, I regress factor 1 on both factors 2 and 3:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">R <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">extract</span>(cfa.stan.fit, <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;R[1, 2]&#34;</span>, <span style="color:#e6db74">&#34;R[1, 3]&#34;</span>, <span style="color:#e6db74">&#34;R[2, 3]&#34;</span>))
-R <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">cbind</span>(R<span style="color:#f92672">$</span>`R[1,2]`, R<span style="color:#f92672">$</span>`R[1,3]`, R<span style="color:#f92672">$</span>`R[2,3]`)
-coefs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">matrix</span>(<span style="color:#66d9ef">NA</span>, <span style="color:#a6e22e">nrow</span>(R), <span style="color:#a6e22e">ncol</span>(R) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
-<span style="color:#a6e22e">for </span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(R)) {
-  m <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">matrix</span>(<span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span>, R[i, <span style="color:#ae81ff">3</span>], R[i, <span style="color:#ae81ff">3</span>], <span style="color:#ae81ff">1</span>), <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>)
-  coefs[i, ] <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">solve</span>(m, R[i, <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>])
-}; <span style="color:#a6e22e">rm</span>(i, m)
-<span style="color:#a6e22e">t</span>(<span style="color:#a6e22e">apply</span>(coefs, <span style="color:#ae81ff">2</span>, <span style="color:#a6e22e">function </span>(x) {
-  <span style="color:#a6e22e">c</span>(estimate <span style="color:#f92672">=</span> <span style="color:#a6e22e">mean</span>(x), sd <span style="color:#f92672">=</span> <span style="color:#a6e22e">sd</span>(x), <span style="color:#a6e22e">quantile</span>(x, <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.25</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.75</span>, <span style="color:#ae81ff">.975</span>)))
-}))
-<span style="color:#75715e">#       estimate         sd      2.5%       25%       50%       75%     97.5%</span>
-<span style="color:#75715e"># [1,] 0.3362981 0.07248634 0.1918812 0.2877936 0.3387682 0.3875141 0.4725508</span>
-<span style="color:#75715e"># [2,] 0.3605951 0.08466494 0.1996710 0.3027047 0.3594806 0.4164141 0.5308578</span>
-</code></pre></div><section class="footnotes" role="doc-endnotes">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>R <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">extract</span>(cfa.stan.fit, <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;R[1, 2]&#34;</span>, <span style="color:#e6db74">&#34;R[1, 3]&#34;</span>, <span style="color:#e6db74">&#34;R[2, 3]&#34;</span>))
+</span></span><span style="display:flex;"><span>R <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">cbind</span>(R<span style="color:#f92672">$</span>`R[1,2]`, R<span style="color:#f92672">$</span>`R[1,3]`, R<span style="color:#f92672">$</span>`R[2,3]`)
+</span></span><span style="display:flex;"><span>coefs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">matrix</span>(<span style="color:#66d9ef">NA</span>, <span style="color:#a6e22e">nrow</span>(R), <span style="color:#a6e22e">ncol</span>(R) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">for </span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(R)) {
+</span></span><span style="display:flex;"><span>  m <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">matrix</span>(<span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span>, R[i, <span style="color:#ae81ff">3</span>], R[i, <span style="color:#ae81ff">3</span>], <span style="color:#ae81ff">1</span>), <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>  coefs[i, ] <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">solve</span>(m, R[i, <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>}; <span style="color:#a6e22e">rm</span>(i, m)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">t</span>(<span style="color:#a6e22e">apply</span>(coefs, <span style="color:#ae81ff">2</span>, <span style="color:#a6e22e">function </span>(x) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">c</span>(estimate <span style="color:#f92672">=</span> <span style="color:#a6e22e">mean</span>(x), sd <span style="color:#f92672">=</span> <span style="color:#a6e22e">sd</span>(x), <span style="color:#a6e22e">quantile</span>(x, <span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.025</span>, <span style="color:#ae81ff">.25</span>, <span style="color:#ae81ff">.5</span>, <span style="color:#ae81ff">.75</span>, <span style="color:#ae81ff">.975</span>)))
+</span></span><span style="display:flex;"><span>}))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#       estimate         sd      2.5%       25%       50%       75%     97.5%</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># [1,] 0.3362981 0.07248634 0.1918812 0.2877936 0.3387682 0.3875141 0.4725508</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># [2,] 0.3605951 0.08466494 0.1996710 0.3027047 0.3594806 0.4164141 0.5308578</span>
+</span></span></code></pre></div><div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>This makes the model non-linear in its parameters showing why software for generalized linear mixed models cannot fit this model. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>This makes the model non-linear in its parameters showing why software for generalized linear mixed models cannot fit this model.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>I&rsquo;m guessing older software manuals may recommend the inverse-Wishart prior for $\mathbf{\Sigma}$. But see <a href="https://docs.pymc.io/notebooks/LKJ.html">HERE</a> as starting point for comments on LKJ-prior. As a funny side note, <a href="https://www.sciencedirect.com/science/article/pii/S0047259X09000876">LKJ is an acronym for the researchers who recommended this approach</a>, the last author is Harry, last name, Joe. And he developed an earlier form of the method. So in the paper by LKJ, you see references to <em>Joe&rsquo;s method</em> which seems out of place for an academic paper :). <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p>I&rsquo;m guessing older software manuals may recommend the inverse-Wishart prior for $\mathbf{\Sigma}$. But see <a href="https://docs.pymc.io/notebooks/LKJ.html">HERE</a> as starting point for comments on LKJ-prior. As a funny side note, <a href="https://www.sciencedirect.com/science/article/pii/S0047259X09000876">LKJ is an acronym for the researchers who recommended this approach</a>, the last author is Harry, last name, Joe. And he developed an earlier form of the method. So in the paper by LKJ, you see references to <em>Joe&rsquo;s method</em> which seems out of place for an academic paper :).&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
-
-</main>
-
-<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
-<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
-
-<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
-<noscript>Please enable Javascript to view comments.</noscript>
-<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
-<a href="https://www.talkyard.io">Talkyard</a>.</p>
 </div>
 
-
-
+    <a href="/"> >> Home</a>
+  </main>
+</div>
     <footer>
-      <script src="//yihui.name/js/math-code.js"></script>
-<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-<script async src="//yihui.name/js/center-img.js"></script>
-
-
+      
 <script>
 (function() {
   function center_el(tagName) {

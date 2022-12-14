@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="James Uanhoro&#39;s personal website.">
     <title>Theil-Sen regression in R | James Uanhoro</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
+    
     <header>
-  
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-        processEscapes: true
-      }
-    });
-  </script>
 
-  
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   <nav>
     <ul>
       
       
       <li class="pull-left ">
-        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+        <a href="https://www.jamesuanhoro.com/">~/james uanhoro</a>
       </li>
       
       
@@ -79,9 +74,9 @@
 </div>
 
 
-
-<main>
-<blockquote>
+<div class="content-wrapper">
+  <main>
+    <blockquote>
 <p><strong>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the <code>Theil-Sen estimator</code>.</strong></p>
 </blockquote>
 <p>A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:</p>
@@ -98,47 +93,32 @@
 <p>I conducted a <a href="/misc/scripts/ts_sim.R">toy simulation</a> to see how Theil-Sen competes with OLS under heteroskedasticity; It is the more efficient estimator.</p>
 <p><img src="/img/posts/ts_hetero/0_slopes_hetero.png" alt="Simulation results">
 <img src="/img/posts/ts_hetero/0_heteroscedastic_samples.png" alt="25 random samples from simulation"></p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. <em>Biometrical Journal, 40</em>(3), 261–268. <a href="https://doi.org/10.1002/(SICI)1521-4036(199807)40:3%3C261::AID-BIMJ261%3E3.0.CO;2-V">doi: 10.1002/(SICI)1521-4036(199807)40:3&lt;261::AID-BIMJ261&gt;3.0.CO;2-V</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. <em>Biometrical Journal, 40</em>(3), 261–268. <a href="https://doi.org/10.1002/(SICI)1521-4036(199807)40:3%3C261::AID-BIMJ261%3E3.0.CO;2-V">doi: 10.1002/(SICI)1521-4036(199807)40:3&lt;261::AID-BIMJ261&gt;3.0.CO;2-V</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p><strong>W</strong>ilcox <strong>R</strong>obust <strong>S</strong>tatistics - Rand Wilcox&rsquo;s collection of robust methods. It is not available on CRAN, as CRAN requires proper documentation for all functions. This is a good set of installation instructions - <a href="https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/">https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/</a>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:2">
+<p><strong>W</strong>ilcox <strong>R</strong>obust <strong>S</strong>tatistics - Rand Wilcox&rsquo;s collection of robust methods. It is not available on CRAN, as CRAN requires proper documentation for all functions. This is a good set of installation instructions - <a href="https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/">https://web.archive.org/web/20170712140359/http://www.nicebread.de/installation-of-wrs-package-wilcox-robust-statistics/</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3" role="doc-endnote">
-<p>Siegel, A. F. (1982). Robust regression using repeated medians. <em>Biometrika, 69</em>(1), 242–244. <a href="https://doi.org/10.1093/biomet/69.1.242">https://doi.org/10.1093/biomet/69.1.242</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:3">
+<p>Siegel, A. F. (1982). Robust regression using repeated medians. <em>Biometrika, 69</em>(1), 242–244. <a href="https://doi.org/10.1093/biomet/69.1.242">https://doi.org/10.1093/biomet/69.1.242</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:4" role="doc-endnote">
-<p>Dietz, E. J. (1987). A comparison of robust estimators in simple linear regression. Communications in Statistics - Simulation and Computation, 16(4), 1209–1227. <a href="https://doi.org/10.1080/03610918708812645">https://doi.org/10.1080/03610918708812645</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:4">
+<p>Dietz, E. J. (1987). A comparison of robust estimators in simple linear regression. Communications in Statistics - Simulation and Computation, 16(4), 1209–1227. <a href="https://doi.org/10.1080/03610918708812645">https://doi.org/10.1080/03610918708812645</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:5" role="doc-endnote">
-<p>Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. Biometrical Journal, 40(3), 261–268. <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:5">
+<p>Wilcox, R. R. (1998). A note on the Theil-Sen regression estimator when the regressor is random and the error term is heteroscedastic. Biometrical Journal, 40(3), 261–268.&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
-
-</main>
-
-<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
-<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
-
-<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
-<noscript>Please enable Javascript to view comments.</noscript>
-<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
-<a href="https://www.talkyard.io">Talkyard</a>.</p>
 </div>
 
-
-
+    <a href="/"> >> Home</a>
+  </main>
+</div>
     <footer>
-      <script src="//yihui.name/js/math-code.js"></script>
-<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-<script async src="//yihui.name/js/center-img.js"></script>
-
-
+      
 <script>
 (function() {
   function center_el(tagName) {

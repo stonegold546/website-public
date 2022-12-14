@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Creating installers for Shiny apps on Windows | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <header>
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    });
+  </script>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Creating installers for Shiny apps on Windows</span></h1>
+
+<h2 class="date">2022/02/19</h2>
+<p class="terms">
+  
+  
+  
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>I had the goal of packaging a Shiny app such that I could simply hand an installation file to a person, they install the file on their system and they can use the Shiny app. Most common way of sharing Shiny apps is uploading the app online. But if the app requires raw data, there are good reasons why people should not upload their raw data.</p>
+<p>The setup I lay out is for Windows, but it should be possible to do all this for Mac. The main difference is you need R-portable for Mac. And if you search the internet enough, you will find an R-portable for Mac.</p>
+<h3 id="r-portable">R-Portable</h3>
+<p>First thing is we need a portable version of R bundled with the installer that the app can rely on. That way, we&rsquo;re unconcerned about the user having (the required version of) R on their machine. Alternatively, we could have a setup where as part of the installation, we install R on the user&rsquo;s system, but that could mess up their machine&rsquo;s R setup.</p>
+<p>R-portable is available here: <a href="https://portableapps.com/node/32898">https://portableapps.com/node/32898</a></p>
+<h3 id="workflow-basic-vs-electron">Workflow: Basic vs. Electron</h3>
+<p>There are two basic workflows for creating an installer. We can take the bare-bones options, or use Electron. Bare-bones option is simple enough and has less hassle so I will cover it here. Electron is a framework for building cross-platform apps. I was able to get Electron to work, but I find it unnecessary. I will not cover it here, but if you find yourself wanting to use Electron and are struggling, you can always contact me.</p>
+
+</main>
+
+<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
+<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
+
+<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
+<noscript>Please enable Javascript to view comments.</noscript>
+<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
+<a href="https://www.talkyard.io">Talkyard</a>.</p>
+</div>
+
+
+
+    <footer>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+

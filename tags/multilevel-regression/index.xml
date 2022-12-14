@@ -6,11 +6,7 @@
     <description>Recent content in multilevel-regression on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 28 Nov 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/multilevel-regression/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 28 Nov 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/multilevel-regression/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Multidimensional CFA with RStan</title>
       <link>https://www.jamesuanhoro.com/post/2018/11/28/multidimensional-cfa-with-rstan/</link>

@@ -6,11 +6,7 @@
     <description>Recent content in rstats on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Oct 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/categories/rstats/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 07 Oct 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/categories/rstats/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Should you perform logistic regression on a dichotomized continuous variable when you have access to the continuous variable? I&#39;m not sure.</title>
       <link>https://www.jamesuanhoro.com/post/2018/10/07/should-you-perform-logistic-regression-on-a-dichotomized-continuous-variable-when-you-have-access-to-the-continuous-variable-im-not-sure./</link>
@@ -75,7 +71,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/11/16/a-chi-square-test-of-close-fit-in-covariance-based-sem/</guid>
       <description>TLDR: If you can assume close fit for the RMSEA, there is no reason why you cannot for a Chi-Square test in SEMs. The method to do this is relatively simple, and may cause SEM practitioners to reconsider the Chi-Square test.
- When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size.</description>
+When assessing the fit of structural equation models, it is common for applied researchers to dismiss the $\chi^2$ test because it will almost always detect a statistically significant discrepancy between your model and the data, given a large enough sample size.</description>
     </item>
     
     <item>
@@ -85,7 +81,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/10/28/misspecification-and-fit-indices-in-covariance-based-sem/</guid>
       <description>TLDR: If you have good measurement quality, conventional benchmarks for fit indices may lead to bad decisions. Additionally, global fit indices are not informative for investigating misspecification.
- I am working with one of my professors, Dr. Jessica Logan, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project.</description>
+I am working with one of my professors, Dr. Jessica Logan, on a checklist for the developmental progress of young children. We intend to take this down the IRT route (or ordinal logistic regression), but currently, this is all part of a factor analysis course project.</description>
     </item>
     
     <item>
@@ -95,7 +91,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</guid>
       <description>TLDR: Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.
- I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
+I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
     </item>
     
     <item>
@@ -105,8 +101,8 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/theil-sen-regression-in-r/</guid>
       <description>TLDR: When performing a simple linear regression, if you have any concern about outliers or heterosedasticity, consider the Theil-Sen estimator.
- A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
- Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope  Calculating the slope this way happens to be quite robust.</description>
+A simple linear regression estimator that is not commonly used or taught in the social sciences is the Theil-Sen estimator. This is a shame given that this estimator is very intuitive, once you know what a slope means. Three steps:
+Plot a line between all the points in your data Calculate the slope for each line The median slope is your regression slope Calculating the slope this way happens to be quite robust.</description>
     </item>
     
     <item>
@@ -116,7 +112,7 @@ This assumption is important for OLS to be the best linear unbiased predictor (B
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/19/linear-regression-with-violation-of-heteroskedasticity-with-small-samples/</guid>
       <description>TLDR: In small samples, the wild bootstrap implemented in the R hcci package is a good bet when heteroskedasticity is a concern.
- Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
+Today while teaching the multiple regression lab, I showed the class the standardized residuals versus standardized predictor plot SPSS lets you produce. It is the plot we typically use to assess homoskedasticity. The sample size for the analysis was 44. I mentioned how the regression slopes are fine under heteroskedasticity, but inference $(t, SE, pvalue)$ may be problematic.</description>
     </item>
     
   </channel>

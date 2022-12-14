@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="James Uanhoro&#39;s personal website.">
     <title>Little&#39;s MCAR test at different sample sizes | James Uanhoro</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
+    
     <header>
-  
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-        processEscapes: true
-      }
-    });
-  </script>
 
-  
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
   <nav>
     <ul>
       
       
       <li class="pull-left ">
-        <a href="https://www.jamesuanhoro.com/">/home/james uanhoro</a>
+        <a href="https://www.jamesuanhoro.com/">~/james uanhoro</a>
       </li>
       
       
@@ -62,7 +57,7 @@
     <br/>
 
 <div class="article-meta">
-<h1><span class="title">Little&#39;s MCAR test at different sample sizes</span></h1>
+<h1><span class="title">Little&rsquo;s MCAR test at different sample sizes</span></h1>
 <h2 class="author">James Uanhoro</h2>
 <h2 class="date">2017/09/21</h2>
 <p class="terms">
@@ -79,44 +74,29 @@
 </div>
 
 
-
-<main>
-<blockquote>
+<div class="content-wrapper">
+  <main>
+    <blockquote>
 <p><strong>TLDR: Little&rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.</strong></p>
 </blockquote>
 <p>I just found out about the R <a href="https://cran.r-project.org/web/packages/simglm/index.html">simglm package</a> and decided to do a small simulation to test Little&rsquo;s MCAR test<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future. I was able to find some examples of researchers using Little&rsquo;s MCAR test at small sample sizes, so I ran a toy simulation.</p>
 <p><img src="/img/posts/little_mcar/zoom_in.png" alt="Data are MCAR">
 <img src="/img/posts/little_mcar/zoom_in_mar.png" alt="Data are MAR"></p>
 <p>And this is the <a href="/misc/scripts/little_sim.R">script I used</a>, the underlying regression is near perfect (no multicollinearity).</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. <em>Journal of the American Statistical Association, 83</em>(404), 1198. <a href="https://doi.org/10.2307/2290157">https://doi.org/10.2307/2290157</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<li id="fn:1">
+<p>Little, R. J. A. (1988). A Test of Missing Completely at Random for Multivariate Data with Missing Values. <em>Journal of the American Statistical Association, 83</em>(404), 1198. <a href="https://doi.org/10.2307/2290157">https://doi.org/10.2307/2290157</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
-
-</main>
-
-<script>talkyardServerUrl='https:\/\/comments-for-www-jamesuanhoro-com.talkyard.net';</script>
-<script async defer src="https://c1.ty-cdn.net/-/talkyard-comments.min.js"></script>
-
-<div class="talkyard-comments" data-discussion-id="" style="margin-top: 45px;">
-<noscript>Please enable Javascript to view comments.</noscript>
-<p style="margin-top: 25px; opacity: 0.9; font-size: 96%">Comments powered by
-<a href="https://www.talkyard.io">Talkyard</a>.</p>
 </div>
 
-
-
+    <a href="/"> >> Home</a>
+  </main>
+</div>
     <footer>
-      <script src="//yihui.name/js/math-code.js"></script>
-<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-<script async src="//yihui.name/js/center-img.js"></script>
-
-
+      
 <script>
 (function() {
   function center_el(tagName) {

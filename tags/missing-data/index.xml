@@ -6,11 +6,7 @@
     <description>Recent content in missing-data on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 21 Sep 2017 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/missing-data/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 21 Sep 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/missing-data/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Little&#39;s MCAR test at different sample sizes</title>
       <link>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</link>
@@ -18,7 +14,7 @@
       
       <guid>https://www.jamesuanhoro.com/post/2017/09/21/littles-mcar-test-at-different-sample-sizes/</guid>
       <description>TLDR: Little&amp;rsquo;s MCAR test is unable to tell data that are MCAR from data that are MAR in small samples, but maintains the nominal error rate when null is true across a wide range of sample sizes.
- I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
+I just found out about the R simglm package and decided to do a small simulation to test Little&amp;rsquo;s MCAR test1 under different sample sizes. I could have investigated heteroskedasticity in linear regression instead, and I probably will in the future.</description>
     </item>
     
   </channel>

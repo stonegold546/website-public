@@ -6,11 +6,7 @@
     <description>Recent content in model-validation on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 May 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.jamesuanhoro.com/tags/model-validation/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 07 May 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/model-validation/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Simulating data from regression models</title>
       <link>https://www.jamesuanhoro.com/post/2018/05/07/simulating-data-from-regression-models/</link>
