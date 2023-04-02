@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="James Uanhoro&#39;s personal website.">
+    <title>The minorbsem package in R | James Uanhoro</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://www.jamesuanhoro.com/">~/james uanhoro</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/post/">~/posts</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/workshops/">~/workshops</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">The minorbsem package in R</span></h1>
+
+<h2 class="date">2023/04/02</h2>
+<p class="terms">
+  
+  
+  
+  
+  Tags: <a href="/tags/structural-equation-modeling">structural-equation-modeling</a> <a href="/tags/wishart">Wishart</a> <a href="/tags/masem">MASEM</a> <a href="/tags/misspecification">misspecification</a> <a href="/tags/minor-factors">minor-factors</a> <a href="/tags/adventitious-error">adventitious-error</a> <a href="/tags/r-package">r-package</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <p>I&rsquo;ve been working on the minorbsem package in R since the start of February.
+It&rsquo;s my first proper attempt at an R package.
+The package allows you fit Bayesian SEMs while accounting for:</p>
+<ol>
+<li>the possibility that minor factors influence the correlation between items (Uanhoro, forthcoming), or</li>
+<li>adventitious error (Wu &amp; Browne, 2015).</li>
+</ol>
+<p>One can also fit meta-analytic SEMs under similar assumptions (Uanhoro, 2022).</p>
+<p>The package is hosted on both <a href="https://github.com/jamesuanhoro/minorbsem/">GitHub</a> and
+<a href="https://jamesuanhoro.r-universe.dev/minorbsem">r-universe.dev</a>.
+And the package website is <a href="https://jamesuanhoro.github.io/minorbsem/">https://jamesuanhoro.github.io/minorbsem/</a>.</p>
+<p>I plan to actively develop this package over time.
+Some of my future plans are in an <a href="https://github.com/jamesuanhoro/minorbsem/issues/3">Issue on the GitHub repo</a>.</p>
+<p>Also, there should be a tutorial paper in the near future on how to use the package.</p>
+<h2 id="citations">Citations</h2>
+<p>Uanhoro JO (forthcoming). Modeling misspecification as a parameter in Bayesian structural equation modeling. <em>Educational and Psychological Measurement</em>.</p>
+<p>Wu H, Browne MW (2015). Quantifying Adventitious Error in a Covariance Structure as a Random Effect. <em>Psychometrika, 80</em>(3), 571–600, doi: <a href="https://dx.doi.org/10.1007/s11336-015-9451-3">10.1007/s11336-015-9451-3</a>.</p>
+<p>Uanhoro JO (2022). Hierarchical Covariance Estimation Approach to Meta-Analytic Structural Equation Modeling. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, doi:<a href="https://dx.doi.org/10.1080/10705511.2022.2142128">10.1080/10705511.2022.2142128</a>. <a href="../../../../2022/12/14/meta-analytic-bayesian-structural-equation-modeling/">Free PDF</a></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      James Uanhoro | <a href="https://keybase.io/jamesuanhoro">Verified digital identities</a> | Powered by: <a href="https://www.netlify.com/">Netlify</a>, <a href="https://gohugo.io/">Hugo</a>, <a href="https://themes.gohugo.io/hugo-classic/">Hugo Classic</a>
+      
+    </footer>
+  </body>
+</html>
+

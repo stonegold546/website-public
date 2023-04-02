@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>MASEM on James Uanhoro</title>
-    <link>https://www.jamesuanhoro.com/tags/masem/</link>
-    <description>Recent content in MASEM on James Uanhoro</description>
+    <title>r-package on James Uanhoro</title>
+    <link>https://www.jamesuanhoro.com/tags/r-package/</link>
+    <description>Recent content in r-package on James Uanhoro</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 02 Apr 2023 08:43:23 -0500</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/masem/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 02 Apr 2023 08:43:23 -0500</lastBuildDate><atom:link href="https://www.jamesuanhoro.com/tags/r-package/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The minorbsem package in R</title>
       <link>https://www.jamesuanhoro.com/post/2023/04/02/the-minorbsem-package-in-r/</link>
@@ -16,16 +16,6 @@
       <description>I&amp;rsquo;ve been working on the minorbsem package in R since the start of February. It&amp;rsquo;s my first proper attempt at an R package. The package allows you fit Bayesian SEMs while accounting for:
 the possibility that minor factors influence the correlation between items (Uanhoro, forthcoming), or adventitious error (Wu &amp;amp; Browne, 2015). One can also fit meta-analytic SEMs under similar assumptions (Uanhoro, 2022).
 The package is hosted on both GitHub and r-universe.</description>
-    </item>
-    
-    <item>
-      <title>Meta-analytic Bayesian structural equation modeling</title>
-      <link>https://www.jamesuanhoro.com/post/2022/12/14/meta-analytic-bayesian-structural-equation-modeling/</link>
-      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.jamesuanhoro.com/post/2022/12/14/meta-analytic-bayesian-structural-equation-modeling/</guid>
-      <description>There is a non-pay-walled version below, but the version of record is available at the Structural Equation Modeling, http://www.tandfonline.com/10.1080/10705511.2022.2142128.
-Here&amp;rsquo;s the PDF and OSF repository with simulation and data analyses code in R.</description>
     </item>
     
   </channel>
